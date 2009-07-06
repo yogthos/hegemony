@@ -26,11 +26,11 @@ public class Edge {
 	static {		
 		Graphics g = edgeHImage.getGraphics();
 		g.setColor(Color.green);
-		g.drawLine(0, Vertex.SIZE/2, LENGTH, Vertex.SIZE/2);
+		g.drawLine(0, 0, LENGTH, 0);
 		
 		g = edgeVImage.getGraphics();
 		g.setColor(Color.green);
-		g.drawLine(0, Vertex.SIZE/2, Vertex.SIZE/2, LENGTH);
+		g.drawLine(0, 0, 0, LENGTH);
 	} 
 
 	
