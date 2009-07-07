@@ -17,7 +17,7 @@ public class Edge {
 	boolean active = false;
 	
 	static {
-		LENGTH = GameCore.HEIGHT/Board.size;
+		LENGTH = GameCore.HEIGHT/(Board.size - 1);
 	}
 	
 	private static Image edgeHImage = new BufferedImage(LENGTH,LENGTH, BufferedImage.TYPE_INT_ARGB);
