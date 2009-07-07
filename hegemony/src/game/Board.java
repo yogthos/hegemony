@@ -52,7 +52,7 @@ public class Board {
 	
 	public void handleAction(int x, int y) {
 		
-		System.out.println(x + "," + y + ":" + GameCore.WIDTH/Board.size + "," + GameCore.HEIGHT/Board.size);
+		System.out.println(x/Edge.LENGTH + "," + y/Edge.LENGTH);
 	}
 	
 	private void generateEdgesAndVertices(Vertex v, int size) {
