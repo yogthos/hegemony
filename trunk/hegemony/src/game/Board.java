@@ -3,20 +3,17 @@ package game;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.List;
 
 public class Board {
 
 	public static int size;
 	
-	private List<Tile> tiles;
-	Vertex[][] vertices = null;
 	Vertex root = null;
 	
 	Image boardImage = null;
 	
 	public Board(int size) {
-		this.size = size;	
+		Board.size = size;	
 		this.boardImage = new BufferedImage(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
 		root = new Vertex(0,0);
@@ -52,7 +49,9 @@ public class Board {
 		Graphics g = boardImage.getGraphics();
 	}
 	
-	
+	public void handleAction(int x, int y) {
+		System.out.println(x + "," + y);
+	}
 	
 	private void generateEdgesAndVertices(Vertex v, int size) {
 		int x = v.getX();
@@ -71,5 +70,5 @@ public class Board {
 	
 	private void makeTile() {
 		
-	}
+	}	
 } 
