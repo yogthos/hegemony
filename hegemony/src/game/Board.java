@@ -14,6 +14,7 @@ public class Board {
 	
 	public Board(int size) {
 		Board.size = size;	
+		
 		this.boardImage = new BufferedImage(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 
 		root = new Vertex(0,0);
@@ -50,7 +51,8 @@ public class Board {
 	}
 	
 	public void handleAction(int x, int y) {
-		System.out.println(x + "," + y);
+		
+		System.out.println(x + "," + y + ":" + GameCore.WIDTH/Board.size + "," + GameCore.HEIGHT/Board.size);
 	}
 	
 	private void generateEdgesAndVertices(Vertex v, int size) {
