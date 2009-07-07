@@ -5,11 +5,11 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseListener;
 import java.awt.image.BufferStrategy;
 import java.applet.Applet;
 
-public class GameCore extends Applet implements Runnable, MouseMotionListener {
+public class GameCore extends Applet implements Runnable, MouseListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -21,13 +21,13 @@ public class GameCore extends Applet implements Runnable, MouseMotionListener {
 	private BufferStrategy bufferStrategy;
 	private Canvas drawArea;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
-	private int x = 0;
-
+	
 	public void init() {
 		board = new Board(10);
 		setSize(WIDTH, HEIGHT);
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
+		drawArea.addMouseListener(this);
 		setIgnoreRepaint(true);
 		t.start();
 	}
@@ -112,16 +112,33 @@ public class GameCore extends Applet implements Runnable, MouseMotionListener {
 	}
 
 	@Override
-	public void mouseDragged(MouseEvent e) {
-		int x = e.getX();
-		int y = e.getY();
-		e.consume();
+	public void mouseReleased( MouseEvent e ) {		
+		board.handleAction(e.getX(), e.getY());
+	    e.consume();
+	   }
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void mouseMoved(MouseEvent e) {
+	public void mouseEntered(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
