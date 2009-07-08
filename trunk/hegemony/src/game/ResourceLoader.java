@@ -40,7 +40,7 @@ public class ResourceLoader implements ImageObserver {
 			return sound;
 		
 		URL url = null;
-		try {
+		try {			
 			url = getClass().getClassLoader().getResource("res/" + name);
 			sound = Applet.newAudioClip(url);
 			sounds.put(name,sound);			
@@ -75,7 +75,7 @@ public class ResourceLoader implements ImageObserver {
 		BufferedImage image = images.get(name);
 		if (null != image)
 			return image;
-		
+
 		URL url = null;
 		try {
 			url = getClass().getClassLoader().getResource("res/" + name);
