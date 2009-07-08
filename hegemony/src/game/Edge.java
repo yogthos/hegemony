@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 
 public class Edge {
 	
+	protected static String[] sprites = null;
 	public static int LENGTH;
 	Vertex first = null;
 	Vertex second = null;
