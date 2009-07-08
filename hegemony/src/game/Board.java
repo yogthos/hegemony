@@ -31,19 +31,23 @@ public class Board {
 	private void draw(Vertex v, Graphics g) {
 		g.drawImage(Vertex.draw(), v.getPosX(), v.getPosY(), null);
 		
-		if (v.getX() < size && v.getY() < size) {			
+		if (v.getX() < size - 1 && v.getY() < size - 1) {			
 			g.drawImage(tiles[v.getX()][v.getY()].draw(),v.getPosX(),v.getPosY(), null);
 		}
 		
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {			
-			g.drawImage(leftEdge.draw(),leftEdge.getPosX(), leftEdge.getPosY(), null);
+			if (leftEdge.isActive()) {
+				g.drawImage(leftEdge.draw(),leftEdge.getPosX(), leftEdge.getPosY(), null);
+			}
 			draw(leftEdge.getSecond(), g);
 		}
 		
 		Edge bottomEdge = v.getBottomEdge();
-		if (null != bottomEdge) {			
-			g.drawImage(bottomEdge.draw(),bottomEdge.getPosX(), bottomEdge.getPosY() , null);		
+		if (null != bottomEdge) {
+			if (bottomEdge.isActive()) {
+				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX(), bottomEdge.getPosY() , null);
+			}
 			draw(bottomEdge.getSecond(), g);
 		}		
 	}
@@ -56,28 +60,6 @@ public class Board {
 		
 		System.out.println(x/(double)Edge.LENGTH + "," + y/(double)Edge.LENGTH);
 	}
-	
-	private void generateEdgesAndVertices(Vertex v, int size) {
-		int x = v.getX();
-		int y = v.getY();
-		
-		System.out.println("adding tile: " + x + "," + y);
-		tiles[x][y] = new Tile(Tile.Type.FOREST);
-		
-		if (x < size - 1) {
-			
-			Vertex left = new Vertex(x + 1, y);
-			new Edge(v, left, false);			
-			generateEdgesAndVertices(left, size);
-			
-		}
-		if (y < size - 1) {
-			Vertex bottom = new Vertex(x, y + 1);
-			new Edge(v, bottom, true);
-			generateEdgesAndVertices(bottom, size);
-		}
-	}
-	
 	
 	private void generateEdgesAndVertices(int size) {
 		
@@ -98,7 +80,9 @@ public class Board {
 					new Edge(vertices[i][j], vertices[i][j + 1], true);
 				}
 				
-				tiles[i][j] = new Tile(Tile.Type.FOREST);
+				if (i < vertices.length - 1 && j < vertices[i].length - 1) {
+					tiles[i][j] = new Tile(Tile.Type.FOREST);
+				}
 			}
 		}					
 	}	
