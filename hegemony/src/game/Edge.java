@@ -12,7 +12,7 @@ public class Edge {
 	private int y;
 	
 	private boolean vertical = false;
-	private boolean active = true;
+	private boolean active = false;
 	
 	static {
 		LENGTH = GameCore.HEIGHT/(Board.size - 1);

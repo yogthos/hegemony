@@ -91,7 +91,28 @@ public class Board {
 	}
 	
 	private void findEdge(double x, double y){
-		Tile tile = tiles[(int)x][(int)y];
-		
+		int xi = (int)x;
+		int yi = (int)y;
+		//Tile tile = tiles[xi][yi];
+		Vertex v = vertices[xi][yi];
+		double xOffset = x - xi;
+		double yOffset = y - yi;
+		System.out.println(xOffset + ","+yOffset);
+		if (Math.abs(0.5 - xOffset) > Math.abs(0.5 - yOffset)) {
+			if (0.5 > xOffset) {
+				v.getBottomEdge().setActive(!v.getBottomEdge().isActive());				
+			} else {				
+				Vertex v1 = v.getLeftEdge().getSecond(); 
+				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());
+			}
+		}
+		else {
+			if (yOffset > 0.5) {			
+				Vertex v1 = v.getBottomEdge().getSecond();
+				v1.getLeftEdge().setActive(!v1.getLeftEdge().isActive());
+			} else {
+				v.getLeftEdge().setActive(!v.getLeftEdge().isActive());
+			}
+		}	
 	}
 } 

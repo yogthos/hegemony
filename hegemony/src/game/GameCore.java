@@ -128,6 +128,7 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 	@Override
 	public void mouseReleased( MouseEvent e ) {		
 		board.handleAction(e.getX(), e.getY());
+
 	    e.consume();
 	   }
 
