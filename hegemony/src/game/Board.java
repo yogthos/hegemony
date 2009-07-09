@@ -14,27 +14,41 @@ public class Board {
 	
 	public Board(int size) {
 		Board.size = size;	
-		tiles = new Tile[size][size];
-		this.boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		tiles = new Tile[size-1][size-1];
+		boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		generateEdgesAndVertices(size);
+		drawTiles(vertices[0][0], boardImage.getGraphics());
 	}
 	
 	public Image draw() {
 		
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = currentBoard.getGraphics();		
-		draw(vertices[0][0], g);		
+		Graphics g = currentBoard.getGraphics();
+		g.drawImage(boardImage,size,size,null);
+		draw(vertices[0][0], g);
+		
 		return currentBoard;		
 	}
 	
-	private void draw(Vertex v, Graphics g) {
-		g.drawImage(Vertex.draw(), v.getPosX(), v.getPosY(), null);
-		
+	private void drawTiles(Vertex v, Graphics g) {
 		if (v.getX() < size - 1 && v.getY() < size - 1) {			
 			g.drawImage(tiles[v.getX()][v.getY()].draw(),v.getPosX(),v.getPosY(), null);
 		}
 		
+		Edge leftEdge = v.getLeftEdge();
+		if (null != leftEdge) {
+			drawTiles(leftEdge.getSecond(), g);
+		}
+		
+		Edge bottomEdge = v.getBottomEdge();
+		if (null != bottomEdge) {
+			drawTiles(bottomEdge.getSecond(), g);
+		}
+	}
+	
+	private void draw(Vertex v, Graphics g) {
+						
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {			
 			if (leftEdge.isActive()) {
@@ -93,7 +107,7 @@ public class Board {
 	private void findEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
-		//Tile tile = tiles[xi][yi];
+
 		Vertex v = vertices[xi][yi];
 		double xOffset = x - xi;
 		double yOffset = y - yi;
