@@ -52,22 +52,24 @@ public class Board {
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {			
 			if (leftEdge.isActive()) {
-				g.drawImage(leftEdge.draw(),leftEdge.getPosX(), leftEdge.getPosY(), null);
+				g.drawImage(leftEdge.draw(),leftEdge.getPosX()  + Vertex.SIZE, leftEdge.getPosY(), null);
 			}
 			draw(leftEdge.getSecond(), g);
+		}
+		
+		if (v.hasActiveEdges()) {
+			g.drawImage(Vertex.draw(), v.getPosX() + Vertex.SIZE/2, v.getPosY() + Vertex.SIZE/2, null);
 		}
 		
 		Edge bottomEdge = v.getBottomEdge();
 		if (null != bottomEdge) {
 			if (bottomEdge.isActive()) {
-				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX(), bottomEdge.getPosY() , null);
+				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX() + Vertex.SIZE, bottomEdge.getPosY() + Vertex.SIZE, null);
 			}
 			draw(bottomEdge.getSecond(), g);
 		}	
 		
-		if (v.hasActiveEdges()) {
-			g.drawImage(v.draw(), v.getPosX() - v.SIZE/2, v.getPosY() - v.SIZE/2, null);
-		}
+		
 	}
 				
 	private void generateEdgesAndVertices(int size) {
