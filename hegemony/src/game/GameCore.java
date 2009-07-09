@@ -23,8 +23,11 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {
-		board = new Board(10);
+		
 		setSize(WIDTH, HEIGHT);
+		setBounds(0, 0, WIDTH, HEIGHT);
+		setBackground(Color.black);
+		board = new Board(10);		
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 		drawArea.addMouseListener(this);

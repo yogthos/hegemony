@@ -51,17 +51,7 @@ public class Board {
 			draw(bottomEdge.getSecond(), g);
 		}		
 	}
-	
-	public void update(int x, int y) {
-		Graphics g = boardImage.getGraphics();
-	}
-	
-	public void handleAction(int x, int y) {
-		
-		System.out.println("X tile: " + x/Edge.LENGTH + ", Y tile: " + y/Edge.LENGTH);	
-		System.out.println(x/(double)Edge.LENGTH + "," + y/(double)Edge.LENGTH);
-	}
-	
+				
 	private void generateEdgesAndVertices(int size) {
 		
 		//make vertices
@@ -85,6 +75,23 @@ public class Board {
 					tiles[i][j] = new Tile(Tile.Type.FOREST);
 				}
 			}
-		}					
-	}	
+		}
+
+	}
+	
+	public void update(int x, int y) {
+		Graphics g = boardImage.getGraphics();
+	}
+	
+	public void handleAction(int x, int y) {
+		double xPos = x/(double)Edge.LENGTH;
+		double yPos = y/(double)Edge.LENGTH;
+		System.out.println(xPos + "," + yPos);
+		findEdge(xPos,yPos);
+	}
+	
+	private void findEdge(double x, double y){
+		Tile tile = tiles[(int)x][(int)y];
+		
+	}
 } 
