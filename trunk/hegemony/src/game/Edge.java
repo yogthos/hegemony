@@ -1,10 +1,6 @@
 package game;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 public class Edge {
 		
 	protected static String[] sprites = {"wallv.png","wallh.png"};
