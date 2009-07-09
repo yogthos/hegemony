@@ -158,18 +158,11 @@ public class Board {
 	}
 	
 
-	private int oldXi;
-	private int oldYi;
+	private Edge lastSelected;
 		
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
-
-		if (xi == oldXi && yi == oldYi) 
-			return;
-		
-		oldXi = xi;
-		oldYi = yi;
 		
 		deselectEdges(vertices[0][0]);
 		
@@ -179,21 +172,29 @@ public class Board {
 		
 		if (Math.abs(0.5 - xOffset) > Math.abs(0.5 - yOffset)) {
 			if (0.5 > xOffset) {
-				v.getBottomEdge().setSelected(!v.getBottomEdge().isSelected());				
+				Edge toSelect = v.getBottomEdge();
+				if (toSelect.equals(lastSelected))
+					return;
+				toSelect.setSelected(!v.getBottomEdge().isSelected());				
 			} else {				
 				Vertex v1 = v.getLeftEdge().getSecond();
-				if (null == v1.getLeftEdge())
+				Edge toSelect = v1.getBottomEdge();
+				if (null == toSelect || toSelect.equals(lastSelected))
 					return;
-				v1.getBottomEdge().setSelected(!v1.getBottomEdge().isSelected());
+				toSelect.setSelected(!v1.getBottomEdge().isSelected());
 			}
 		}
 		else {
 			if (yOffset > 0.5) {			
 				Vertex v1 = v.getBottomEdge().getSecond();
-				if (null == v1.getLeftEdge())
+				Edge toSelect = v1.getLeftEdge();
+				if (null == toSelect || toSelect.equals(lastSelected))
 					return;
 				v1.getLeftEdge().setSelected(!v1.getLeftEdge().isSelected());
-			} else {				
+			} else {		
+				Edge toSelect = v.getLeftEdge();
+				if (toSelect.equals(lastSelected))
+					return;
 				v.getLeftEdge().setSelected(!v.getLeftEdge().isSelected());
 			}
 		}	
