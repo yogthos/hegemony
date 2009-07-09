@@ -2,6 +2,8 @@ package game;
 
 import java.applet.Applet;
 import java.applet.AudioClip;
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
@@ -66,6 +68,23 @@ public class ResourceLoader implements ImageObserver {
 		return compatible;		
 	}
 
+	private BufferedImage getImageWithOpacity(BufferedImage src, float alpha)
+    {
+        BufferedImage dest = new BufferedImage(src.getWidth(), src.getHeight(),
+                                               BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = dest.createGraphics();
+        int rule = AlphaComposite.SRC_OVER;
+        AlphaComposite ac = AlphaComposite.getInstance(rule, alpha);
+        g2.setComposite(ac);
+        g2.drawImage(src, null, 0, 0);
+        g2.dispose();
+        return dest;
+    }
+	
+	public BufferedImage getSprite(String name, float alpha) {
+		return getImageWithOpacity(getSprite(name), alpha);
+	}
+	
 	/**
 	 * check if image is cached, if not, load it
 	 * @param name

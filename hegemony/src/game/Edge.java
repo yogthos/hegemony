@@ -1,6 +1,8 @@
 package game;
 
 import java.awt.Image;
+
+
 public class Edge {
 		
 	protected static String[] sprites = {"wallv.png","wallh.png"};
@@ -13,6 +15,7 @@ public class Edge {
 	
 	private boolean vertical = false;
 	private boolean active = false;
+	private boolean selected = false;
 	
 	static {
 		LENGTH = GameCore.HEIGHT/(Board.size - 1);
@@ -77,6 +80,26 @@ public class Edge {
 	}
 	
 	public Image draw() {
+
 		return (vertical ? ResourceLoader.getInstance().getSprite(sprites[0]) : ResourceLoader.getInstance().getSprite(sprites[1]));
+
+		/*
+		return (vertical ? 
+				(selected?
+						ResourceLoader.getInstance().getSprite(sprites[0], 0.3f):
+						ResourceLoader.getInstance().getSprite(sprites[0])): 
+				(selected?
+						ResourceLoader.getInstance().getSprite(sprites[1], 0.3f):
+						ResourceLoader.getInstance().getSprite(sprites[1])));
+	    */
+						
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
+	}
+
+	public boolean isSelected() {
+		return selected;
 	}
 }

@@ -6,10 +6,11 @@ import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.applet.Applet;
 
-public class GameCore extends Applet implements Runnable, MouseListener {
+public class GameCore extends Applet implements Runnable, MouseListener, MouseMotionListener {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -18,6 +19,7 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 
 	private Board board = null;
 
+	private Modes currentMode;
 	private Player[] players = null;
 	private int turn;
 	
@@ -31,6 +33,7 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
 		
+		currentMode = Modes.EDGE_PLACEMENT;
 		players = new Player[4];
 		turn = 0;
 		
@@ -38,6 +41,8 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 		drawArea.addMouseListener(this);
+		drawArea.addMouseMotionListener(this);
+		
 		setIgnoreRepaint(true);
 		t.start();
 	}
@@ -154,6 +159,25 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 	public void mousePressed(MouseEvent e) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		if (Modes.EDGE_PLACEMENT == currentMode) {
+			board.createOverlay(e.getX(), e.getY());
+		}
+		e.consume();
+		
+	}
+	
+	private enum Modes {
+		EDGE_PLACEMENT,
+		PIECE_PLACEMENT
 	}
 
 }
