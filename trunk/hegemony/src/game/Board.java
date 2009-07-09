@@ -48,7 +48,7 @@ public class Board {
 	}
 	
 	private void draw(Vertex v, Graphics g) {
-						
+										
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {			
 			if (leftEdge.isActive()) {
@@ -63,7 +63,11 @@ public class Board {
 				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX(), bottomEdge.getPosY() , null);
 			}
 			draw(bottomEdge.getSecond(), g);
-		}		
+		}	
+		
+		if (v.hasActiveEdges()) {
+			g.drawImage(v.draw(), v.getPosX() - v.SIZE/2, v.getPosY() - v.SIZE/2, null);
+		}
 	}
 				
 	private void generateEdgesAndVertices(int size) {

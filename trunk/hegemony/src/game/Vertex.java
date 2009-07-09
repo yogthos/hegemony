@@ -8,12 +8,8 @@ import java.awt.image.BufferedImage;
 public class Vertex {
 	
 	public static int SIZE = 4;
-	private static Image vertexImage = new BufferedImage(SIZE,SIZE,BufferedImage.TYPE_INT_ARGB);
-	static {
-		Graphics g = vertexImage.getGraphics();
-		g.setColor(Color.red);
-		g.fillRect(0, 0, SIZE, SIZE);
-	}
+	private static final String[] sprites = {"tower.png"};
+	
 	
 	private int x;
 	private int y;
@@ -61,7 +57,7 @@ public class Vertex {
 	}
 	
 	public static Image draw() {
-		return vertexImage;
+		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 
 	public int getX() {
@@ -78,6 +74,32 @@ public class Vertex {
 	
 	public int getPosY() {
 		return y*Edge.LENGTH;
+	}
+	
+	public boolean hasActiveEdges() {
+		boolean activeEdges = false;
+		if (null != leftEdge) {
+			if (leftEdge.isActive()) {
+				activeEdges = true;
+			}
+		}
+		if (null != rightEdge) {
+			if (rightEdge.isActive()) {
+				activeEdges = true;
+			}
+		}
+		if (null != bottomEdge) {
+			if (bottomEdge.isActive()) {
+				activeEdges = true;
+			}
+		}
+		if (null != topEdge) {
+			if (topEdge.isActive()) {
+				activeEdges = true;
+			}
+		}
+		
+		return activeEdges;			
 	}
 	
 	public String toString() {
