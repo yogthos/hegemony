@@ -6,8 +6,9 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 public class Edge {
+		
+	protected static String[] sprites = {"wallv.png","wallh.png"};
 	
-	protected static String[] sprites = null;
 	public static int LENGTH;
 	Vertex first = null;
 	Vertex second = null;
@@ -15,26 +16,12 @@ public class Edge {
 	private int y;
 	
 	private boolean vertical = false;
-	private boolean active = false;
+	private boolean active = true;
 	
 	static {
 		LENGTH = GameCore.HEIGHT/(Board.size - 1);
 	}
-	
-	private static Image edgeHImage = new BufferedImage(LENGTH,LENGTH, BufferedImage.TYPE_INT_ARGB);
-	private static Image edgeVImage = new BufferedImage(LENGTH,LENGTH, BufferedImage.TYPE_INT_ARGB);
-	
-	static {		
-		Graphics g = edgeHImage.getGraphics();
-		g.setColor(Color.green);
-		g.drawLine(0, 0, LENGTH, 0);
 		
-		g = edgeVImage.getGraphics();
-		g.setColor(Color.green);
-		g.drawLine(0, 0, 0, LENGTH);
-	} 
-
-	
 	public Edge(Vertex first, Vertex second, boolean vertical) {
 		this.first = first;
 		this.second = second;
@@ -94,6 +81,6 @@ public class Edge {
 	}
 	
 	public Image draw() {
-		return (vertical ? edgeVImage : edgeHImage);
+		return (vertical ? ResourceLoader.getInstance().getSprite(sprites[0]) : ResourceLoader.getInstance().getSprite(sprites[1]));
 	}
 }

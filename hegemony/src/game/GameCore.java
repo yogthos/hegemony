@@ -18,6 +18,9 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 
 	private Board board = null;
 
+	private Player[] players = null;
+	private int turn;
+	
 	private BufferStrategy bufferStrategy;
 	private Canvas drawArea;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
@@ -27,12 +30,20 @@ public class GameCore extends Applet implements Runnable, MouseListener {
 		setSize(WIDTH, HEIGHT);
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
+		
+		players = new Player[4];
+		turn = 0;
+		
 		board = new Board(10);		
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 		drawArea.addMouseListener(this);
 		setIgnoreRepaint(true);
 		t.start();
+	}
+	
+	public void updateCurrentTurn() {
+		turn = (turn + 1) % players.length;
 	}
 
 	public void destroy() {
