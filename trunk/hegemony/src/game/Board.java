@@ -11,9 +11,6 @@ public class Board {
 	Vertex[][] vertices = null;
 	Tile[][] tiles = null;
 	Image boardImage = null;
-
-	private int tile_height = 0;
-	private int tile_width = 0;
 	
 	public Board(int size) {
 		Board.size = size;	
@@ -21,9 +18,6 @@ public class Board {
 		this.boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		generateEdgesAndVertices(size);
-		
-		tile_height = (GameCore.HEIGHT - (GameCore.HEIGHT%(size - 1)))/(size - 1);
-		tile_width = (GameCore.HEIGHT - (GameCore.HEIGHT%(size - 1)))/(size - 1);
 	}
 	
 	public Image draw() {
@@ -64,9 +58,7 @@ public class Board {
 	
 	public void handleAction(int x, int y) {
 		
-		if (tile_height != 0 && tile_width != 0) {
-			System.out.println("X tile: " + x/tile_width + ", Y tile: " + y/tile_height);	
-		}
+		System.out.println("X tile: " + x/Edge.LENGTH + ", Y tile: " + y/Edge.LENGTH);	
 		System.out.println(x/(double)Edge.LENGTH + "," + y/(double)Edge.LENGTH);
 	}
 	
