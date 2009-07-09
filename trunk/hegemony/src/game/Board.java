@@ -123,12 +123,16 @@ public class Board {
 				v.getBottomEdge().setActive(!v.getBottomEdge().isActive());				
 			} else {				
 				Vertex v1 = v.getLeftEdge().getSecond(); 
+				if (null == v1.getBottomEdge())
+					return;
 				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());
 			}
 		}
 		else {
 			if (yOffset > 0.5) {			
 				Vertex v1 = v.getBottomEdge().getSecond();
+				if (null == v1.getLeftEdge())
+					return;
 				v1.getLeftEdge().setActive(!v1.getLeftEdge().isActive());
 			} else {
 				v.getLeftEdge().setActive(!v.getLeftEdge().isActive());
@@ -136,8 +140,6 @@ public class Board {
 		}	
 	}
 	
-	private int oldXi;
-	private int oldYi;
 	
 	private void deselectEdges(Vertex v) {
 		if (null == v)
@@ -154,6 +156,10 @@ public class Board {
 			deselectEdges(v.getBottomEdge().getSecond());
 		}
 	}
+	
+
+	private int oldXi;
+	private int oldYi;
 		
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
@@ -170,20 +176,24 @@ public class Board {
 		Vertex v = vertices[xi][yi];
 		double xOffset = x - xi;
 		double yOffset = y - yi;
-
+		
 		if (Math.abs(0.5 - xOffset) > Math.abs(0.5 - yOffset)) {
 			if (0.5 > xOffset) {
 				v.getBottomEdge().setSelected(!v.getBottomEdge().isSelected());				
 			} else {				
-				Vertex v1 = v.getLeftEdge().getSecond(); 
+				Vertex v1 = v.getLeftEdge().getSecond();
+				if (null == v1.getLeftEdge())
+					return;
 				v1.getBottomEdge().setSelected(!v1.getBottomEdge().isSelected());
 			}
 		}
 		else {
 			if (yOffset > 0.5) {			
 				Vertex v1 = v.getBottomEdge().getSecond();
+				if (null == v1.getLeftEdge())
+					return;
 				v1.getLeftEdge().setSelected(!v1.getLeftEdge().isSelected());
-			} else {
+			} else {				
 				v.getLeftEdge().setSelected(!v.getLeftEdge().isSelected());
 			}
 		}	
