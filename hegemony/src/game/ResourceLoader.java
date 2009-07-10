@@ -68,7 +68,7 @@ public class ResourceLoader implements ImageObserver {
 		return compatible;		
 	}
 
-	private BufferedImage getImageWithOpacity(BufferedImage src, float alpha)
+	public static BufferedImage getImageWithOpacity(BufferedImage src, float alpha)
     {
         BufferedImage dest = new BufferedImage(src.getWidth(), src.getHeight(),
                                                BufferedImage.TYPE_INT_ARGB);
