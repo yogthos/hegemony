@@ -6,6 +6,7 @@ import java.awt.Image;
 public class Edge {
 		
 	protected static String[] sprites = {"wallv.png","wallh.png"};
+	protected static String placeSound = "place_wall.wav";
 	
 	public static int LENGTH;
 	Vertex first = null;
@@ -76,6 +77,9 @@ public class Edge {
 	}
 	
 	public void setActive(boolean active) {
+		if (active)
+			ResourceLoader.getInstance().getSound(placeSound).play();
+		
 		this.active = active;
 	}
 	

@@ -11,6 +11,7 @@ public class Board {
 	Vertex[][] vertices = null;
 	Tile[][] tiles = null;
 	Image boardImage = null;
+	private Edge lastSelected;
 	
 	public Board(int size) {
 		Board.size = size;	
@@ -92,7 +93,7 @@ public class Board {
 				}
 				
 				if (i < vertices.length - 1 && j < vertices[i].length - 1) {
-					tiles[i][j] = new Tile(Tile.Type.FOREST);
+					tiles[i][j] = new Tile(Tile.Type.GRASS);
 				}
 			}
 		}
@@ -125,7 +126,7 @@ public class Board {
 				Vertex v1 = v.getLeftEdge().getSecond(); 
 				if (null == v1.getBottomEdge())
 					return;
-				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());
+				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());				
 			}
 		}
 		else {
@@ -158,7 +159,7 @@ public class Board {
 	}
 	
 
-	private Edge lastSelected;
+	
 		
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
