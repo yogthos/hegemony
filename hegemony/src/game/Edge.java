@@ -89,10 +89,10 @@ public class Edge {
 
 		
 		return (vertical ? 
-				(selected?
+				(selected && !active?
 						ResourceLoader.getInstance().getSprite(sprites[0], 0.5f):
 						ResourceLoader.getInstance().getSprite(sprites[0])): 
-				(selected?
+				(selected && !active?
 						ResourceLoader.getInstance().getSprite(sprites[1], 0.5f):
 						ResourceLoader.getInstance().getSprite(sprites[1])));
 	    
