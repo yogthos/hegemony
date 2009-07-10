@@ -109,6 +109,8 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 		// animation loop
 		while (!stopped) {
+			//TODO: check phases
+			
 			// Get time past
 			long elapsedTime = System.currentTimeMillis() - currTime;
 			currTime += elapsedTime;

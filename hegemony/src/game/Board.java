@@ -4,6 +4,11 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import tiles.Tile;
+import tiles.GrassTile;
+import tiles.WoodTile;
+import gamepieces.GamePiece;
+
 public class Board {
 
 	public static int size;
@@ -11,15 +16,17 @@ public class Board {
 	Vertex[][] vertices = null;
 	Tile[][] tiles = null;
 	Image boardImage = null;
+	Image terrainImage = null;
 	private Edge lastSelected;
 	
 	public Board(int size) {
 		Board.size = size;	
 		tiles = new Tile[size-1][size-1];
 		boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		terrainImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		generateEdgesAndVertices(size);
-		drawTiles(vertices[0][0], boardImage.getGraphics());
+		drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
 	}
 	
 	public Image draw() {
@@ -28,34 +35,58 @@ public class Board {
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,size,size,null);
 		draw(vertices[0][0], g);
+		g.drawImage(terrainImage,size,size,null);
 		
 		return currentBoard;		
 	}
 	
-	private void drawTiles(Vertex v, Graphics g) {
-		if (v.getX() < size - 1 && v.getY() < size - 1) {			
-			g.drawImage(tiles[v.getX()][v.getY()].draw(),v.getPosX(),v.getPosY(), null);
-		}
+	private void drawTilesAndTerrain(Vertex v, Graphics boardG, Graphics terrainG) {
+
+		
+		drawTileTerrainColumn(v, boardG, terrainG);
 		
 		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {
-			drawTiles(leftEdge.getSecond(), g);
+		if (null != leftEdge) {			
+			drawTilesAndTerrain(leftEdge.getSecond(), boardG, terrainG);			
+		}				
+	}
+	
+	private void drawTileTerrainColumn(Vertex v, Graphics boardG, Graphics terrainG) {
+		int x = v.getX();
+		int y = v.getY();
+		int posX = v.getPosX();
+		int posY = v.getPosY();
+
+		if (x < size - 1 && y < size - 1) {
+			boardG.drawImage(tiles[x][y].draw(), posX, posY, null);
+			for (GamePiece piece : tiles[x][y].getItems()) {
+				terrainG.drawImage(piece.draw(), posX, posY, null);
+			}
+
+			Edge bottomEdge = v.getBottomEdge();
+			if (null != bottomEdge) {
+				drawTileTerrainColumn(bottomEdge.getSecond(), boardG, terrainG);
+			}
 		}
+	}
+
+	private void draw(Vertex v, Graphics g) {
 		
-		Edge bottomEdge = v.getBottomEdge();
-		if (null != bottomEdge) {
-			drawTiles(bottomEdge.getSecond(), g);
+			
+		drawEdgeColumn(v, g);
+		Edge leftEdge = v.getLeftEdge(); 
+		if (null != leftEdge) {
+			draw(leftEdge.getSecond(), g);
 		}
 	}
 	
-	private void draw(Vertex v, Graphics g) {
-										
+	
+	private void drawEdgeColumn(Vertex v, Graphics g) {
 		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {			
+		if (null != leftEdge) {
 			if (leftEdge.isActive() || leftEdge.isSelected()) {
 				g.drawImage(leftEdge.draw(),leftEdge.getPosX()  + Vertex.SIZE, leftEdge.getPosY(), null);
 			}
-			draw(leftEdge.getSecond(), g);
 		}
 		
 		if (v.hasActiveEdges()) {
@@ -67,11 +98,10 @@ public class Board {
 			if (bottomEdge.isActive() || bottomEdge.isSelected()) {
 				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX() + Vertex.SIZE, bottomEdge.getPosY() + Vertex.SIZE, null);
 			}
-			draw(bottomEdge.getSecond(), g);
+			drawEdgeColumn(bottomEdge.getSecond(), g);
 		}	
-		
-		
 	}
+	
 				
 	private void generateEdgesAndVertices(int size) {
 		
@@ -93,7 +123,8 @@ public class Board {
 				}
 				
 				if (i < vertices.length - 1 && j < vertices[i].length - 1) {
-					tiles[i][j] = new Tile(Tile.Type.GRASS);
+					//tiles[i][j] = new GrassTile();
+					tiles[i][j] = new WoodTile();
 				}
 			}
 		}
@@ -142,30 +173,22 @@ public class Board {
 	}
 	
 	
-	private void deselectEdges(Vertex v) {
-		if (null == v)
-			return;
-		
-		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {
-			v.getLeftEdge().setSelected(false);
-			deselectEdges(v.getLeftEdge().getSecond());
-		}
-		Edge bottomEdge = v.getBottomEdge();
-		if (null != bottomEdge) {
-			bottomEdge.setSelected(false);
-			deselectEdges(v.getBottomEdge().getSecond());
+	private void deselectEdges() {
+		for (int x = 0; x < vertices.length -1; x++) {
+			for (int y = 0; y < vertices[x].length - 1; y++) {
+				vertices[x][y].getLeftEdge().setSelected(false);
+				vertices[x][y].getBottomEdge().setSelected(false);
+			}
 		}
 	}
-	
 
 	
 		
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
-		
-		deselectEdges(vertices[0][0]);
+				
+		deselectEdges();
 		
 		Vertex v = vertices[xi][yi];
 		double xOffset = x - xi;

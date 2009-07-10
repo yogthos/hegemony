@@ -85,17 +85,17 @@ public class Edge {
 	
 	public Image draw() {
 
-		return (vertical ? ResourceLoader.getInstance().getSprite(sprites[0]) : ResourceLoader.getInstance().getSprite(sprites[1]));
+		//return (vertical ? ResourceLoader.getInstance().getSprite(sprites[0]) : ResourceLoader.getInstance().getSprite(sprites[1]));
 
-		/*
+		
 		return (vertical ? 
 				(selected?
-						ResourceLoader.getInstance().getSprite(sprites[0], 0.3f):
+						ResourceLoader.getInstance().getSprite(sprites[0], 0.5f):
 						ResourceLoader.getInstance().getSprite(sprites[0])): 
 				(selected?
-						ResourceLoader.getInstance().getSprite(sprites[1], 0.3f):
+						ResourceLoader.getInstance().getSprite(sprites[1], 0.5f):
 						ResourceLoader.getInstance().getSprite(sprites[1])));
-	    */
+	    
 						
 	}
 

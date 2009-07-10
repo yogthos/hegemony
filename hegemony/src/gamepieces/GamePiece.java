@@ -1,5 +1,7 @@
 package gamepieces;
 
-public class GamePiece {
-	protected String[] sprites = null;
+import java.awt.Image;
+
+public abstract class GamePiece {
+	public abstract Image draw();
 }
