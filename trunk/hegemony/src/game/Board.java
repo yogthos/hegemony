@@ -1,8 +1,11 @@
 package game;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.HashSet;
+import java.util.Set;
 
 import tiles.Tile;
 import tiles.GrassTile;
@@ -36,6 +39,8 @@ public class Board {
 		g.drawImage(boardImage,size,size,null);
 		draw(vertices[0][0], g);
 		g.drawImage(terrainImage,size,size,null);
+		
+		findLoops(g);
 		
 		return currentBoard;		
 	}
@@ -231,5 +236,56 @@ public class Board {
 		double yPos = y/(double)Edge.LENGTH;
 				
 		selectEdge(xPos,yPos);		
+	}
+	
+	private void drawLoop(Set<Vertex> path, Graphics g) {
+		Image overlay = ResourceLoader.getImageWithOpacity(ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB), 0.4f);
+		Graphics g1 = overlay.getGraphics();
+		g1.setColor(Color.red);
+		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
+		
+		
+		
+		int xStart;
+		int yStart;
+		int xEnd;
+		int yEnd;
+		System.out.println("Found loop: ");
+		for (Vertex v : path) {
+			System.out.println(v.getX() + "," + v.getY());
+		}
+		
+		//g.drawImage(overlay, )
+		
+	}
+	
+	private void findLoops(Graphics g) {
+		for (int x = 0; x < vertices.length; x++) {
+			for (int y = 0; y < vertices.length; y++) {
+				findLoops(vertices[x][y], new HashSet<Vertex>(), g);
+			}
+		}
+	}
+	
+	private void findLoops(Vertex v, Set<Vertex> traversed, Graphics g) {
+		if (traversed.contains(v)) {
+			drawLoop(traversed, g);
+			return;
+		}
+			
+		traversed.add(v);
+		Edge leftEdge = v.getLeftEdge();
+		if (null != leftEdge) {
+			if (leftEdge.isActive()) {
+				findLoops(leftEdge.getSecond(), traversed, g);
+			}
+		}
+		Edge bottomEdge = v.getBottomEdge();
+		if (null != bottomEdge) {
+			if (bottomEdge.isActive()) {
+				findLoops(bottomEdge.getSecond(), traversed, g);
+			}
+		}
+			
 	}
 } 
