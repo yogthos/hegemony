@@ -4,6 +4,7 @@ import game.ResourceLoader;
 import gamepieces.GamePiece;
 
 import java.awt.Image;
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class Tile {
@@ -15,6 +16,8 @@ public abstract class Tile {
 			ResourceLoader.getInstance().getSprite(sprite);
 		}
 	}
+	
+	protected List<GamePiece> items = new ArrayList<GamePiece>();
 	
 	public enum Type {
 		FOREST,
@@ -28,10 +31,16 @@ public abstract class Tile {
 
 	public abstract Type getType();
 	
-	public abstract List<GamePiece> getItems();
 	
 	public Image draw() {
 		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 	
+	public List<GamePiece> getItems() {
+		return items;
+	}	
+	
+	public void placeItem(GamePiece piece) {
+		items.add(piece);
+	}
 }
