@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -16,10 +17,11 @@ public class Board {
 
 	public static int size;
 	
-	Vertex[][] vertices = null;
-	Tile[][] tiles = null;
-	Image boardImage = null;
-	Image terrainImage = null;
+	private Vertex[][] vertices = null;
+	private Tile[][] tiles = null;
+	private Image boardImage = null;
+	private Image terrainImage = null;
+	private Image highlightsImage = null;
 	private Edge lastSelected;
 	
 	public Board(int size) {
@@ -27,8 +29,10 @@ public class Board {
 		tiles = new Tile[size-1][size-1];
 		boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		terrainImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		highlightsImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		
 		generateEdgesAndVertices(size);
+		
 		drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
 	}
 	
@@ -37,11 +41,10 @@ public class Board {
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,size,size,null);
+		g.drawImage(highlightsImage,size,size,null);
 		draw(vertices[0][0], g);
 		g.drawImage(terrainImage,size,size,null);
-		
-		findLoops(g);
-		
+						
 		return currentBoard;		
 	}
 	
@@ -145,6 +148,7 @@ public class Board {
 		double yPos = y/(double)Edge.LENGTH;
 		
 		updateEdgeStatus(xPos,yPos);
+		findLoops(highlightsImage.getGraphics());
 	}
 	
 	private void updateEdgeStatus(double x, double y){
@@ -252,6 +256,7 @@ public class Board {
 		System.out.println("Found loop: ");
 		for (Vertex v : path) {
 			System.out.println(v.getX() + "," + v.getY());
+			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
 		}
 		
 		//g.drawImage(overlay, )
@@ -259,11 +264,12 @@ public class Board {
 	}
 	
 	private void findLoops(Graphics g) {
+		Set<Set<Vertex>> traversedPaths = new HashSet<Set<Vertex>>();
 		for (int x = 0; x < vertices.length; x++) {
 			for (int y = 0; y < vertices.length; y++) {
-				Vertex v = vertices[x][y];
+				Vertex v = vertices[x][y];				
 				if (isTraversable(v.getLeftEdge())) {
-					findLoops(v, null, new HashSet<Vertex>(), g);
+					findLoops(v, null, new HashSet<Vertex>(), traversedPaths, g);					
 				}
 			}
 		}
@@ -283,14 +289,18 @@ public class Board {
 		
 	}
 
-	private void findLoops(Vertex v, Edge incoming, Set<Vertex> traversed, Graphics g) {
+	private void findLoops(Vertex v, Edge incoming, Set<Vertex> traversed, Set<Set<Vertex>> traversedPaths, Graphics g) {
 		
 		if (traversed.contains(v)) {
+			//do proper traversal detection
+			if (traversedPaths.contains(traversed))
+				return;
+			traversedPaths.add(traversed);
 			drawLoop(traversed, g);
 			return;
 		}
 		
-		traversed.add(v);
+		traversed.add(v);		
 		
 		Edge leftEdge = v.getLeftEdge();
 		Edge topEdge = v.getTopEdge();
@@ -299,20 +309,19 @@ public class Board {
 		
 		if (isTraversable(leftEdge) && !isDeadEnd(leftEdge.getSecond())) {
 			if (!leftEdge.equals(incoming))
-				findLoops(leftEdge.getSecond(), leftEdge, traversed, g);			
+				findLoops(leftEdge.getSecond(), leftEdge, traversed, traversedPaths, g);			
 		}
 		if(isTraversable(topEdge) && !isDeadEnd(topEdge.getFirst())) {
 			if (!topEdge.equals(incoming))
-				findLoops(topEdge.getFirst(), topEdge, traversed, g);
+				findLoops(topEdge.getFirst(), topEdge, traversed, traversedPaths, g);
 		}
 		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond())) {
 			if (!bottomEdge.equals(incoming))
-				findLoops(bottomEdge.getSecond(), bottomEdge, traversed, g);
+				findLoops(bottomEdge.getSecond(), bottomEdge, traversed, traversedPaths, g);
 		}
 		if(isTraversable(rightEdge) && !isDeadEnd(rightEdge.getFirst())) {
 			if (!rightEdge.equals(incoming))
-				findLoops(rightEdge.getFirst(), rightEdge, traversed, g);
-		}
-		
+				findLoops(rightEdge.getFirst(), rightEdge, traversed, traversedPaths, g);
+		}		
 	}		
 } 
