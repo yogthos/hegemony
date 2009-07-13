@@ -101,4 +101,8 @@ public class Edge {
 	public boolean isSelected() {
 		return selected;
 	}
+	
+	public String toString() {
+		return "[" + first.getX() + "," + first.getY() + "]-" + (active?"active":"inactive") + "->[" + second.getX() + "," + second.getY() + "]";
+	}
 }
