@@ -1,5 +1,7 @@
 package game;
 
+import gamepieces.GamePiece;
+
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -8,9 +10,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import tiles.Tile;
-import tiles.GrassTile;
 import tiles.WoodTile;
-import gamepieces.GamePiece;
 
 public class Board {
 
@@ -243,8 +243,7 @@ public class Board {
 		Graphics g1 = overlay.getGraphics();
 		g1.setColor(Color.red);
 		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
-		
-		
+				
 		
 		int xStart;
 		int yStart;
@@ -262,30 +261,58 @@ public class Board {
 	private void findLoops(Graphics g) {
 		for (int x = 0; x < vertices.length; x++) {
 			for (int y = 0; y < vertices.length; y++) {
-				findLoops(vertices[x][y], new HashSet<Vertex>(), g);
+				Vertex v = vertices[x][y];
+				if (isTraversable(v.getLeftEdge())) {
+					findLoops(v, null, new HashSet<Vertex>(), g);
+				}
 			}
 		}
 	}
-	
-	private void findLoops(Vertex v, Set<Vertex> traversed, Graphics g) {
+
+	private boolean isTraversable(Edge e) {
+		return null != e && e.isActive();
+	}
+		
+	private boolean isDeadEnd(Vertex v) {
+		int numTraversable = 
+			(isTraversable(v.getBottomEdge()) ? 1 : 0) +
+			(isTraversable(v.getLeftEdge()) ? 1 : 0) +
+			(isTraversable(v.getRightEdge()) ? 1 : 0) +
+			(isTraversable(v.getTopEdge()) ? 1 : 0);
+		return numTraversable < 2 ? true : false;
+		
+	}
+
+	private void findLoops(Vertex v, Edge incoming, Set<Vertex> traversed, Graphics g) {
+		
 		if (traversed.contains(v)) {
 			drawLoop(traversed, g);
 			return;
 		}
-			
+		
 		traversed.add(v);
+		
 		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {
-			if (leftEdge.isActive()) {
-				findLoops(leftEdge.getSecond(), traversed, g);
-			}
-		}
+		Edge topEdge = v.getTopEdge();
 		Edge bottomEdge = v.getBottomEdge();
-		if (null != bottomEdge) {
-			if (bottomEdge.isActive()) {
-				findLoops(bottomEdge.getSecond(), traversed, g);
-			}
+		Edge rightEdge = v.getRightEdge();
+		
+		if (isTraversable(leftEdge) && !isDeadEnd(leftEdge.getSecond())) {
+			if (!leftEdge.equals(incoming))
+				findLoops(leftEdge.getSecond(), leftEdge, traversed, g);			
 		}
-			
-	}
+		if(isTraversable(topEdge) && !isDeadEnd(topEdge.getFirst())) {
+			if (!topEdge.equals(incoming))
+				findLoops(topEdge.getFirst(), topEdge, traversed, g);
+		}
+		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond())) {
+			if (!bottomEdge.equals(incoming))
+				findLoops(bottomEdge.getSecond(), bottomEdge, traversed, g);
+		}
+		if(isTraversable(rightEdge) && !isDeadEnd(rightEdge.getFirst())) {
+			if (!rightEdge.equals(incoming))
+				findLoops(rightEdge.getFirst(), rightEdge, traversed, g);
+		}
+		
+	}		
 } 
