@@ -295,8 +295,10 @@ public class Board {
 
 	private void findLoops(Vertex root, Vertex v, Edge incoming, Set<Vertex> traversed, Set<Vertex> traversals, Graphics g) {
 
+		boolean rootVertex = false;
 		if (null == root) {
 			root = v;
+			rootVertex = true;
 		}		
 		else if (root.equals(v)) {
 			drawLoop(traversed, g);
@@ -324,7 +326,7 @@ public class Board {
 			if (!topEdge.equals(incoming))
 				findLoops(root, topEdge.getFirst(), topEdge, myTraversed, traversals, g);
 		}
-		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond())) {
+		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond()) && !rootVertex) {
 			if (!bottomEdge.equals(incoming))
 				findLoops(root, bottomEdge.getSecond(), bottomEdge, myTraversed, traversals, g);
 		}
