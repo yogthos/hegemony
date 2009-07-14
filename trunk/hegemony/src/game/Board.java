@@ -251,12 +251,12 @@ public class Board {
 		Graphics g1 = overlay.getGraphics();
 		g1.setColor(Color.red);
 		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
-				
 		
-		int xStart;
-		int yStart;
-		int xEnd;
-		int yEnd;
+		Vertex topLeft;
+		Vertex topRight;
+		Vertex bottomLeft;
+		Vertex bottomRight;
+		
 		System.out.println("Found loop: ");
 		for (Vertex v : path) {
 			System.out.println(v.getX() + "," + v.getY());
@@ -307,6 +307,7 @@ public class Board {
 			return;
 		}
 
+		traversals.add(v);
 		Set<Vertex> myTraversed = new HashSet<Vertex>();
 		myTraversed.addAll(traversed);
 		myTraversed.add(v);				
