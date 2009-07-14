@@ -2,6 +2,7 @@ package game;
 
 import java.awt.Canvas;
 import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Dimension;
 import java.awt.event.MouseEvent;
@@ -14,8 +15,10 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final int WIDTH = 400;
-	public static final int HEIGHT = 400;
+	public static final int WIDTH = 800;
+	public static final int HEIGHT = 500;
+
+	public static final int BOARD_SIZE = 400;	
 
 	private Board board = null;
 
@@ -40,9 +43,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		board = new Board(10);		
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
-		drawArea.addMouseListener(this);
-		drawArea.addMouseMotionListener(this);
-		
+				
 		setIgnoreRepaint(true);
 		t.start();
 	}
@@ -99,7 +100,11 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	// Do not override this method
 	public void run() {
-		drawArea.setSize(new Dimension(getWidth(), getHeight()));
+		//drawArea.setSize(new Dimension(getWidth(), getHeight()));
+		drawArea.setSize(BOARD_SIZE,BOARD_SIZE);
+		drawArea.addMouseListener(this);
+		drawArea.addMouseMotionListener(this);
+				
 		add(drawArea);
 		createBufferStrategy(2);
 		bufferStrategy = drawArea.getBufferStrategy();
@@ -170,7 +175,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (Modes.EDGE_PLACEMENT == currentMode) {
+		if (Modes.EDGE_PLACEMENT == currentMode){
 			board.createOverlay(e.getX(), e.getY());
 		}
 		e.consume();
