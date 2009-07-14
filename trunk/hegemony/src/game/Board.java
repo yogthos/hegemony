@@ -29,8 +29,8 @@ public class Board {
 	public Board(int size) {
 		Board.size = size;	
 		tiles = new Tile[size-1][size-1];
-		boardImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
-		terrainImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 				
 		generateEdgesAndVertices(size);
 		
@@ -39,7 +39,7 @@ public class Board {
 	
 	public Image draw() {
 		
-		Image currentBoard = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);
+		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,size,size,null);
 		if (null != highlightsImage) g.drawImage(highlightsImage,size,size,null);
@@ -151,7 +151,7 @@ public class Board {
 		updateEdgeStatus(xPos,yPos);
 		
 		
-		highlightsImage = ResourceLoader.createCompatible(GameCore.WIDTH,GameCore.HEIGHT, BufferedImage.TYPE_INT_ARGB);				
+		highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);				
 		findLoops(highlightsImage.getGraphics());
 	}
 	
@@ -200,7 +200,7 @@ public class Board {
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
-				
+		
 		deselectEdges();
 		
 		Vertex v = vertices[xi][yi];
@@ -263,7 +263,6 @@ public class Board {
 			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
 		}
 		
-		//g.drawImage(overlay, )
 		
 	}
 	
