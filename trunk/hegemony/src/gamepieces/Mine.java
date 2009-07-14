@@ -1,9 +1,12 @@
 package gamepieces;
 
+import game.ResourceLoader;
+
 import java.awt.Image;
 
 public class Mine extends GamePiece {
 
+	private static final String[] sprites = {"mine.png"};
 	private int type;
 	private Types mine_type;
 	
@@ -20,6 +23,6 @@ public class Mine extends GamePiece {
 	}
 	
 	public Image draw() {
-		return null;
+		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 }
