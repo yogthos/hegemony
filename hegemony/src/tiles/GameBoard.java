@@ -5,9 +5,9 @@ public class GameBoard {
 
 	private enum Rotate {		
 		NONE { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[x][y]; }},
-		CLOCKWISE { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[Math.abs(y-orig_board.length)][x]; }},
-		COUNTER { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[y][Math.abs(x-orig_board.length)]; }},
-		ONEEIGHTY { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[Math.abs(x-orig_board.length)][Math.abs(y-orig_board.length)]; }};
+		CLOCKWISE { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[Math.abs(y-(orig_board.length-1))][x]; }},
+		COUNTER { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[y][Math.abs(x-(orig_board.length-1))]; }},
+		ONEEIGHTY { Tile rotate(Tile[][] orig_board, int x, int y) { return orig_board[Math.abs(x-(orig_board.length-1))][Math.abs(y-(orig_board.length-1))]; }};
 
 		abstract Tile rotate(Tile[][] orig_board, int x, int y);
 	}
@@ -35,7 +35,7 @@ public class GameBoard {
 
 	/**
 	 * Returns the tile from the board, rotated as needed, based on the enum type.
-	 * We're doing in-place rotation like this to cut down on processing time (O(1) vs. O(n^2))
+	 * We're doing in-place rotation like this to cut down on processing time (O(1) vs. O(n-something))
 	 * 
 	 * Right now we assume a square board.
 	 * 
@@ -45,6 +45,16 @@ public class GameBoard {
 	 */
 	public Tile getTile(int x, int y) {
 		return rotation.rotate(board, x, y);
+	}
+	
+	/**
+	 * Return the entire board for drawing, whatever.
+	 * Need to implement.
+	 * 
+	 * @return
+	 */
+	public Tile[][] getBoard() {
+		return null;
 	}
 
 }
