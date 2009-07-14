@@ -15,7 +15,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final int WIDTH = 800;
+	public static final int WIDTH = 500;
 	public static final int HEIGHT = 500;
 
 	public static final int BOARD_SIZE = 400;	
@@ -44,6 +44,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 				
+		this.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
 		setIgnoreRepaint(true);
 		t.start();
 	}
@@ -105,7 +106,10 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		drawArea.addMouseListener(this);
 		drawArea.addMouseMotionListener(this);
 				
-		add(drawArea);
+		add(drawArea);				
+	    add(new java.awt.Button("OK"));
+		
+		
 		createBufferStrategy(2);
 		bufferStrategy = drawArea.getBufferStrategy();
 
