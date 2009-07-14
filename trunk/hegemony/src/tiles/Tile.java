@@ -22,15 +22,16 @@ public abstract class Tile {
 	public enum Type {
 		FOREST,
 		GRASS,
-		STONE,
 		VILLAGE,
 		GOLD,
 		SILVER,
-		PLATINUM		
+		COPPER,
+		DIAMOND,
+		CAPITAL	
 	}
 
 	public abstract Type getType();
-	
+	public abstract int getValue();
 	
 	public Image draw() {
 		return ResourceLoader.getInstance().getSprite(sprites[0]);
