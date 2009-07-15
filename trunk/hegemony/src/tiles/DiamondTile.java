@@ -6,7 +6,8 @@ public class DiamondTile extends Tile {
 
 	private static final int value = 0;
 	
-	public DiamondTile() {
+	public DiamondTile(int x, int y) {
+		super(x,y);
 		items.add(new Mine(Mine.Types.DIAMOND));
 	}
 	

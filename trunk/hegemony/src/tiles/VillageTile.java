@@ -6,7 +6,8 @@ public class VillageTile extends Tile {
 
 	private static int value = 3;
 	
-	public VillageTile() {
+	public VillageTile(int x, int y) {
+		super(x,y);
 		items.add(new Village());
 	}
 	

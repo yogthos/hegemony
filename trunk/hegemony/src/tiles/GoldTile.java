@@ -6,7 +6,8 @@ public class GoldTile extends Tile {
 
 	private static final int value = 0;
 	
-	public GoldTile() {
+	public GoldTile(int x, int y) {
+		super(x,y);
 		items.add(new Mine(Mine.Types.GOLD));
 	}
 	

@@ -8,9 +8,13 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
+import java.util.TreeSet;
 
 import tiles.Tile;
 import tiles.WoodTile;
@@ -122,22 +126,42 @@ public class Board {
 			}
 		}
 		//make edges and tiles
-		for (int i = 0; i < vertices.length; i++) {
-			for (int j = 0; j < vertices[i].length; j++) {
-				if (i < vertices.length - 1) {					
-					new Edge(vertices[i][j], vertices[i + 1][j], false);								
+		for (int x = 0; x < vertices.length; x++) {
+			for (int y = 0; y < vertices[x].length; y++) {
+				
+				if (x < vertices.length - 1) {					
+					new Edge(vertices[x][y], vertices[x + 1][y], false);								
 				}
-				if (j < vertices[i].length - 1) {					
-					new Edge(vertices[i][j], vertices[i][j + 1], true);
+				if (y < vertices[x].length - 1) {					
+					new Edge(vertices[x][y], vertices[x][y + 1], true);
 				}
 				
-				if (i < vertices.length - 1 && j < vertices[i].length - 1) {
-					//tiles[i][j] = new GrassTile();
-					tiles[i][j] = new WoodTile();
+				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
+				
+					tiles[x][y] = new WoodTile(x,y);
 				}
 			}
 		}
-
+		
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles[x].length; y++) {
+				Vertex topLeft = vertices[x][y];
+				Vertex bottomRight = vertices[x+1][y+1];
+				tiles[x][y].setBottomEdge(bottomRight.getRightEdge());
+				tiles[x][y].setRightEdge(bottomRight.getTopEdge());
+				tiles[x][y].setLeftEdge(topLeft.getBottomEdge());
+				tiles[x][y].setTopEdge(topLeft.getLeftEdge());
+				
+				if (y < tiles.length - 1) 
+					tiles[x][y].setBottomTile(tiles[x][y + 1]);
+				if (x > 0)
+					tiles[x][y].setLeftTile(tiles[x - 1][y]);
+				if (x < tiles.length - 1)
+					tiles[x][y].setRightTile(tiles[x + 1][y]);
+				if (y > 0)
+					tiles[x][y].setTopTile(tiles[x][y - 1]);
+			}
+		}
 	}
 	
 	public void update(int x, int y) {
@@ -246,6 +270,76 @@ public class Board {
 		selectEdge(xPos,yPos);		
 	}
 	
+	private void findLoops(Graphics g) {
+	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
+	    Set<Tile> globalTraversed = new HashSet<Tile>();
+	    
+	    toVisit.add(tiles[0][0]);
+	    
+	    while(!toVisit.isEmpty()) 
+	    {
+	    	System.out.println("Pre traversal: " + toVisit.size());
+	        Set<Tile> traversed = new HashSet<Tile>();
+	        findConnected(toVisit.first(), traversed, globalTraversed, toVisit);
+	        paintTiles(traversed, g);        
+	        System.out.println("Post traversal: " + toVisit.size());
+	    } 
+	}
+
+	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> globalTraversed, TreeSet<Tile> toVisit) {
+	    traversed.add(tile);
+	    globalTraversed.add(tile);
+	    toVisit.remove(tile);
+	    
+	    Tile top = tile.getTopTile();
+	    Tile bottom = tile.getBottomTile();
+	    Tile left = tile.getLeftTile();
+	    Tile right = tile.getRightTile();
+	    
+	    if (null != top && !globalTraversed.contains(top)) {
+	        toVisit.add(top);
+	        if(!tile.getTopEdge().isActive()) {
+	            findConnected(top, traversed, globalTraversed, toVisit);
+	        }
+	    }
+	    if (null != bottom && !globalTraversed.contains(bottom)) {
+	        toVisit.add(bottom);
+	        if(!tile.getBottomEdge().isActive()) {
+	            findConnected(bottom, traversed, globalTraversed, toVisit);
+	        }
+	    }
+	    if (null != left && !globalTraversed.contains(left)) {
+	        toVisit.add(left);
+	        if(!tile.getLeftEdge().isActive()) {
+	            findConnected(left, traversed, globalTraversed, toVisit);
+	        }
+	    }
+	    if (null != right && !globalTraversed.contains(right)) {
+	        toVisit.add(right);
+	        if(!tile.getRightEdge().isActive()) {
+	            findConnected(right, traversed, globalTraversed, toVisit);
+	        }
+	    }
+	}
+	
+	
+	private void paintTiles(Set<Tile> tiles, Graphics g) {
+		Image overlay = ResourceLoader.getImageWithOpacity(ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB), 0.4f);
+		Graphics g1 = overlay.getGraphics();
+		g1.setColor(Color.red);
+		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
+		
+		System.out.println("found loop of size: " + tiles.size());
+		for (Tile t : tiles) {
+			Vertex v = vertices[t.getX()][t.getY()];
+			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
+		}
+	}
+	
+	/************************************************************/
+	/*******************Finding Loops in Edges*******************/
+	/************************************************************/
+	
 	private void drawLoop(Set<Vertex> path, Graphics g) {
 		Image overlay = ResourceLoader.getImageWithOpacity(ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB), 0.4f);
 		Graphics g1 = overlay.getGraphics();
@@ -261,19 +355,18 @@ public class Board {
 		for (Vertex v : path) {
 			System.out.println(v.getX() + "," + v.getY());
 			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
-		}
-		
-		
+		}				
 	}
-	
-	private void findLoops(Graphics g) {
-		Set<Vertex> traversed = new HashSet<Vertex>();		
+			
+	private void findLoopsInEdges(Graphics g) {
+				
 		for (int x = 0; x < vertices.length; x++) {
 			for (int y = 0; y < vertices.length; y++) {
 				Vertex v = vertices[x][y];		
 				
-				if (!traversed.contains(v) && isTraversable(v.getLeftEdge())) {
-					findLoops(null, v, null, new HashSet<Vertex>(), traversed, g);					
+				if (isTraversable(v.getLeftEdge())) {
+					System.out.println("Traversing from: "+ v);
+					findLoops(null, v, null, new HashSet<Vertex>(), g);					
 				}
 			}
 		}		
@@ -293,7 +386,7 @@ public class Board {
 		
 	}
 
-	private void findLoops(Vertex root, Vertex v, Edge incoming, Set<Vertex> traversed, Set<Vertex> traversals, Graphics g) {
+	private void findLoops(Vertex root, Vertex v, Edge incoming, Set<Vertex> traversed, Graphics g) {
 
 		boolean rootVertex = false;
 		if (null == root) {
@@ -308,7 +401,6 @@ public class Board {
 			return;
 		}
 
-		traversals.add(v);
 		Set<Vertex> myTraversed = new HashSet<Vertex>();
 		myTraversed.addAll(traversed);
 		myTraversed.add(v);				
@@ -320,19 +412,19 @@ public class Board {
 		
 		if (isTraversable(leftEdge) && !isDeadEnd(leftEdge.getSecond())) {
 			if (!leftEdge.equals(incoming))
-				findLoops(root, leftEdge.getSecond(), leftEdge, myTraversed, traversals, g);			
+				findLoops(root, leftEdge.getSecond(), leftEdge, myTraversed, g);			
 		}
 		if(isTraversable(topEdge) && !isDeadEnd(topEdge.getFirst())) {
 			if (!topEdge.equals(incoming))
-				findLoops(root, topEdge.getFirst(), topEdge, myTraversed, traversals, g);
+				findLoops(root, topEdge.getFirst(), topEdge, myTraversed, g);
 		}
 		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond()) && !rootVertex) {
 			if (!bottomEdge.equals(incoming))
-				findLoops(root, bottomEdge.getSecond(), bottomEdge, myTraversed, traversals, g);
+				findLoops(root, bottomEdge.getSecond(), bottomEdge, myTraversed, g);
 		}
 		if(isTraversable(rightEdge) && !isDeadEnd(rightEdge.getFirst())) {
 			if (!rightEdge.equals(incoming))
-				findLoops(root, rightEdge.getFirst(), rightEdge, myTraversed, traversals, g);
+				findLoops(root, rightEdge.getFirst(), rightEdge, myTraversed, g);
 		}		
 	}		
 } 
