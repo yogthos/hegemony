@@ -6,7 +6,8 @@ public class CopperTile extends Tile {
 
 	private static final int value = 0;
 	
-	public CopperTile() {
+	public CopperTile(int x, int y) {
+		super(x,y);
 		items.add(new Mine(Mine.Types.COPPER));
 	}
 	

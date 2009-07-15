@@ -6,7 +6,8 @@ public class WoodTile extends Tile {
 
 	private static final int value = 3;
 	
-	public WoodTile() {
+	public WoodTile(int x, int y) {
+		super(x,y);
 		items.add(new Tree());
 	}
 	

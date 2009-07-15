@@ -6,7 +6,8 @@ public class CapitalTile extends Tile {
 
 	private static final int value = 5;
 
-	public CapitalTile() {
+	public CapitalTile(int x, int y) {
+		super(x,y);
 		items.add(new Capital());
 	}
 	
