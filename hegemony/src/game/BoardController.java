@@ -6,14 +6,8 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 import java.util.TreeSet;
 
 import tiles.Tile;
@@ -29,6 +23,17 @@ public class BoardController {
 	private Image terrainImage = null;
 	private Image highlightsImage = null;
 	private Edge lastSelected;
+	
+	public enum MODE {
+		PLACE_CASTLE,
+		PLACE_KNIGHT,
+		PLACE_WALL,
+		EXPAND_AREA
+	}
+	
+	public enum PHASE {
+		
+	}
 	
 	public BoardController(int size) {
 		BoardController.size = size;	
@@ -163,10 +168,7 @@ public class BoardController {
 			}
 		}
 	}
-	
-	public void update(int x, int y) {
-		Graphics g = boardImage.getGraphics();
-	}
+
 	
 	public void handleAction(int x, int y) {
 		double xPos = x/(double)Edge.LENGTH;
@@ -331,97 +333,5 @@ public class BoardController {
 			Vertex v = vertices[t.getX()][t.getY()];
 			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
 		}
-	}
-	
-	/************************************************************/
-	/*******************Finding Loops in Edges*******************/
-	/************************************************************/
-	
-	private void drawLoop(Set<Vertex> path, Graphics g) {
-		Image overlay = ResourceLoader.getImageWithOpacity(ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB), 0.4f);
-		Graphics g1 = overlay.getGraphics();
-		g1.setColor(Color.red);
-		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
-		
-		Vertex topLeft;
-		Vertex topRight;
-		Vertex bottomLeft;
-		Vertex bottomRight;
-		
-		System.out.println("Found loop: ");
-		for (Vertex v : path) {
-			System.out.println(v.getX() + "," + v.getY());
-			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
-		}				
-	}
-			
-	private void findLoopsInEdges(Graphics g) {
-				
-		for (int x = 0; x < vertices.length; x++) {
-			for (int y = 0; y < vertices.length; y++) {
-				Vertex v = vertices[x][y];		
-				
-				if (isTraversable(v.getLeftEdge())) {
-					System.out.println("Traversing from: "+ v);
-					findLoops(null, v, null, new HashSet<Vertex>(), g);					
-				}
-			}
-		}		
-	}
-
-	private boolean isTraversable(Edge e) {
-		return null != e && e.isActive();
-	}
-		
-	private boolean isDeadEnd(Vertex v) {
-		int numTraversable = 
-			(isTraversable(v.getBottomEdge()) ? 1 : 0) +
-			(isTraversable(v.getLeftEdge()) ? 1 : 0) +
-			(isTraversable(v.getRightEdge()) ? 1 : 0) +
-			(isTraversable(v.getTopEdge()) ? 1 : 0);
-		return numTraversable < 2 ? true : false;
-		
-	}
-
-	private void findLoops(Vertex root, Vertex v, Edge incoming, Set<Vertex> traversed, Graphics g) {
-
-		boolean rootVertex = false;
-		if (null == root) {
-			root = v;
-			rootVertex = true;
-		}		
-		else if (root.equals(v)) {
-			drawLoop(traversed, g);
-			return;
-		}
-		else if (traversed.contains(v)) {
-			return;
-		}
-
-		Set<Vertex> myTraversed = new HashSet<Vertex>();
-		myTraversed.addAll(traversed);
-		myTraversed.add(v);				
-		
-		Edge leftEdge = v.getLeftEdge();
-		Edge topEdge = v.getTopEdge();
-		Edge bottomEdge = v.getBottomEdge();
-		Edge rightEdge = v.getRightEdge();
-		
-		if (isTraversable(leftEdge) && !isDeadEnd(leftEdge.getSecond())) {
-			if (!leftEdge.equals(incoming))
-				findLoops(root, leftEdge.getSecond(), leftEdge, myTraversed, g);			
-		}
-		if(isTraversable(topEdge) && !isDeadEnd(topEdge.getFirst())) {
-			if (!topEdge.equals(incoming))
-				findLoops(root, topEdge.getFirst(), topEdge, myTraversed, g);
-		}
-		if(isTraversable(bottomEdge) && !isDeadEnd(bottomEdge.getSecond()) && !rootVertex) {
-			if (!bottomEdge.equals(incoming))
-				findLoops(root, bottomEdge.getSecond(), bottomEdge, myTraversed, g);
-		}
-		if(isTraversable(rightEdge) && !isDeadEnd(rightEdge.getFirst())) {
-			if (!rightEdge.equals(incoming))
-				findLoops(root, rightEdge.getFirst(), rightEdge, myTraversed, g);
-		}		
-	}		
+	}	
 } 
