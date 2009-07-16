@@ -19,7 +19,7 @@ import java.util.TreeSet;
 import tiles.Tile;
 import tiles.WoodTile;
 
-public class Board {
+public class BoardController {
 
 	public static int size;
 	
@@ -30,8 +30,8 @@ public class Board {
 	private Image highlightsImage = null;
 	private Edge lastSelected;
 	
-	public Board(int size) {
-		Board.size = size;	
+	public BoardController(int size) {
+		BoardController.size = size;	
 		tiles = new Tile[size-1][size-1];
 		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);

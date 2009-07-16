@@ -20,7 +20,7 @@ public class Edge {
 	private boolean hidden = false;
 	
 	static {
-		LENGTH = GameCore.BOARD_SIZE/(Board.size - 1);
+		LENGTH = GameCore.BOARD_SIZE/(BoardController.size - 1);
 	}
 	
 	public Edge(Vertex first, Vertex second, boolean vertical, boolean hidden) {

@@ -20,7 +20,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	public static final int BOARD_SIZE = 400;	
 
-	private Board board = null;
+	private BoardController board = null;
 
 	private Modes currentMode;
 	private Player[] players = null;
@@ -40,7 +40,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		players = new Player[4];
 		turn = 0;
 		
-		board = new Board(10);		
+		board = new BoardController(10);		
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 				
