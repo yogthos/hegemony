@@ -272,23 +272,20 @@ public class Board {
 	
 	private void findLoops(Graphics g) {
 	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
-	    Set<Tile> globalTraversed = new HashSet<Tile>();
-	    
+	    Set<Tile> visited = new HashSet<Tile>();	    
 	    toVisit.add(tiles[0][0]);
 	    
 	    while(!toVisit.isEmpty()) 
 	    {
-	    	System.out.println("Pre traversal: " + toVisit.size());
 	        Set<Tile> traversed = new HashSet<Tile>();
-	        findConnected(toVisit.first(), traversed, globalTraversed, toVisit);
+	        findConnected(toVisit.first(), traversed, visited, toVisit);
 	        paintTiles(traversed, g);        
-	        System.out.println("Post traversal: " + toVisit.size());
-	    } 
+	    } 	    
 	}
 
-	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> globalTraversed, TreeSet<Tile> toVisit) {
+	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit) {
 	    traversed.add(tile);
-	    globalTraversed.add(tile);
+	    visited.add(tile);
 	    toVisit.remove(tile);
 	    
 	    Tile top = tile.getTopTile();
@@ -296,28 +293,28 @@ public class Board {
 	    Tile left = tile.getLeftTile();
 	    Tile right = tile.getRightTile();
 	    
-	    if (null != top && !globalTraversed.contains(top)) {
+	    if (null != top && !visited.contains(top)) {
 	        toVisit.add(top);
 	        if(!tile.getTopEdge().isActive()) {
-	            findConnected(top, traversed, globalTraversed, toVisit);
+	            findConnected(top, traversed, visited, toVisit);
 	        }
 	    }
-	    if (null != bottom && !globalTraversed.contains(bottom)) {
+	    if (null != bottom && !visited.contains(bottom)) {
 	        toVisit.add(bottom);
 	        if(!tile.getBottomEdge().isActive()) {
-	            findConnected(bottom, traversed, globalTraversed, toVisit);
+	            findConnected(bottom, traversed, visited, toVisit);
 	        }
 	    }
-	    if (null != left && !globalTraversed.contains(left)) {
+	    if (null != left && !visited.contains(left)) {
 	        toVisit.add(left);
 	        if(!tile.getLeftEdge().isActive()) {
-	            findConnected(left, traversed, globalTraversed, toVisit);
+	            findConnected(left, traversed, visited, toVisit);
 	        }
 	    }
-	    if (null != right && !globalTraversed.contains(right)) {
+	    if (null != right && !visited.contains(right)) {
 	        toVisit.add(right);
 	        if(!tile.getRightEdge().isActive()) {
-	            findConnected(right, traversed, globalTraversed, toVisit);
+	            findConnected(right, traversed, visited, toVisit);
 	        }
 	    }
 	}
