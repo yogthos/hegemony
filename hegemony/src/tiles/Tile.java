@@ -138,9 +138,7 @@ public abstract class Tile implements Comparable<Tile> {
 	public int compareTo(Tile o) {
 		if (this == o)
 			return 0;
-		else if (x > o.x && y > o.y)
-			return 1;
-		else return -1;
+		else return this.hashCode() - o.hashCode();
 	}
 	
 }
