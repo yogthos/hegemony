@@ -1,15 +1,21 @@
 package game;
 
+import java.awt.BorderLayout;
 import java.awt.Canvas;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.applet.Applet;
+
+import javax.swing.JButton;
+import javax.swing.JPanel;
 
 public class GameCore extends Applet implements Runnable, MouseListener, MouseMotionListener {
 	
@@ -22,7 +28,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	private BoardController board = null;
 
-	private Modes currentMode;
+	private BoardController.MODE currentMode;
 	private Player[] players = null;
 	private int turn;
 	
@@ -32,11 +38,9 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	
 	public void init() {
 		
-		setSize(WIDTH, HEIGHT);
-		setBounds(0, 0, WIDTH, HEIGHT);
-		setBackground(Color.black);
 		
-		currentMode = Modes.EDGE_PLACEMENT;
+		
+		currentMode = BoardController.MODE.PLACE_WALL;
 		players = new Player[4];
 		turn = 0;
 		
@@ -44,7 +48,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		Thread t = new Thread(this);
 		drawArea = new Canvas();
 				
-		this.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+		
 		setIgnoreRepaint(true);
 		t.start();
 	}
@@ -101,15 +105,32 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	// Do not override this method
 	public void run() {
-		//drawArea.setSize(new Dimension(getWidth(), getHeight()));
+		setSize(WIDTH, HEIGHT);
+		setBounds(0, 0, WIDTH, HEIGHT);
+		setBackground(Color.black);
+		
 		drawArea.setSize(BOARD_SIZE,BOARD_SIZE);
+		drawArea.setPreferredSize(new Dimension(BOARD_SIZE, BOARD_SIZE));
 		drawArea.addMouseListener(this);
 		drawArea.addMouseMotionListener(this);
-				
+		
+		setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));		
 		add(drawArea);				
 	    add(new java.awt.Button("OK"));
 		
-		
+	    /*
+		add(drawArea, BorderLayout.CENTER);		
+				
+		JPanel controls = new JPanel();
+        controls.setLayout(new FlowLayout());
+				
+        controls.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
+        controls.add(new ModeButton(BoardController.MODE.PLACE_WALL));
+	    add(controls, BorderLayout.SOUTH);
+	    controls.setVisible(true);
+	    //setVisible(true);
+		*/
+	    
 		createBufferStrategy(2);
 		bufferStrategy = drawArea.getBufferStrategy();
 
@@ -138,12 +159,18 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Dispose of graphics context
 			g.dispose();
 		}
-
 	}
 
 	@Override
-	public void mouseReleased( MouseEvent e ) {		
-		board.handleAction(e.getX(), e.getY());
+	public void mouseReleased( MouseEvent e ) {
+		if (BoardController.MODE.PLACE_CASTLE == currentMode)
+			board.placeCastle(e.getX(), e.getY());
+		else if (BoardController.MODE.EXPAND_AREA == currentMode)
+			board.expandTerritory(e.getX(), e.getY());
+		else if (BoardController.MODE.PLACE_KNIGHT == currentMode)
+			board.placeKnight(e.getX(), e.getY());
+		else if (BoardController.MODE.PLACE_WALL == currentMode)
+			board.placeEdge(e.getX(), e.getY());
 
 	    e.consume();
 	   }
@@ -179,16 +206,37 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (Modes.EDGE_PLACEMENT == currentMode){
+		if (BoardController.MODE.PLACE_WALL == currentMode){
 			board.createOverlay(e.getX(), e.getY());
 		}
 		e.consume();
 		
 	}
-	
-	private enum Modes {
-		EDGE_PLACEMENT,
-		PIECE_PLACEMENT
-	}
 
+	private class ModeButton  extends JButton implements ActionListener {
+
+		private static final long serialVersionUID = 1L;
+
+		private BoardController.MODE mode;
+		
+		public ModeButton(BoardController.MODE mode) {
+			super();
+			this.mode = mode;
+			if (BoardController.MODE.PLACE_CASTLE == mode)
+				setText("Castle Mode");
+			else if (BoardController.MODE.EXPAND_AREA == mode)
+				setText("Expand Mode");
+			else if (BoardController.MODE.PLACE_KNIGHT == mode)
+				setText("Knight Mode");
+			else if (BoardController.MODE.PLACE_WALL == mode)
+				setText("Wall Mode");
+			addActionListener(this);
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			currentMode = mode;		
+		}
+		
+	}
 }
