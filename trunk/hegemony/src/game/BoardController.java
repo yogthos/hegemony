@@ -169,8 +169,20 @@ public class BoardController {
 		}
 	}
 
+	///////////Mode Actions/////////////
+	public void placeCastle(int x, int y) {
+		System.out.println("In castle mode");
+	}
 	
-	public void handleAction(int x, int y) {
+	public void placeKnight(int x, int y) {
+		
+	}
+	
+	public void expandTerritory(int x, int y) {
+		
+	}
+	
+	public void placeEdge(int x, int y) {
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
