@@ -8,7 +8,7 @@ public class CopperTile extends Tile {
 	
 	public CopperTile(int x, int y) {
 		super(x,y);
-		items.add(new Mine(Mine.Types.COPPER));
+		setMine(new Mine(Mine.Types.COPPER));
 	}
 	
 	@Override

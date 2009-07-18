@@ -8,7 +8,7 @@ public class WoodTile extends Tile {
 	
 	public WoodTile(int x, int y) {
 		super(x,y);
-		items.add(new Tree());
+		setForest(new Tree());		
 	}
 	
 	@Override

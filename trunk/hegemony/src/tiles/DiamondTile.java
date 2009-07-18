@@ -8,7 +8,7 @@ public class DiamondTile extends Tile {
 	
 	public DiamondTile(int x, int y) {
 		super(x,y);
-		items.add(new Mine(Mine.Types.DIAMOND));
+		setMine(new Mine(Mine.Types.DIAMOND));
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ public class GoldTile extends Tile {
 	
 	public GoldTile(int x, int y) {
 		super(x,y);
-		items.add(new Mine(Mine.Types.GOLD));
+		setMine(new Mine(Mine.Types.GOLD));
 	}
 	
 	@Override

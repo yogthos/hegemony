@@ -8,7 +8,7 @@ public class CapitalTile extends Tile {
 
 	public CapitalTile(int x, int y) {
 		super(x,y);
-		items.add(new Capital());
+		setCapital(new Capital());
 	}
 	
 	@Override
