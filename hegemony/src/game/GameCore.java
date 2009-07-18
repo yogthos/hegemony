@@ -26,28 +26,25 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	public static final int BOARD_SIZE = 400;	
 
-	private BoardController board = null;
-
-	private BoardController.MODE currentMode;
+	public BoardController board = null;
+	
 	private Player[] players = null;
 	private int turn;
 	
 	private BufferStrategy bufferStrategy;
-	private Canvas drawArea;/* Drawing Canvas */
+	private GameCanvas drawArea;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {
 		
-		
-		
-		currentMode = BoardController.MODE.PLACE_WALL;
 		players = new Player[4];
 		turn = 0;
 		
-		board = new BoardController(10);		
+		board = new BoardController(12);		
 		Thread t = new Thread(this);
-		drawArea = new Canvas();
-				
+		
+		drawArea = new GameCanvas(board, BOARD_SIZE);
+		drawArea.currentMode = BoardController.MODE.PLACE_WALL;		
 		
 		setIgnoreRepaint(true);
 		t.start();
@@ -109,10 +106,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
 		
-		drawArea.setSize(BOARD_SIZE,BOARD_SIZE);
-		drawArea.setPreferredSize(new Dimension(BOARD_SIZE, BOARD_SIZE));
-		drawArea.addMouseListener(this);
-		drawArea.addMouseMotionListener(this);
+		
 		
 		setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));		
 		add(drawArea);				
@@ -163,16 +157,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	@Override
 	public void mouseReleased( MouseEvent e ) {
-		if (BoardController.MODE.PLACE_CASTLE == currentMode)
-			board.placeCastle(e.getX(), e.getY());
-		else if (BoardController.MODE.EXPAND_AREA == currentMode)
-			board.expandTerritory(e.getX(), e.getY());
-		else if (BoardController.MODE.PLACE_KNIGHT == currentMode)
-			board.placeKnight(e.getX(), e.getY());
-		else if (BoardController.MODE.PLACE_WALL == currentMode)
-			board.placeEdge(e.getX(), e.getY());
-
-	    e.consume();
+		
 	   }
 
 	@Override
@@ -206,10 +191,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		if (BoardController.MODE.PLACE_WALL == currentMode){
-			board.createOverlay(e.getX(), e.getY());
-		}
-		e.consume();
 		
 	}
 
@@ -235,7 +216,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			currentMode = mode;		
+			drawArea.currentMode = mode;		
 		}
 		
 	}
