@@ -335,10 +335,12 @@ public class BoardController {
 	
 	
 	private void paintTiles(Set<Tile> tiles, Graphics g) {
-		Image overlay = ResourceLoader.getImageWithOpacity(ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB), 0.4f);
-		Graphics g1 = overlay.getGraphics();
+		BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
+		Graphics g1 =image.getGraphics();
 		g1.setColor(Color.red);
 		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
+		
+		Image overlay = ResourceLoader.getImageWithOpacity(image, 0.3f);
 		
 		System.out.println("found loop of size: " + tiles.size());
 		for (Tile t : tiles) {
