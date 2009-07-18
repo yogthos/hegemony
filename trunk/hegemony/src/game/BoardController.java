@@ -2,6 +2,7 @@ package game;
 
 import gamepieces.Castle;
 import gamepieces.GamePiece;
+import gamepieces.Knight;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
+import tiles.GrassTile;
 import tiles.Tile;
 import tiles.WoodTile;
 
@@ -60,11 +62,12 @@ public class BoardController {
 		
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = currentBoard.getGraphics();
-		g.drawImage(boardImage,size,size,null);
-		if (null != highlightsImage) g.drawImage(highlightsImage,size,size,null);
-		drawTileItems(g);
+		g.drawImage(boardImage,0,0,null);
+		if (null != highlightsImage) g.drawImage(highlightsImage,0,0,null);
+		
 		draw(vertices[0][0], g);
-		g.drawImage(terrainImage,size,size,null);
+		g.drawImage(terrainImage,0,0,null);
+		drawTileItems(g);
 						
 		return currentBoard;		
 	}
@@ -87,11 +90,9 @@ public class BoardController {
 
 		if (x < size - 1 && y < size - 1) {
 			boardG.drawImage(tiles[x][y].draw(), posX, posY, null);
-			/*
-			for (GamePiece piece : tiles[x][y].getItems()) {
-				terrainG.drawImage(piece.draw(), posX, posY, null);
-			}
-			*/
+			if (null != tiles[x][y].getForest())
+				terrainG.drawImage(tiles[x][y].getForest().draw(), posX, posY, null);
+			
 			Edge bottomEdge = v.getBottomEdge();
 			if (null != bottomEdge) {
 				drawTileTerrainColumn(bottomEdge.getSecond(), boardG, terrainG);
@@ -102,9 +103,11 @@ public class BoardController {
 	private void drawTileItems(Graphics g) {
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles.length; y++) {
+				
 				for (GamePiece piece : tiles[x][y].getItems()) {
 					g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
 				}
+				
 			}
 		}
 	}
@@ -124,18 +127,18 @@ public class BoardController {
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {
 			if ((leftEdge.isActive() || leftEdge.isSelected()) && !leftEdge.isHidden()) {
-				g.drawImage(leftEdge.draw(),leftEdge.getPosX()  + Vertex.SIZE, leftEdge.getPosY(), null);
+				g.drawImage(leftEdge.draw(),leftEdge.getPosX() - Vertex.SIZE, leftEdge.getPosY() - Vertex.SIZE*2, null);
 			}
 		}
 		
 		if (v.hasActiveEdges()) {
-			g.drawImage(Vertex.draw(), v.getPosX() + Vertex.SIZE/2, v.getPosY() + Vertex.SIZE/2, null);
+			g.drawImage(Vertex.draw(), v.getPosX() - Vertex.SIZE*2, v.getPosY() - Vertex.SIZE*2, null);
 		}
 		
 		Edge bottomEdge = v.getBottomEdge();
 		if (null != bottomEdge) {
 			if ((bottomEdge.isActive() || bottomEdge.isSelected()) && !bottomEdge.isHidden()) {
-				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX() + Vertex.SIZE, bottomEdge.getPosY() + Vertex.SIZE, null);
+				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX()  - Vertex.SIZE, bottomEdge.getPosY() - Vertex.SIZE, null);
 			}
 			drawEdgeColumn(bottomEdge.getSecond(), g);
 		}	
@@ -164,7 +167,7 @@ public class BoardController {
 				
 				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
 				
-					tiles[x][y] = new WoodTile(x,y);
+					tiles[x][y] = new GrassTile(x,y);
 				}
 			}
 		}
@@ -191,22 +194,35 @@ public class BoardController {
 	}
 
 	///////////Mode Actions/////////////
-	public void placeCastle(int x, int y) {
+	public boolean placeCastle(int x, int y) {
 		System.out.println("In castle mode");
 		int xPos = (int)(x/(double)Edge.LENGTH);
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
 		
 		if(null != tile.getCastle())
-			return;
+			return false;
+
+		//TODO: check that castles aren't too close when placing
 		
 		tile.setCastle(new Castle(players[currentTurn]));
-		System.out.println(tiles[xPos][yPos].getCastle());
-		System.out.println(tiles[xPos][yPos].getItems());
+		return true;
 	}
 	
-	public void placeKnight(int x, int y) {
+	public boolean placeKnight(int x, int y) {
 		System.out.println("In knight mode");
+		int xPos = (int)(x/(double)Edge.LENGTH);
+		int yPos = (int)(y/(double)Edge.LENGTH);
+		Tile tile = tiles[xPos][yPos];
+		
+		if(null != tile.getCastle())
+			return false;
+		if (null != tile.getKnight())
+			return false;
+		//TODO: check that knight is connected to a castle or a knight
+		
+		tile.setKnight(new Knight(players[currentTurn]));
+		return true;
 	}
 	
 	public void expandTerritory(int x, int y) {
@@ -333,10 +349,6 @@ public class BoardController {
 	        	paintTiles(traversed, g);
 	        }
 	    } 	    
-	}
-
-	private void addCastle(Integer num) {
-		
 	}
 	
 	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit, List<GamePiece> castles) {

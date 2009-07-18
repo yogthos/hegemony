@@ -158,7 +158,6 @@ public abstract class Tile implements Comparable<Tile> {
 		return forest;
 	}
 	public void setForest(GamePiece forest) {
-		items.add(forest);
 		this.forest = forest;
 	}
 	public GamePiece getVillage() {		
