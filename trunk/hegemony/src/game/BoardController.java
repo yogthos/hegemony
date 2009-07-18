@@ -248,10 +248,12 @@ public class BoardController {
 		if (Math.abs(0.5 - xOffset) > Math.abs(0.5 - yOffset)) {
 			if (0.5 > xOffset) {
 				Edge toSelect = v.getBottomEdge();
-				if (toSelect.equals(lastSelected))
+				if (null == toSelect || toSelect.equals(lastSelected))
 					return;
 				toSelect.setSelected(!v.getBottomEdge().isSelected());				
-			} else {				
+			} else {		
+				if (null == v.getLeftEdge())
+					return;
 				Vertex v1 = v.getLeftEdge().getSecond();
 				Edge toSelect = v1.getBottomEdge();
 				if (null == toSelect || toSelect.equals(lastSelected))
@@ -260,7 +262,9 @@ public class BoardController {
 			}
 		}
 		else {
-			if (yOffset > 0.5) {			
+			if (yOffset > 0.5) {	
+				if (null == v.getBottomEdge())
+					return;
 				Vertex v1 = v.getBottomEdge().getSecond();
 				Edge toSelect = v1.getLeftEdge();
 				if (null == toSelect || toSelect.equals(lastSelected))
@@ -268,7 +272,7 @@ public class BoardController {
 				v1.getLeftEdge().setSelected(!v1.getLeftEdge().isSelected());
 			} else {		
 				Edge toSelect = v.getLeftEdge();
-				if (toSelect.equals(lastSelected))
+				if (null == toSelect || toSelect.equals(lastSelected))
 					return;
 				v.getLeftEdge().setSelected(!v.getLeftEdge().isSelected());
 			}
@@ -342,7 +346,7 @@ public class BoardController {
 		
 		Image overlay = ResourceLoader.getImageWithOpacity(image, 0.3f);
 		
-		System.out.println("found loop of size: " + tiles.size());
+		//System.out.println("found loop of size: " + tiles.size());
 		for (Tile t : tiles) {
 			Vertex v = vertices[t.getX()][t.getY()];
 			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
