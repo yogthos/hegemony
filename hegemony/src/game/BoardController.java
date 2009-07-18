@@ -1,12 +1,15 @@
 package game;
 
+import gamepieces.Castle;
 import gamepieces.GamePiece;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -23,7 +26,10 @@ public class BoardController {
 	private Image terrainImage = null;
 	private Image highlightsImage = null;
 	private Edge lastSelected;
+	private Player[] players = null;
+	private int currentTurn = 0;
 	
+	private MODE currentMode;
 	public enum MODE {
 		PLACE_CASTLE,
 		PLACE_KNIGHT,
@@ -35,9 +41,13 @@ public class BoardController {
 		
 	}
 	
-	public BoardController(int size) {
+	public BoardController(int size, int numPlayers) {
 		BoardController.size = size;	
-		tiles = new Tile[size-1][size-1];
+		players = new Player[numPlayers];
+		for (int i = 0; i < numPlayers; i++) {
+			players[i] = new Player();
+		}
+		tiles = new Tile[size-1][size-1];		
 		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 				
@@ -52,6 +62,7 @@ public class BoardController {
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,size,size,null);
 		if (null != highlightsImage) g.drawImage(highlightsImage,size,size,null);
+		drawTileItems(g);
 		draw(vertices[0][0], g);
 		g.drawImage(terrainImage,size,size,null);
 						
@@ -59,7 +70,6 @@ public class BoardController {
 	}
 	
 	private void drawTilesAndTerrain(Vertex v, Graphics boardG, Graphics terrainG) {
-
 		
 		drawTileTerrainColumn(v, boardG, terrainG);
 		
@@ -77,10 +87,11 @@ public class BoardController {
 
 		if (x < size - 1 && y < size - 1) {
 			boardG.drawImage(tiles[x][y].draw(), posX, posY, null);
+			/*
 			for (GamePiece piece : tiles[x][y].getItems()) {
 				terrainG.drawImage(piece.draw(), posX, posY, null);
 			}
-
+			*/
 			Edge bottomEdge = v.getBottomEdge();
 			if (null != bottomEdge) {
 				drawTileTerrainColumn(bottomEdge.getSecond(), boardG, terrainG);
@@ -88,6 +99,16 @@ public class BoardController {
 		}
 	}
 
+	private void drawTileItems(Graphics g) {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles.length; y++) {
+				for (GamePiece piece : tiles[x][y].getItems()) {
+					g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
+				}
+			}
+		}
+	}
+	
 	private void draw(Vertex v, Graphics g) {
 		
 			
@@ -172,22 +193,31 @@ public class BoardController {
 	///////////Mode Actions/////////////
 	public void placeCastle(int x, int y) {
 		System.out.println("In castle mode");
+		int xPos = (int)(x/(double)Edge.LENGTH);
+		int yPos = (int)(y/(double)Edge.LENGTH);
+		Tile tile = tiles[xPos][yPos];
+		
+		if(null != tile.getCastle())
+			return;
+		
+		tile.setCastle(new Castle(players[currentTurn]));
+		System.out.println(tiles[xPos][yPos].getCastle());
+		System.out.println(tiles[xPos][yPos].getItems());
 	}
 	
 	public void placeKnight(int x, int y) {
-		
+		System.out.println("In knight mode");
 	}
 	
 	public void expandTerritory(int x, int y) {
-		
+		System.out.println("In expand mode");
 	}
 	
 	public void placeEdge(int x, int y) {
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
-		updateEdgeStatus(xPos,yPos);
-		
+		updateEdgeStatus(xPos,yPos);		
 		
 		highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);				
 		findLoops(highlightsImage.getGraphics());
@@ -296,15 +326,26 @@ public class BoardController {
 	    while(!toVisit.isEmpty()) 
 	    {
 	        Set<Tile> traversed = new HashSet<Tile>();
-	        findConnected(toVisit.first(), traversed, visited, toVisit);
-	        paintTiles(traversed, g);        
+	        List<GamePiece> castles = new ArrayList<GamePiece>();
+	        findConnected(toVisit.first(), traversed, visited, toVisit, castles);
+	       
+	        if (castles.size() == 1) {	        	
+	        	paintTiles(traversed, g);
+	        }
 	    } 	    
 	}
 
-	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit) {
+	private void addCastle(Integer num) {
+		
+	}
+	
+	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit, List<GamePiece> castles) {
 	    traversed.add(tile);
 	    visited.add(tile);
 	    toVisit.remove(tile);
+	    
+	    if (null != tile.getCastle())
+	    	castles.add(tile.getCastle());
 	    
 	    Tile top = tile.getTopTile();
 	    Tile bottom = tile.getBottomTile();
@@ -314,25 +355,25 @@ public class BoardController {
 	    if (null != top && !visited.contains(top)) {
 	        toVisit.add(top);
 	        if(!tile.getTopEdge().isActive()) {
-	            findConnected(top, traversed, visited, toVisit);
+	            findConnected(top, traversed, visited, toVisit, castles);
 	        }
 	    }
 	    if (null != bottom && !visited.contains(bottom)) {
 	        toVisit.add(bottom);
 	        if(!tile.getBottomEdge().isActive()) {
-	            findConnected(bottom, traversed, visited, toVisit);
+	            findConnected(bottom, traversed, visited, toVisit, castles);
 	        }
 	    }
 	    if (null != left && !visited.contains(left)) {
 	        toVisit.add(left);
 	        if(!tile.getLeftEdge().isActive()) {
-	            findConnected(left, traversed, visited, toVisit);
+	            findConnected(left, traversed, visited, toVisit, castles);
 	        }
 	    }
 	    if (null != right && !visited.contains(right)) {
 	        toVisit.add(right);
 	        if(!tile.getRightEdge().isActive()) {
-	            findConnected(right, traversed, visited, toVisit);
+	            findConnected(right, traversed, visited, toVisit, castles);
 	        }
 	    }
 	}
@@ -351,5 +392,17 @@ public class BoardController {
 			Vertex v = vertices[t.getX()][t.getY()];
 			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
 		}
-	}	
+	}
+
+	public void setCurrentMode(MODE currentMode) {
+		this.currentMode = currentMode;
+	}
+
+	public MODE getCurrentMode() {
+		return currentMode;
+	}
+
+	public void updateCurrentTurn() {
+		this.currentTurn = (currentTurn + 1) % players.length;	
+	}
 } 

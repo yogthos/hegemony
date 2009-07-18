@@ -8,7 +8,7 @@ public class VillageTile extends Tile {
 	
 	public VillageTile(int x, int y) {
 		super(x,y);
-		items.add(new Village());
+		setVillage(new Village());
 	}
 	
 	@Override

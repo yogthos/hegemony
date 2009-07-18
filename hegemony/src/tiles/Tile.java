@@ -3,10 +3,9 @@ package tiles;
 import game.Edge;
 import game.ResourceLoader;
 import gamepieces.GamePiece;
-
 import java.awt.Image;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public abstract class Tile implements Comparable<Tile> {
 
@@ -17,20 +16,27 @@ public abstract class Tile implements Comparable<Tile> {
 			ResourceLoader.getInstance().getSprite(sprite);
 		}
 	}
+		
+	protected int x;
+	protected int y;
+	protected Edge topEdge;	
+	protected Edge bottomEdge;
+	protected Edge leftEdge;
+	protected Edge rightEdge;
 	
-	protected List<GamePiece> items = new ArrayList<GamePiece>();
+	protected Tile topTile;
+	protected Tile bottomTile;
+	protected Tile leftTile;
+	protected Tile rightTile;
 	
-	private int x;
-	private int y;
-	private Edge topEdge;	
-	private Edge bottomEdge;
-	private Edge leftEdge;
-	private Edge rightEdge;
+	protected GamePiece castle = null;
+	protected GamePiece knight = null;
+	protected GamePiece forest = null;
+	protected GamePiece village = null;
+	protected GamePiece mine = null;
+	protected GamePiece capital = null;
 	
-	private Tile topTile;
-	private Tile bottomTile;
-	private Tile leftTile;
-	private Tile rightTile;
+	protected Set<GamePiece> items = new HashSet<GamePiece>();
 	
 	public enum Type {
 		FOREST,
@@ -44,7 +50,14 @@ public abstract class Tile implements Comparable<Tile> {
 	}
 
 	public abstract Type getType();
-	public abstract int getValue();
+	public int getValue() {
+		int value = 0;
+		for (GamePiece item : items) {
+			value += item.getValue();	
+		}
+		
+		return value;
+	}
 	
 	public Tile(int x, int y) {
 		this.x = x;
@@ -54,15 +67,7 @@ public abstract class Tile implements Comparable<Tile> {
 	public Image draw() {
 		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
-	
-	public List<GamePiece> getItems() {
-		return items;
-	}	
-	
-	public void placeItem(GamePiece piece) {
-		items.add(piece);
-	}
-	
+		
 	public Edge getTopEdge() {
 		return topEdge;
 	}
@@ -125,6 +130,70 @@ public abstract class Tile implements Comparable<Tile> {
 	}
 	public void setRightTile(Tile rightTile) {
 		this.rightTile = rightTile;
+	}
+	
+	
+	
+	public GamePiece getCastle() {
+		return castle;
+	}
+	public void setCastle(GamePiece castle) {
+		items.add(castle);
+		this.castle = castle;
+	}
+	public GamePiece getKnight() {		
+		return knight;
+	}
+	public void setKnight(GamePiece knight) {
+		items.add(knight);
+		this.knight = knight;
+	}
+	
+	public void removeKnight() {
+		items.remove(knight);
+		knight = null;		
+	}
+	
+	public GamePiece getForest() {
+		return forest;
+	}
+	public void setForest(GamePiece forest) {
+		items.add(forest);
+		this.forest = forest;
+	}
+	public GamePiece getVillage() {		
+		return village;
+	}
+	public void setVillage(GamePiece village) {
+		items.add(village);
+		this.village = village;
+	}
+	public GamePiece getMine() {
+		return mine;
+	}
+	public void setMine(GamePiece mine) {
+		items.add(mine);
+		this.mine = mine;
+	}
+	public GamePiece getCapital() {
+		return capital;
+	}
+	
+	public void setCapital(GamePiece capital) {
+		items.add(capital);
+		this.capital = capital;
+	}
+	
+	public Set<GamePiece> getItems() {
+		return items;
+	}
+	
+	public int getPosX() {
+		return x*Edge.LENGTH;
+	}
+	
+	public int getPosY() {
+		return y*Edge.LENGTH;
 	}
 	
 	public String toString() {

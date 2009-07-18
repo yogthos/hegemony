@@ -11,14 +11,17 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	
 	public BoardController.MODE currentMode;
 	private BoardController board;
-	private int size;
 	
 	public GameCanvas(BoardController board, int size) {
 		this.board = board;
-		this.size = size;
 		setSize(size,size);		
 		addMouseListener(this);
 		addMouseMotionListener(this);
+		currentMode = BoardController.MODE.PLACE_WALL;
+	}
+	
+	public void setCurrentMode(BoardController.MODE mode) {
+		currentMode = mode;
 	}
 	
 	@Override
@@ -56,14 +59,12 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		else if (BoardController.MODE.PLACE_WALL == currentMode)
 			board.placeEdge(e.getX(), e.getY());
 
-	    e.consume();
-		
+	    e.consume();		
 	}
 
 	@Override
 	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		// TODO Auto-generated method stub		
 	}
 
 	
@@ -75,8 +76,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		}
 		
 		if (BoardController.MODE.PLACE_WALL == currentMode){			
-			board.createOverlay(e.getX(), e.getY());
-			
+			board.createOverlay(e.getX(), e.getY());			
 		}
 		e.consume();		
 	}
