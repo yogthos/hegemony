@@ -24,6 +24,12 @@ public class ControlsPanel extends JFrame {
         panel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
         add(panel);
         pack();
+        /*
+		add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
+        add(new ModeButton(BoardController.MODE.PLACE_WALL));
+        add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
+        add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+        */
 	    setVisible(true);
 		
 	}

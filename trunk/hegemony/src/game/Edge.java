@@ -17,16 +17,9 @@ public class Edge {
 	private boolean vertical = false;
 	private boolean active = false;
 	private boolean selected = false;
-	private boolean hidden = false;
 	
 	static {
 		LENGTH = GameCore.BOARD_SIZE/BoardController.size;
-	}
-	
-	public Edge(Vertex first, Vertex second, boolean vertical, boolean hidden) {
-		this(first, second, vertical);
-		this.hidden = hidden;
-		this.active = true;
 	}
 	
 	public Edge(Vertex first, Vertex second, boolean vertical) {
@@ -111,13 +104,5 @@ public class Edge {
 	
 	public String toString() {
 		return "[" + first.getX() + "," + first.getY() + "]-" + (active?"active":"inactive") + "->[" + second.getX() + "," + second.getY() + "]";
-	}
-
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
-
-	public boolean isHidden() {
-		return hidden;
-	}
+	}	
 }
