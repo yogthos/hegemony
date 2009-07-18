@@ -69,10 +69,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-		//if (e.getX() > size -1 || e.getY() > size -1) {
-			System.out.println(e.getX() + ", " + e.getY());
-//			return;
-//		}
+
+		if (e.getX()/Edge.LENGTH > BoardController.size - 1 || e.getY()/Edge.LENGTH > BoardController.size - 1) {
+			return;
+		}
 		
 		if (BoardController.MODE.PLACE_WALL == currentMode){			
 			board.createOverlay(e.getX(), e.getY());
