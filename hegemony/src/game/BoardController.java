@@ -126,7 +126,7 @@ public class BoardController {
 	private void drawEdgeColumn(Vertex v, Graphics g) {
 		Edge leftEdge = v.getLeftEdge();
 		if (null != leftEdge) {
-			if ((leftEdge.isActive() || leftEdge.isSelected()) && !leftEdge.isHidden()) {
+			if ((leftEdge.isActive() || leftEdge.isSelected())) {
 				g.drawImage(leftEdge.draw(),leftEdge.getPosX() - Vertex.SIZE, leftEdge.getPosY() - Vertex.SIZE*2, null);
 			}
 		}
@@ -137,7 +137,7 @@ public class BoardController {
 		
 		Edge bottomEdge = v.getBottomEdge();
 		if (null != bottomEdge) {
-			if ((bottomEdge.isActive() || bottomEdge.isSelected()) && !bottomEdge.isHidden()) {
+			if ((bottomEdge.isActive() || bottomEdge.isSelected())) {
 				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX()  - Vertex.SIZE, bottomEdge.getPosY() - Vertex.SIZE, null);
 			}
 			drawEdgeColumn(bottomEdge.getSecond(), g);

@@ -26,7 +26,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		board = new BoardController(12, 4);		
 		Thread t = new Thread(this);
 		
-		gameCanvas = new GameCanvas(board, BOARD_SIZE);				
+		gameCanvas = new GameCanvas(board, BOARD_SIZE);						
 		
 		setIgnoreRepaint(true);
 		t.start();
@@ -48,21 +48,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Show bufferStrategy
 			bufferStrategy.show();
 		}
-	}
-
-	// Return drawArea's BufferStrategy
-	public BufferStrategy getBufferStrategy() {
-		return bufferStrategy;
-	}
-
-	// Create drawArea's BufferStrategies
-	public void createBufferStrategy(int numBuffers) {
-		gameCanvas.createBufferStrategy(numBuffers);
-	}
-
-	// Subclasses should override this method to do any drawing
-	public void draw(Graphics2D g) {
-
 	}
 
 	public void update(Graphics2D g) {
@@ -89,13 +74,18 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		setBackground(Color.black);
 		
 				
-		setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));		
-		add(gameCanvas);					    
-		new ControlsPanel(gameCanvas);
+		setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
+		//javax.swing.JPanel gamePanel = new javax.swing.JPanel();
+		//gamePanel.add(gameCanvas);
+		//add(gamePanel);		
+		//add(new ControlsPanel(gameCanvas));
 	    
-		createBufferStrategy(2);
+		add(gameCanvas);					
+		new ControlsPanel(gameCanvas);
+		
+		gameCanvas.createBufferStrategy(2);
 		bufferStrategy = gameCanvas.getBufferStrategy();
-
+		
 		long startTime = System.currentTimeMillis();
 		long currTime = startTime;
 
@@ -116,11 +106,11 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Handle Drawing
 			Graphics2D g = getGraphics();
 			update(g);
-			draw(g);
 
 			// Dispose of graphics context
 			g.dispose();
 		}
+		
 	}
 
 	@Override
