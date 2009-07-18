@@ -8,7 +8,7 @@ import java.awt.Image;
 public class Castle extends GamePiece {
 
 	private static String[] sprites = {"castle.png"};
-	private int value = 1;
+	private int value = 0;
 	private Player player;
 	
 	public Castle(Player player) {

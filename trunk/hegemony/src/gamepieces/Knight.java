@@ -9,7 +9,7 @@ public class Knight extends GamePiece {
 
 	private static final String[] sprites = {"knight.png"};
 	
-	private int value = 1;
+	private int value = 0;
 	private Player player = null;
 	
 	public Knight(Player player) {
