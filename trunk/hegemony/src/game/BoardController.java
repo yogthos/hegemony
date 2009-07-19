@@ -219,8 +219,50 @@ public class BoardController {
 			return false;
 		if (null != tile.getKnight())
 			return false;
-		//TODO: check that knight is connected to a castle or a knight
 		
+		//check that knight is connected to a castle or a knight
+		Knight knight = null;
+		Castle castle = null;
+		Tile top = tile.getTopTile();
+	    Tile bottom = tile.getBottomTile();
+	    Tile left = tile.getLeftTile();
+	    Tile right = tile.getRightTile();
+	    
+	    if (null != top && null != top.getCastle() && !tile.getTopEdge().isActive())
+	    	castle = (Castle)top.getCastle();
+	    else if (null != bottom && null != bottom.getCastle() && !tile.getBottomEdge().isActive())
+	    	castle = (Castle)bottom.getCastle();
+	    else if(null != left && null != left.getCastle() && !tile.getLeftEdge().isActive())
+	    	castle = (Castle)left.getCastle();
+	    else if(null != right && null != right.getCastle() && !tile.getRightEdge().isActive())
+	    	castle = (Castle)right.getCastle();
+	    
+	    if (null != top && null != top.getKnight() && !tile.getTopEdge().isActive())
+	    	knight = (Knight)top.getKnight();
+	    else if (null != bottom && null != bottom.getKnight() && !tile.getBottomEdge().isActive())
+	    	knight = (Knight)bottom.getKnight();
+	    else if(null != left && null != left.getKnight() && !tile.getLeftEdge().isActive())
+	    	knight = (Knight)left.getKnight();
+	    else if(null != right && null != right.getKnight() && !tile.getRightEdge().isActive())
+	    	knight = (Knight)right.getKnight();
+	    
+	    if (null == castle && null == knight)
+	    	return false;
+	    else if (null != castle) {
+	    	if(!castle.getPlayer().equals(players[currentTurn])) {
+	    		if (null != knight ) {
+	    			if (!knight.getPLayer().equals(players[currentTurn])) {
+	    				return false;
+	    			}
+	    		}
+	    	}
+	    } else if (null != knight) {	    	
+   			if (!knight.getPLayer().equals(players[currentTurn])) {
+   				return false;
+   			}
+	    }
+	    	    	
+	    
 		tile.setKnight(new Knight(players[currentTurn]));
 		return true;
 	}

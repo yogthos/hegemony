@@ -14,7 +14,8 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	
 	public GameCanvas(BoardController board, int size) {
 		this.board = board;
-		setSize(size,size);		
+		setSize(size,size);
+		
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		currentMode = BoardController.MODE.PLACE_WALL;

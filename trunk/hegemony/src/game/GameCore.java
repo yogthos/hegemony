@@ -21,8 +21,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	private GameCanvas gameCanvas;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
-	public void init() {
-		
+	public void init() {						
 		board = new BoardController(12, 4);		
 		Thread t = new Thread(this);
 		
@@ -63,7 +62,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 	}
 
-	public Graphics2D getGraphics() {
+	public Graphics2D getGraphics() {				
 		return (Graphics2D) bufferStrategy.getDrawGraphics();
 	}
 
@@ -79,10 +78,12 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		//gamePanel.add(gameCanvas);
 		//add(gamePanel);		
 		//add(new ControlsPanel(gameCanvas));
+		
 	    
 		add(gameCanvas);					
 		new ControlsPanel(gameCanvas);
 		
+
 		gameCanvas.createBufferStrategy(2);
 		bufferStrategy = gameCanvas.getBufferStrategy();
 		
@@ -109,8 +110,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 			// Dispose of graphics context
 			g.dispose();
-		}
-		
+		}		
 	}
 
 	@Override
