@@ -31,6 +31,8 @@ public class BoardController {
 	private Player[] players = null;
 	private int currentTurn = 0;
 	
+	private List<Set<Tile>> areas = new ArrayList<Set<Tile>>();
+	
 	private MODE currentMode;
 	public enum MODE {
 		PLACE_CASTLE,
@@ -220,6 +222,14 @@ public class BoardController {
 		if (null != tile.getKnight())
 			return false;
 		
+		boolean isInArea = false;
+		for (Set<Tile> area : areas) {
+			if (area.contains(tile))
+				isInArea = true;
+		}
+		if (!isInArea)
+			return false;
+		
 		//check that knight is connected to a castle or a knight
 		Knight knight = null;
 		Castle castle = null;
@@ -377,6 +387,7 @@ public class BoardController {
 	}
 	
 	private void findLoops(Graphics g) {
+		areas.clear();
 	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
 	    Set<Tile> visited = new HashSet<Tile>();	    
 	    toVisit.add(tiles[0][0]);
@@ -386,7 +397,8 @@ public class BoardController {
 	        Set<Tile> traversed = new HashSet<Tile>();
 	        List<GamePiece> castles = new ArrayList<GamePiece>();
 	        findConnected(toVisit.first(), traversed, visited, toVisit, castles);
-	       
+	        if (traversed.size() > 0)
+	        	areas.add(traversed);
 	        if (castles.size() == 1) {	        	
 	        	paintTiles(traversed, g);
 	        }
