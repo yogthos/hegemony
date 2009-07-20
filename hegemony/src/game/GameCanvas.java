@@ -9,7 +9,6 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 	private static final long serialVersionUID = 1L;
 	
-	public BoardController.MODE currentMode;
 	private BoardController board;
 	
 	public GameCanvas(BoardController board, int size) {
@@ -18,11 +17,11 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		currentMode = BoardController.MODE.PLACE_WALL;
+		board.setCurrentMode(BoardController.MODE.PLACE_WALL);
 	}
 	
 	public void setCurrentMode(BoardController.MODE mode) {
-		currentMode = mode;
+		board.setCurrentMode(mode);
 	}
 	
 	@Override
@@ -51,15 +50,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		if (BoardController.MODE.PLACE_CASTLE == currentMode)
-			board.placeCastle(e.getX(), e.getY());
-		else if (BoardController.MODE.EXPAND_AREA == currentMode)
-			board.expandTerritory(e.getX(), e.getY());
-		else if (BoardController.MODE.PLACE_KNIGHT == currentMode)
-			board.placeKnight(e.getX(), e.getY());
-		else if (BoardController.MODE.PLACE_WALL == currentMode)
-			board.placeEdge(e.getX(), e.getY());
-
+		board.handlePlayerAction(e.getX(), e.getY(), true);
 	    e.consume();		
 	}
 
@@ -75,10 +66,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		if (e.getX()/Edge.LENGTH > BoardController.size - 1 || e.getY()/Edge.LENGTH > BoardController.size - 1) {
 			return;
 		}
-		
-		if (BoardController.MODE.PLACE_WALL == currentMode){			
-			board.createOverlay(e.getX(), e.getY());			
-		}
+		board.handlePlayerAction(e.getX(), e.getY(), false);
 		e.consume();		
 	}
 

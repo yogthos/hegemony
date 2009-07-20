@@ -209,6 +209,24 @@ public class BoardController {
 	}
 
 	///////////Mode Actions/////////////
+	public void handlePlayerAction(int x, int y, boolean clicked) {
+		if (clicked) {
+			if (MODE.PLACE_CASTLE == currentMode)
+				placeCastle(x, y);
+			else if (MODE.EXPAND_AREA == currentMode)
+				expandTerritory(x, y);
+			else if (MODE.PLACE_KNIGHT == currentMode)
+				placeKnight(x, y);
+			else if (MODE.PLACE_WALL == currentMode)
+				placeEdge(x, y);
+		}
+		else {
+			if (MODE.PLACE_WALL == currentMode){			
+				createOverlay(x,y);			
+			}
+		}
+	}
+	
 	public boolean placeCastle(int x, int y) {
 		System.out.println("In castle mode");
 		int xPos = (int)(x/(double)Edge.LENGTH);
