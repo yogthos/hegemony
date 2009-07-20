@@ -1,12 +1,7 @@
 package gamepieces;
 
-import game.ResourceLoader;
-
-import java.awt.Image;
-
 public class Mine extends GamePiece {
 
-	private static final String[] sprites = {"mine.png"};
 	private int type;
 	private Types mine_type;
 	private int value = 1;
@@ -20,16 +15,15 @@ public class Mine extends GamePiece {
 	
 	
 	public Mine(Types mine_type) {
+		sprites = new String[]{"mine.png"};
+		
+		frame = 0;
+		frameSpeed = 35;
 		this.mine_type = mine_type;
 	}
 
 	
 	public int getValue() {
 		return value;
-	}
-	
-	@Override
-	public Image draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 }

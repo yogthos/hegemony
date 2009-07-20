@@ -3,6 +3,7 @@ package game;
 import gamepieces.Castle;
 import gamepieces.GamePiece;
 import gamepieces.Knight;
+import gamepieces.Tree;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -60,6 +61,16 @@ public class BoardController {
 		drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
 	}
 	
+	public void updateWorld() {
+		for (int x = 0; x < tiles.length; x++) {
+			for (int y = 0; y < tiles.length; y++) {
+				for (GamePiece item : tiles[x][y].getItems()) {
+					item.act();
+				}
+			}
+		}
+	}
+	
 	public Image draw() {
 		
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -107,7 +118,8 @@ public class BoardController {
 			for (int y = 0; y < tiles.length; y++) {
 				
 				for (GamePiece piece : tiles[x][y].getItems()) {
-					g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
+					if (!(piece instanceof Tree))
+						g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
 				}
 				
 			}
@@ -169,7 +181,8 @@ public class BoardController {
 				
 				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
 				
-					tiles[x][y] = new GrassTile(x,y);
+					//tiles[x][y] = new GrassTile(x,y);
+					tiles[x][y] = new WoodTile(x,y);
 				}
 			}
 		}
