@@ -1,17 +1,17 @@
 package gamepieces;
 
 import game.Player;
-import game.ResourceLoader;
-
-import java.awt.Image;
 
 public class Castle extends GamePiece {
 
-	private static String[] sprites = {"castle.png"};
 	private int value = 0;
 	private Player player;
 	
 	public Castle(Player player) {
+		
+		sprites = new String[]{"castle.png"};
+		frame = 0;
+		frameSpeed = 35;
 		this.player = player;
 	}
 	
@@ -21,10 +21,5 @@ public class Castle extends GamePiece {
 	
 	public Player getPlayer() {
 		return player;
-	}
-	
-	@Override
-	public Image draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 }

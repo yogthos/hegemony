@@ -1,18 +1,19 @@
 package gamepieces;
 
 import game.Player;
-import game.ResourceLoader;
-
-import java.awt.Image;
 
 public class Knight extends GamePiece {
 
-	private static final String[] sprites = {"knight.png"};
+
 	
 	private int value = 0;
 	private Player player = null;
 	
 	public Knight(Player player) {
+		sprites = new String[]{"knight0.png","knight1.png"};
+		
+		frame = 0;
+		frameSpeed = 60;
 		this.player = player;
 	}
 	
@@ -22,10 +23,5 @@ public class Knight extends GamePiece {
 	
 	public Player getPLayer() {
 		return player;
-	}
-	
-	@Override
-	public Image draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
-	}
+	}		
 }

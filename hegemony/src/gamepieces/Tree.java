@@ -1,20 +1,17 @@
 package gamepieces;
 
-import java.awt.Image;
-
-import game.ResourceLoader;
-
 public class Tree extends GamePiece {
-	private static final String[] sprites = {"tree.png"};
 	
 	private int value = 1;
 	
-	public int getValue() {
-		return value;
+	public Tree () {
+		sprites = new String[]{"tree.png"};
+		
+		frame = 0;
+		frameSpeed = 35;
 	}
 	
-	@Override
-	public Image draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
+	public int getValue() {
+		return value;
 	}
 }

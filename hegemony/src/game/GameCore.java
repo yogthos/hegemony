@@ -58,8 +58,8 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	}
 
 	// Update any sprites, images, or primitives
-	public void update(long time) {
-
+	public void updateWorld(long time) {
+		board.updateWorld();
 	}
 
 	public Graphics2D getGraphics() {				
@@ -102,7 +102,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			update();
 
 			// Update any sprites or other graphical objects
-			update(elapsedTime);
+			updateWorld(elapsedTime);
 
 			// Handle Drawing
 			Graphics2D g = getGraphics();
