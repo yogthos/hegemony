@@ -10,8 +10,10 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -32,7 +34,7 @@ public class BoardController {
 	private Player[] players = null;
 	private int currentTurn = 0;
 	
-	private List<Set<Tile>> areas = new ArrayList<Set<Tile>>();
+	private Map<Player, List<Set<Tile>>> areas = new HashMap<Player, List<Set<Tile>>>();
 	
 	private MODE currentMode;
 	public enum MODE {
@@ -254,7 +256,8 @@ public class BoardController {
 			return false;
 		
 		boolean isInArea = false;
-		for (Set<Tile> area : areas) {
+	    List<Set<Tile>> playerAreas = areas.get(players[currentTurn]);
+		for (Set<Tile> area : playerAreas) {
 			if (area.contains(tile))
 				isInArea = true;
 		}
@@ -289,6 +292,8 @@ public class BoardController {
 	    
 	    if (null == castle && null == knight)
 	    	return false;
+	    	   
+	    /*
 	    else if (null != castle) {
 	    	if(!castle.getPlayer().equals(players[currentTurn])) {
 	    		if (null != knight ) {
@@ -302,14 +307,39 @@ public class BoardController {
    				return false;
    			}
 	    }
+	    */
 	    	    	
 	    
 		tile.setKnight(new Knight(players[currentTurn]));
 		return true;
 	}
 	
-	public void expandTerritory(int x, int y) {
+	public boolean expandTerritory(int x, int y) {
 		System.out.println("In expand mode");
+		
+		int xPos = (int)(x/(double)Edge.LENGTH);
+		int yPos = (int)(y/(double)Edge.LENGTH);
+		Tile tile = tiles[xPos][yPos];
+		
+		Tile top = tile.getTopTile();
+	    Tile bottom = tile.getBottomTile();
+	    Tile left = tile.getLeftTile();
+	    Tile right = tile.getRightTile();
+	    
+	    Tile adjacentFriendly = null;
+	    /*
+	    for (Set<Tile> area : areas.get(players[currentTurn])) {
+	    	if (area.contains(tile) && ) {
+	    		return false;
+	    	}	    		    		
+	    }
+	    
+	    for (Set<Tile> area : areas) {
+	    	if (area.contains(top)) {
+	    	}
+    	}
+	    */
+	    return true;
 	}
 	
 	public void placeEdge(int x, int y) {
@@ -426,23 +456,28 @@ public class BoardController {
 	    while(!toVisit.isEmpty()) 
 	    {
 	        Set<Tile> traversed = new HashSet<Tile>();
-	        List<GamePiece> castles = new ArrayList<GamePiece>();
+	        List<Castle> castles = new ArrayList<Castle>();
 	        findConnected(toVisit.first(), traversed, visited, toVisit, castles);
-	        if (traversed.size() > 0)
-	        	areas.add(traversed);
-	        if (castles.size() == 1) {	        	
+	        
+	        if (castles.size() == 1) {
+	        	List<Set<Tile>> playerAreas = areas.get(castles.get(0).getPlayer());
+	        	if (null == playerAreas) {
+	        		playerAreas = new ArrayList<Set<Tile>>();
+	        		areas.put(castles.get(0).getPlayer(), playerAreas);
+	        	}
+	        	playerAreas.add(traversed);
 	        	paintTiles(traversed, g);
 	        }
 	    } 	    
 	}
 	
-	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit, List<GamePiece> castles) {
+	private void findConnected(Tile tile, Set<Tile> traversed, Set<Tile> visited, Set<Tile> toVisit, List<Castle> castles) {
 	    traversed.add(tile);
 	    visited.add(tile);
 	    toVisit.remove(tile);
 	    
 	    if (null != tile.getCastle())
-	    	castles.add(tile.getCastle());
+	    	castles.add((Castle)tile.getCastle());
 	    
 	    Tile top = tile.getTopTile();
 	    Tile bottom = tile.getBottomTile();
