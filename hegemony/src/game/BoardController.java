@@ -29,7 +29,7 @@ public class BoardController {
 	private Tile[][] tiles = null;
 	private Image boardImage = null;
 	private Image terrainImage = null;
-	private Image highlightsImage = null;
+	//private Image highlightsImage = null;
 	private Edge lastSelected;
 	private Player[] players = null;
 	private int currentTurn = 0;
@@ -79,7 +79,10 @@ public class BoardController {
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,0,0,null);
-		if (null != highlightsImage) g.drawImage(highlightsImage,0,0,null);
+
+		Image highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		paintTiles(highlightsImage.getGraphics());
+		g.drawImage(highlightsImage,0,0,null);
 		
 		draw(vertices[0][0], g);
 		g.drawImage(terrainImage,0,0,null);
@@ -167,6 +170,30 @@ public class BoardController {
 		}	
 	}
 	
+	private void paintTiles(Graphics g) {
+		
+		
+		//System.out.println("found loop of size: " + tiles.size());
+		for (Player p : areas.keySet()) {
+			for (Set<Tile> tiles : areas.get(p)) {
+				for (Tile t : tiles) {
+					Vertex v = vertices[t.getX()][t.getY()];
+					g.drawImage(createOverlay(p.getColor()), v.getPosX(), v.getPosY(), null);
+				}
+			}
+		}
+	}
+	
+	private Image createOverlay(Color c) {
+		BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
+		Graphics g1 =image.getGraphics();
+		g1.setColor(Color.red);
+		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
+		
+		return ResourceLoader.getImageWithOpacity(image, 0.3f);
+	}
+	
+	////Initialize the board
 				
 	private void generateEdgesAndVertices(int size) {
 		
@@ -318,34 +345,126 @@ public class BoardController {
 	    Tile left = tile.getLeftTile();
 	    Tile right = tile.getRightTile();
 	    
-	    boolean isInFriendlyArea = false;
-	    Tile adjacentFriendly = null;
+	    Player areaOwner = null;
+	    Set<Tile> tileArea = null; 
+	    Set<Tile> topArea = null;
+	    Set<Tile> bottomArea = null;
+	    Set<Tile> leftArea = null;
+	    Set<Tile> rightArea = null;
+	   
+	    boolean topFriendly = false;
+	    boolean bottomFriendly = false;
+	    boolean leftFriendly = false;
+	    boolean rightFriendly = false;
+	    
+	    
 	    
 	    for (Player p : areas.keySet()) {
 	    	for (Set<Tile> area : areas.get(p)) {
 	    		
-	    		if (area.contains(tile) && p.equals(players[currentTurn])) {
-	    			isInFriendlyArea = true;
-	    		}	    		    		
-	    		
+	    		if (area.contains(tile)) 
+	    			areaOwner = p;	    		
+	    		if (area.contains(top)) {
+	    			tileArea = area;
+	    			if (p.equals(players[currentTurn])) { 
+	    				topFriendly = true;
+	    				topArea = area;
+	    			}
+	    		}
+	    		if (area.contains(bottom)) {
+	    			tileArea = area;
+	    			if (p.equals(players[currentTurn])) {
+	    				bottomFriendly = true;
+	    				bottomArea = area;
+	    			}
+	    		}
+	    		if (area.contains(left)) {
+	    			tileArea = area;
+	    			if (p.equals(players[currentTurn])) {
+	    				leftFriendly = true;
+	    				leftArea = area;
+	    			}
+	    		}
+	    		if (area.contains(right)) {
+	    			tileArea = area;	    	
+	    			if (p.equals(players[currentTurn])) {
+	    				rightFriendly = true;
+	    				rightArea = area;
+	    			}
+	    		}
 	    	}
 	    }
 	    
-	    if (isInFriendlyArea)
+	    if (!topFriendly && !bottomFriendly && !leftFriendly && !rightFriendly)
 	    	return false;
 	    
+	    //check if the area is valid for expansion
+	    if (null != areaOwner && !players[currentTurn].equals(areaOwner)) {
+	    	int numOpposingKnights = countKnightsInArea(tileArea);
+	    	int numFriendlyKnights = 0;
+	    	if (topFriendly) {
+	    		int knights = countKnightsInArea(topArea);
+	    		if (knights > numFriendlyKnights)
+	    			numFriendlyKnights = knights;
+	    	}
+	    	if (bottomFriendly) {
+	    		int knights = countKnightsInArea(bottomArea);
+	    		if (knights > numFriendlyKnights)
+	    			numFriendlyKnights = knights;
+	    	}
+	    	if (leftFriendly) {
+	    		int knights = countKnightsInArea(leftArea);
+	    		if (knights > numFriendlyKnights)
+	    			numFriendlyKnights = knights;
+	    	}
+	    	if (rightFriendly) {
+	    		int knights = countKnightsInArea(rightArea);
+	    		if (knights > numFriendlyKnights)
+	    			numFriendlyKnights = knights;
+	    	}
+	    	if (numFriendlyKnights < numOpposingKnights)
+	    		return false;
+	    	
+	    }
 	    
+	    //expand area
+	    tile.getTopEdge().setActive(true);
+    	tile.getLeftEdge().setActive(true);
+    	tile.getRightEdge().setActive(true);
+    	tile.getBottomEdge().setActive(true);
+    	
+	    if (topFriendly) {
+	    	tile.getTopEdge().setActive(false);
+	    } 
+	    if (bottomFriendly) {
+	    	tile.getBottomEdge().setActive(false);
+	    }
+	    if (leftFriendly) {
+	    	tile.getLeftEdge().setActive(false);
+	    }
+	    if (rightFriendly) {
+	    	tile.getRightEdge().setActive(false);
+	    }
+	    
+	    findLoops();
 	    return true;
+	}
+	
+	private int countKnightsInArea(Set<Tile> area) {
+		int numOpposingKnights = 0;
+    	for (Tile t : area) {
+    		if (null != t.getKnight())
+    			numOpposingKnights++;
+    	}
+    	return numOpposingKnights; 
 	}
 	
 	public void placeEdge(int x, int y) {
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
-		updateEdgeStatus(xPos,yPos);		
-		
-		highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);				
-		findLoops(highlightsImage.getGraphics());
+		updateEdgeStatus(xPos,yPos);									
+		findLoops();
 	}
 	
 	private void updateEdgeStatus(double x, double y){
@@ -443,7 +562,7 @@ public class BoardController {
 		selectEdge(xPos,yPos);		
 	}
 	
-	private void findLoops(Graphics g) {
+	private void findLoops() {
 		areas.clear();
 	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
 	    Set<Tile> visited = new HashSet<Tile>();	    
@@ -462,7 +581,7 @@ public class BoardController {
 	        		areas.put(castles.get(0).getPlayer(), playerAreas);
 	        	}
 	        	playerAreas.add(traversed);
-	        	paintTiles(traversed, g);
+	        	//paintTiles(traversed, g);
 	        }
 	    } 	    
 	}
@@ -506,21 +625,6 @@ public class BoardController {
 	    }
 	}
 	
-	
-	private void paintTiles(Set<Tile> tiles, Graphics g) {
-		BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
-		Graphics g1 =image.getGraphics();
-		g1.setColor(Color.red);
-		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
-		
-		Image overlay = ResourceLoader.getImageWithOpacity(image, 0.3f);
-		
-		//System.out.println("found loop of size: " + tiles.size());
-		for (Tile t : tiles) {
-			Vertex v = vertices[t.getX()][t.getY()];
-			g.drawImage(overlay, v.getPosX(), v.getPosY(), null);
-		}
-	}
 
 	public void setCurrentMode(MODE currentMode) {
 		this.currentMode = currentMode;
