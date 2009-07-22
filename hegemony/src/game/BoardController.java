@@ -54,6 +54,7 @@ public class BoardController {
 		for (int i = 0; i < numPlayers; i++) {
 			players[i] = new Player();
 		}
+		//TODO: comment out
 		tiles = new Tile[size-1][size-1];		
 		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -107,6 +108,12 @@ public class BoardController {
 			boardG.drawImage(tiles[x][y].draw(), posX, posY, null);
 			if (null != tiles[x][y].getForest())
 				terrainG.drawImage(tiles[x][y].getForest().draw(), posX, posY, null);
+			if (null != tiles[x][y].getMine())
+				terrainG.drawImage(tiles[x][y].getMine().draw(), posX, posY, null);			
+			if (null != tiles[x][y].getCapital())
+				terrainG.drawImage(tiles[x][y].getCapital().draw(), posX, posY, null);
+			if (null != tiles[x][y].getVillage())
+				terrainG.drawImage(tiles[x][y].getVillage().draw(), posX, posY, null);
 			
 			Edge bottomEdge = v.getBottomEdge();
 			if (null != bottomEdge) {
@@ -181,13 +188,15 @@ public class BoardController {
 					new Edge(vertices[x][y], vertices[x][y + 1], true);
 				}
 				
-				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
-				
-					//tiles[x][y] = new GrassTile(x,y);
-					tiles[x][y] = new WoodTile(x,y);
+				//TODO: remove and replace with the generator
+				if (x < vertices.length - 1 && y < vertices[x].length - 1) {									
+					tiles[x][y] = new GrassTile(x,y);
+					//tiles[x][y] = new WoodTile(x,y);
 				}
 			}
 		}
+		//TODO: generate tiles with tile generator:
+		//tiles = new GameBoard(size - 1).getBoard(); 
 		
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {
@@ -291,24 +300,7 @@ public class BoardController {
 	    	knight = (Knight)right.getKnight();
 	    
 	    if (null == castle && null == knight)
-	    	return false;
-	    	   
-	    /*
-	    else if (null != castle) {
-	    	if(!castle.getPlayer().equals(players[currentTurn])) {
-	    		if (null != knight ) {
-	    			if (!knight.getPLayer().equals(players[currentTurn])) {
-	    				return false;
-	    			}
-	    		}
-	    	}
-	    } else if (null != knight) {	    	
-   			if (!knight.getPLayer().equals(players[currentTurn])) {
-   				return false;
-   			}
-	    }
-	    */
-	    	    	
+	    	return false;	    	    	
 	    
 		tile.setKnight(new Knight(players[currentTurn]));
 		return true;
@@ -326,19 +318,23 @@ public class BoardController {
 	    Tile left = tile.getLeftTile();
 	    Tile right = tile.getRightTile();
 	    
+	    boolean isInFriendlyArea = false;
 	    Tile adjacentFriendly = null;
-	    /*
-	    for (Set<Tile> area : areas.get(players[currentTurn])) {
-	    	if (area.contains(tile) && ) {
-	    		return false;
-	    	}	    		    		
+	    
+	    for (Player p : areas.keySet()) {
+	    	for (Set<Tile> area : areas.get(p)) {
+	    		
+	    		if (area.contains(tile) && p.equals(players[currentTurn])) {
+	    			isInFriendlyArea = true;
+	    		}	    		    		
+	    		
+	    	}
 	    }
 	    
-	    for (Set<Tile> area : areas) {
-	    	if (area.contains(top)) {
-	    	}
-    	}
-	    */
+	    if (isInFriendlyArea)
+	    	return false;
+	    
+	    
 	    return true;
 	}
 	
