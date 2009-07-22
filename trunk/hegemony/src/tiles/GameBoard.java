@@ -43,7 +43,7 @@ public class GameBoard {
 	 * @param y - The y coord relative to the rotated board piece.
 	 * @return The tile that would be in position x, y on the rotated board.
 	 */
-	public Tile getTile(int x, int y) {
+	private Tile getTile(int x, int y) {
 		return rotation.rotate(board, x, y);
 	}
 	
