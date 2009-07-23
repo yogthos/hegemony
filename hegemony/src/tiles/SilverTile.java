@@ -2,7 +2,7 @@ package tiles;
 
 import gamepieces.Mine;
 
-public class SilverTile extends Tile {
+public class SilverTile extends Tile implements MineTile {
 
 	private static final int value = 0;
 	
