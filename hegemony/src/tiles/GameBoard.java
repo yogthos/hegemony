@@ -105,7 +105,7 @@ public class GameBoard {
 					subboard = generateCenterBoard(DEFAULT_TILES, r, woods, fields);
 				}
 				for (int array = 0; array < x; array++) {
-					//TODO Fix this array copy
+					//TODO Fix this array copy once I feel less burnt out.
 
 					//System.arraycopy(subboard[array], 0, board[y_multiplier * array], , subboard[array].length);
 				}
