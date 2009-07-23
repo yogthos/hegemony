@@ -22,6 +22,7 @@ public class ControlsPanel extends JFrame {
         panel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
         panel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
         panel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+        panel.add(new TurnButton());
         add(panel);
         pack();
         /*
@@ -31,6 +32,21 @@ public class ControlsPanel extends JFrame {
         add(new ModeButton(BoardController.MODE.EXPAND_AREA));
         */
 	    setVisible(true);
+		
+	}
+	
+	private class TurnButton extends JButton implements ActionListener {
+
+		public TurnButton() {
+			super();
+			setText("Next Turn");
+			addActionListener(this);
+		}
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			canvas.getBoard().updateCurrentTurn();
+			
+		}
 		
 	}
 	

@@ -24,6 +24,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		board.setCurrentMode(mode);
 	}
 	
+	public BoardController getBoard() {
+		return board;
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		// TODO Auto-generated method stub
