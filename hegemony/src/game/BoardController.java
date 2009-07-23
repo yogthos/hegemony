@@ -48,12 +48,21 @@ public class BoardController {
 		
 	}
 	
+		
 	public BoardController(int size, int numPlayers) {
 		BoardController.size = size;	
 		players = new Player[numPlayers];
+		
+		
 		for (int i = 0; i < numPlayers; i++) {
 			players[i] = new Player();
 		}
+		//TODO: find a way to generate colors on the fly
+		Color[] playerColors = {Color.red, Color.blue, Color.green, Color.black};
+		for (int i = 0; i < players.length; i++) {
+			players[i].setColor(playerColors[i]);
+		}
+		
 		//TODO: comment out
 		tiles = new Tile[size-1][size-1];		
 		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
@@ -171,24 +180,27 @@ public class BoardController {
 	}
 	
 	private void paintTiles(Graphics g) {
-		
-		
+				
 		//System.out.println("found loop of size: " + tiles.size());
-		for (Player p : areas.keySet()) {
-			for (Set<Tile> tiles : areas.get(p)) {
+		//TODO: figure out why concurrent modification exception happens sometimes...
+		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
+		for (Player p : currentAreas.keySet()) {
+			
+			for (Set<Tile> tiles : currentAreas.get(p)) {
 				for (Tile t : tiles) {
 					Vertex v = vertices[t.getX()][t.getY()];
 					g.drawImage(createOverlay(p.getColor()), v.getPosX(), v.getPosY(), null);
 				}
-			}
+			}			
 		}
 	}
 	
-	private Image createOverlay(Color c) {
+	private Image createOverlay(Color color) {
+						
 		BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
-		Graphics g1 =image.getGraphics();
-		g1.setColor(Color.red);
-		g1.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
+		Graphics g =image.getGraphics();
+		g.setColor(color);
+		g.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
 		
 		return ResourceLoader.getImageWithOpacity(image, 0.3f);
 	}
@@ -292,7 +304,8 @@ public class BoardController {
 			return false;
 		
 		boolean isInArea = false;
-	    List<Set<Tile>> playerAreas = areas.get(players[currentTurn]);
+		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
+	    List<Set<Tile>> playerAreas = currentAreas.get(players[currentTurn]);
 		for (Set<Tile> area : playerAreas) {
 			if (area.contains(tile))
 				isInArea = true;
@@ -358,9 +371,9 @@ public class BoardController {
 	    boolean rightFriendly = false;
 	    
 	    
-	    
-	    for (Player p : areas.keySet()) {
-	    	for (Set<Tile> area : areas.get(p)) {
+	    Map<Player, List<Set<Tile>>> currentAreas = getAreas();
+	    for (Player p : currentAreas.keySet()) {
+	    	for (Set<Tile> area : currentAreas.get(p)) {
 	    		
 	    		if (area.contains(tile)) 
 	    			areaOwner = p;	    		
@@ -563,7 +576,8 @@ public class BoardController {
 	}
 	
 	private void findLoops() {
-		areas.clear();
+		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
+		currentAreas.clear();
 	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
 	    Set<Tile> visited = new HashSet<Tile>();	    
 	    toVisit.add(tiles[0][0]);
@@ -575,10 +589,10 @@ public class BoardController {
 	        findConnected(toVisit.first(), traversed, visited, toVisit, castles);
 	        
 	        if (castles.size() == 1) {
-	        	List<Set<Tile>> playerAreas = areas.get(castles.get(0).getPlayer());
+	        	List<Set<Tile>> playerAreas = currentAreas.get(castles.get(0).getPlayer());
 	        	if (null == playerAreas) {
 	        		playerAreas = new ArrayList<Set<Tile>>();
-	        		areas.put(castles.get(0).getPlayer(), playerAreas);
+	        		currentAreas.put(castles.get(0).getPlayer(), playerAreas);
 	        	}
 	        	playerAreas.add(traversed);
 	        	//paintTiles(traversed, g);
@@ -625,7 +639,10 @@ public class BoardController {
 	    }
 	}
 	
-
+	private synchronized Map<Player, List<Set<Tile>>> getAreas() {
+		return areas;
+	}
+	
 	public void setCurrentMode(MODE currentMode) {
 		this.currentMode = currentMode;
 	}
@@ -636,5 +653,6 @@ public class BoardController {
 
 	public void updateCurrentTurn() {
 		this.currentTurn = (currentTurn + 1) % players.length;	
+		System.out.println(currentTurn);
 	}
 } 
