@@ -10,6 +10,7 @@ import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -33,8 +34,8 @@ public class BoardController {
 	private Edge lastSelected;
 	private Player[] players = null;
 	private int currentTurn = 0;
-	
-	private Map<Player, List<Set<Tile>>> areas = new HashMap<Player, List<Set<Tile>>>();
+		
+	private Map<Player, List<Set<Tile>>> areas =  Collections.synchronizedMap(new HashMap<Player, List<Set<Tile>>>());
 	
 	private MODE currentMode;
 	public enum MODE {
@@ -52,8 +53,7 @@ public class BoardController {
 	public BoardController(int size, int numPlayers) {
 		BoardController.size = size;	
 		players = new Player[numPlayers];
-		
-		
+				
 		for (int i = 0; i < numPlayers; i++) {
 			players[i] = new Player();
 		}
@@ -183,7 +183,8 @@ public class BoardController {
 				
 		//System.out.println("found loop of size: " + tiles.size());
 		//TODO: figure out why concurrent modification exception happens sometimes...
-		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
+		Map<Player, List<Set<Tile>>> currentAreas = new HashMap<Player, List<Set<Tile>>>();
+		currentAreas.putAll(areas);
 		for (Player p : currentAreas.keySet()) {
 			
 			for (Set<Tile> tiles : currentAreas.get(p)) {
@@ -304,8 +305,11 @@ public class BoardController {
 			return false;
 		
 		boolean isInArea = false;
-		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
-	    List<Set<Tile>> playerAreas = currentAreas.get(players[currentTurn]);
+		
+	    List<Set<Tile>> playerAreas = areas.get(players[currentTurn]);
+	    if (null == playerAreas)
+	    	return false;
+	    
 		for (Set<Tile> area : playerAreas) {
 			if (area.contains(tile))
 				isInArea = true;
@@ -371,9 +375,9 @@ public class BoardController {
 	    boolean rightFriendly = false;
 	    
 	    
-	    Map<Player, List<Set<Tile>>> currentAreas = getAreas();
-	    for (Player p : currentAreas.keySet()) {
-	    	for (Set<Tile> area : currentAreas.get(p)) {
+	    
+	    for (Player p : areas.keySet()) {
+	    	for (Set<Tile> area : areas.get(p)) {
 	    		
 	    		if (area.contains(tile)) 
 	    			areaOwner = p;	    		
@@ -576,10 +580,10 @@ public class BoardController {
 	}
 	
 	private void findLoops() {
-		Map<Player, List<Set<Tile>>> currentAreas = getAreas();
-		currentAreas.clear();
+		
+		areas.clear();
 	    TreeSet<Tile> toVisit = new TreeSet<Tile>();
-	    Set<Tile> visited = new HashSet<Tile>();	    
+	    Set<Tile> visited = Collections.synchronizedSet(new HashSet<Tile>());	    
 	    toVisit.add(tiles[0][0]);
 	    
 	    while(!toVisit.isEmpty()) 
@@ -589,10 +593,10 @@ public class BoardController {
 	        findConnected(toVisit.first(), traversed, visited, toVisit, castles);
 	        
 	        if (castles.size() == 1) {
-	        	List<Set<Tile>> playerAreas = currentAreas.get(castles.get(0).getPlayer());
+	        	List<Set<Tile>> playerAreas = areas.get(castles.get(0).getPlayer());
 	        	if (null == playerAreas) {
-	        		playerAreas = new ArrayList<Set<Tile>>();
-	        		currentAreas.put(castles.get(0).getPlayer(), playerAreas);
+	        		playerAreas = Collections.synchronizedList(new ArrayList<Set<Tile>>());
+	        		areas.put(castles.get(0).getPlayer(), playerAreas);
 	        	}
 	        	playerAreas.add(traversed);
 	        	//paintTiles(traversed, g);
@@ -637,10 +641,6 @@ public class BoardController {
 	            findConnected(right, traversed, visited, toVisit, castles);
 	        }
 	    }
-	}
-	
-	private synchronized Map<Player, List<Set<Tile>>> getAreas() {
-		return areas;
 	}
 	
 	public void setCurrentMode(MODE currentMode) {
