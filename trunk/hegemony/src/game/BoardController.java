@@ -235,7 +235,7 @@ public class BoardController {
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
 		
-		if (null != tile.getKnight() || null != tile.getCapital())
+		if (null != tile.getKnight() || null != tile.getCastle())
 			return false;
 		
 		Tile top = tile.getTopTile();
