@@ -2,7 +2,7 @@ package gamepieces;
 
 import game.ResourceLoader;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public abstract class GamePiece {
 	protected int time;
@@ -24,8 +24,8 @@ public abstract class GamePiece {
 			frame = (frame + 1) % sprites.length;
 		}
 	}
-	
-	public Image draw() {
+		
+	public BufferedImage draw() {
 		return ResourceLoader.getInstance().getSprite(sprites[frame]);
 	}
 }
