@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ControlsPanel extends JFrame {
@@ -13,30 +14,35 @@ public class ControlsPanel extends JFrame {
 	private static final long serialVersionUID = 1L;
 
 	private GameCanvas canvas;
-	
+	private JLabel playerLabel = null;
+	private JLabel modeLabel = null;
 	public ControlsPanel(GameCanvas canvas) {
 		this.canvas = canvas;
 				
 		JPanel panel = new JPanel();
-        panel.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
-        panel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
-        panel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
-        panel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
-        panel.add(new TurnButton());
+		JPanel buttons = new JPanel();
+		buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
+		buttons.add(new ModeButton(BoardController.MODE.PLACE_WALL));
+		buttons.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
+		buttons.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+        buttons.add(new TurnButton());
+        panel.add(buttons);
+        JPanel labels = new JPanel();
+        playerLabel = new JLabel("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
+        modeLabel = new JLabel("Current mode: " + canvas.getBoard().getCurrentMode());
+        labels.add(playerLabel);
+        labels.add(modeLabel);
+        panel.add(labels);
         add(panel);
         pack();
-        /*
-		add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
-        add(new ModeButton(BoardController.MODE.PLACE_WALL));
-        add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
-        add(new ModeButton(BoardController.MODE.EXPAND_AREA));
-        */
+
 	    setVisible(true);
 		
 	}
 	
 	private class TurnButton extends JButton implements ActionListener {
 
+		private static final long serialVersionUID = 1L;
 		public TurnButton() {
 			super();
 			setText("Next Turn");
@@ -45,7 +51,7 @@ public class ControlsPanel extends JFrame {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			canvas.getBoard().updateCurrentTurn();
-			
+			playerLabel.setText("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
 		}
 		
 	}
@@ -55,24 +61,26 @@ public class ControlsPanel extends JFrame {
 		private static final long serialVersionUID = 1L;
 
 		private BoardController.MODE mode;
-		
+		String modeName;
 		public ModeButton(BoardController.MODE mode) {
 			super();
 			this.mode = mode;
 			if (BoardController.MODE.PLACE_CASTLE == mode)
-				setText("Castle Mode");
+				modeName = "Castle Mode";		
 			else if (BoardController.MODE.EXPAND_AREA == mode)
-				setText("Expand Mode");
+				modeName = "Expand Mode";
 			else if (BoardController.MODE.PLACE_KNIGHT == mode)
-				setText("Knight Mode");
+				modeName = "Knight Mode";
 			else if (BoardController.MODE.PLACE_WALL == mode)
-				setText("Wall Mode");
+				modeName = "Wall Mode";
+			setText(modeName);
 			addActionListener(this);
 		}
 		
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			canvas.setCurrentMode(mode);		
+		public void actionPerformed(ActionEvent e) {		
+			canvas.setCurrentMode(mode);				
+			modeLabel.setText("Current mode: " +modeName);
 		}
 		
 	}

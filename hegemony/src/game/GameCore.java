@@ -22,7 +22,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {						
-		board = new BoardController(12, 4);		
+		board = new BoardController(12, 2);		
 		Thread t = new Thread(this);
 		
 		gameCanvas = new GameCanvas(board, BOARD_SIZE);						

@@ -649,6 +649,10 @@ public class BoardController {
 		this.currentMode = currentMode;
 	}
 
+	public Player getCurrentPlayer() {
+		return players[currentTurn];
+	}
+	
 	public MODE getCurrentMode() {
 		return currentMode;
 	}
