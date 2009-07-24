@@ -28,9 +28,9 @@ public class BoardController {
 	
 	private Vertex[][] vertices = null;
 	private Tile[][] tiles = null;
-	private Image boardImage = null;
-	private Image terrainImage = null;
-	//private Image highlightsImage = null;
+	//private Image boardImage = null;
+	//private Image terrainImage = null;
+
 	private Edge lastSelected;
 	private Player[] players = null;
 	private int currentTurn = 0;
@@ -65,12 +65,12 @@ public class BoardController {
 		
 		//TODO: comment out
 		tiles = new Tile[size-1][size-1];		
-		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		//boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		//terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 				
 		generateEdgesAndVertices(size);
 		
-		drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
+		//drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
 	}
 	
 	public void updateWorld() {
@@ -82,130 +82,7 @@ public class BoardController {
 			}
 		}
 	}
-	
-	public Image draw() {
-		
-		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-		Graphics g = currentBoard.getGraphics();
-		g.drawImage(boardImage,0,0,null);
 
-		Image highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-		paintTiles(highlightsImage.getGraphics());
-		g.drawImage(highlightsImage,0,0,null);
-		
-		draw(vertices[0][0], g);
-		g.drawImage(terrainImage,0,0,null);
-		drawTileItems(g);
-						
-		return currentBoard;		
-	}
-	
-	private void drawTilesAndTerrain(Vertex v, Graphics boardG, Graphics terrainG) {
-		
-		drawTileTerrainColumn(v, boardG, terrainG);
-		
-		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {			
-			drawTilesAndTerrain(leftEdge.getSecond(), boardG, terrainG);			
-		}				
-	}
-	
-	private void drawTileTerrainColumn(Vertex v, Graphics boardG, Graphics terrainG) {
-		int x = v.getX();
-		int y = v.getY();
-		int posX = v.getPosX();
-		int posY = v.getPosY();
-
-		if (x < size - 1 && y < size - 1) {
-			boardG.drawImage(tiles[x][y].draw(), posX, posY, null);
-			if (null != tiles[x][y].getForest())
-				terrainG.drawImage(tiles[x][y].getForest().draw(), posX, posY, null);
-			if (null != tiles[x][y].getMine())
-				terrainG.drawImage(tiles[x][y].getMine().draw(), posX, posY, null);			
-			if (null != tiles[x][y].getCapital())
-				terrainG.drawImage(tiles[x][y].getCapital().draw(), posX, posY, null);
-			if (null != tiles[x][y].getVillage())
-				terrainG.drawImage(tiles[x][y].getVillage().draw(), posX, posY, null);
-			
-			Edge bottomEdge = v.getBottomEdge();
-			if (null != bottomEdge) {
-				drawTileTerrainColumn(bottomEdge.getSecond(), boardG, terrainG);
-			}
-		}
-	}
-
-	private void drawTileItems(Graphics g) {
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles.length; y++) {
-				
-				for (GamePiece piece : tiles[x][y].getItems()) {
-					if (!(piece instanceof Tree))
-						g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
-				}
-				
-			}
-		}
-	}
-	
-	private void draw(Vertex v, Graphics g) {
-		
-			
-		drawEdgeColumn(v, g);
-		Edge leftEdge = v.getLeftEdge(); 
-		if (null != leftEdge) {
-			draw(leftEdge.getSecond(), g);
-		}
-	}
-	
-	
-	private void drawEdgeColumn(Vertex v, Graphics g) {
-		Edge leftEdge = v.getLeftEdge();
-		if (null != leftEdge) {
-			if ((leftEdge.isActive() || leftEdge.isSelected())) {
-				g.drawImage(leftEdge.draw(),leftEdge.getPosX() - Vertex.SIZE, leftEdge.getPosY() - Vertex.SIZE*2, null);
-			}
-		}
-		
-		if (v.hasActiveEdges()) {
-			g.drawImage(Vertex.draw(), v.getPosX() - Vertex.SIZE*2, v.getPosY() - Vertex.SIZE*2, null);
-		}
-		
-		Edge bottomEdge = v.getBottomEdge();
-		if (null != bottomEdge) {
-			if ((bottomEdge.isActive() || bottomEdge.isSelected())) {
-				g.drawImage(bottomEdge.draw(),bottomEdge.getPosX()  - Vertex.SIZE, bottomEdge.getPosY() - Vertex.SIZE, null);
-			}
-			drawEdgeColumn(bottomEdge.getSecond(), g);
-		}	
-	}
-	
-	private void paintTiles(Graphics g) {
-				
-		Map<Player, List<Set<Tile>>> currentAreas = getPlayerAreas();
-
-		for (Player p : currentAreas.keySet()) {
-			List<Set<Tile>> playerAreas = currentAreas.get(p);
-			if (null == playerAreas)
-				continue;
-			for (Set<Tile> tiles : playerAreas) {
-				for (Tile t : tiles) {
-					Vertex v = vertices[t.getX()][t.getY()];
-					g.drawImage(createOverlay(p.getColor()), v.getPosX(), v.getPosY(), null);
-				}
-			}			
-		}
-	}
-	
-	private Image createOverlay(Color color) {
-						
-		BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH, Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
-		Graphics g =image.getGraphics();
-		g.setColor(color);
-		g.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
-		
-		return ResourceLoader.getImageWithOpacity(image, 0.3f);
-	}
-	
 	////Initialize the board
 				
 	private void generateEdgesAndVertices(int size) {

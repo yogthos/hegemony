@@ -17,12 +17,14 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	public static final int BOARD_SIZE = 550;
 	
 	public BoardController board = null;
+	public BoardRenderer renderer = null;
 	private BufferStrategy bufferStrategy;
 	private GameCanvas gameCanvas;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {						
-		board = new BoardController(12, 2);		
+		board = new BoardController(12, 2);	
+		renderer = new BoardRenderer(board);
 		Thread t = new Thread(this);
 		
 		gameCanvas = new GameCanvas(board, BOARD_SIZE);						
@@ -53,7 +55,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
-		g.drawImage(board.draw(), 0, 0, this);
+		g.drawImage(renderer.draw(), 0, 0, this);
 		getToolkit().sync();
 	}
 
