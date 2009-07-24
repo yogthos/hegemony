@@ -1,6 +1,7 @@
 package game;
 
 import gamepieces.GamePiece;
+import gamepieces.OverlayPiece;
 import gamepieces.Tree;
 
 import java.awt.Color;
@@ -29,6 +30,7 @@ public class BoardRenderer {
 public Image draw() {
 		
 		Image currentBoard = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,0,0,null);
 
@@ -40,7 +42,8 @@ public Image draw() {
 		draw(vertices[0][0], g);
 		g.drawImage(terrainImage,0,0,null);
 		drawTileItems(g);
-						
+			
+		drawHighlightedPiece(g);
 		return currentBoard;		
 	}
 	
@@ -52,6 +55,13 @@ public Image draw() {
 		if (null != leftEdge) {			
 			drawTilesAndTerrain(leftEdge.getSecond(), boardG, terrainG);			
 		}				
+	}
+	
+	private void drawHighlightedPiece(Graphics g) {
+		
+		OverlayPiece overlay = board.getCurrentPiece();
+		if (overlay.isActive())
+			g.drawImage(overlay.draw(), overlay.getX(), overlay.getY(), null);
 	}
 	
 	private void drawTileTerrainColumn(Vertex v, Graphics boardG, Graphics terrainG) {
@@ -127,9 +137,7 @@ public Image draw() {
 	}
 	
 	private void paintTiles(Graphics g) {
-		
-		//System.out.println("found loop of size: " + tiles.size());
-		//TODO: figure out why concurrent modification exception happens sometimes...
+
 		Map<Player, List<Set<Tile>>> currentAreas = board.getPlayerAreas();
 
 		Vertex[][] vertices = board.getVertices();

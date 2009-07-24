@@ -3,6 +3,7 @@ package game;
 import gamepieces.Castle;
 import gamepieces.GamePiece;
 import gamepieces.Knight;
+import gamepieces.OverlayPiece;
 import gamepieces.Tree;
 
 import java.awt.Color;
@@ -138,6 +139,7 @@ public class BoardController {
 
 	///////////Mode Actions/////////////
 	public void handlePlayerAction(int x, int y, boolean clicked) {
+		highlightedPiece.setActive(false);
 		deselectEdges();
 		if (clicked) {
 			if (MODE.PLACE_CASTLE == currentMode)
@@ -150,9 +152,12 @@ public class BoardController {
 				placeEdge(x, y);
 		}
 		else {
-			if (MODE.PLACE_WALL == currentMode){			
-				createOverlay(x,y);			
-			}
+			if (MODE.PLACE_WALL == currentMode)			
+				createWallOverlay(x,y);					
+			else if (MODE.PLACE_CASTLE == currentMode)
+				createCastleOverlay(x, y);
+			else if (MODE.PLACE_KNIGHT == currentMode)
+				createKnightOverlay(x, y);
 		}
 	}
 	
@@ -448,8 +453,25 @@ public class BoardController {
 		}	
 	}
 
-
-	public void createOverlay(int x, int y) {
+	private OverlayPiece highlightedPiece = new OverlayPiece();
+	
+	public OverlayPiece getCurrentPiece() {
+		return highlightedPiece;
+	}
+	
+	private void createCastleOverlay(int x, int y) {		
+		highlightedPiece.setXY(x,y);
+		highlightedPiece.setPiece(new Castle(players[currentTurn]));
+		highlightedPiece.setActive(true);
+	}
+	
+	private void createKnightOverlay(int x, int y) {		
+		highlightedPiece.setXY(x,y);
+		highlightedPiece.setPiece(new Knight(players[currentTurn]));
+		highlightedPiece.setActive(true);
+	}
+	
+	private void createWallOverlay(int x, int y) {
 		
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;

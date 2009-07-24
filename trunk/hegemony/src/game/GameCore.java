@@ -103,6 +103,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Flip or show the back buffer
 			update();
 
+			
 			// Update any sprites or other graphical objects
 			updateWorld(elapsedTime);
 
@@ -112,6 +113,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 
 			// Dispose of graphics context
 			g.dispose();
+			
 		}		
 	}
 
