@@ -261,6 +261,7 @@ public class BoardController {
 
 	///////////Mode Actions/////////////
 	public void handlePlayerAction(int x, int y, boolean clicked) {
+		deselectEdges();
 		if (clicked) {
 			if (MODE.PLACE_CASTLE == currentMode)
 				placeCastle(x, y);
@@ -357,6 +358,9 @@ public class BoardController {
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
 		
+		if (null != tile.getKnight() || null != tile.getCapital())
+			return false;
+		
 		Tile top = tile.getTopTile();
 	    Tile bottom = tile.getBottomTile();
 	    Tile left = tile.getLeftTile();
@@ -412,8 +416,9 @@ public class BoardController {
 	    	}
 	    }
 	    
-	    if (!topFriendly && !bottomFriendly && !leftFriendly && !rightFriendly)
+	    if (!(topFriendly  || bottomFriendly || leftFriendly  || rightFriendly))
 	    	return false;
+	    	   
 	    
 	    //check if the area is valid for expansion
 	    if (null != areaOwner && !players[currentTurn].equals(areaOwner)) {
@@ -439,7 +444,7 @@ public class BoardController {
 	    		if (knights > numFriendlyKnights)
 	    			numFriendlyKnights = knights;
 	    	}
-	    	if (numFriendlyKnights < numOpposingKnights)
+	    	if (numFriendlyKnights <= numOpposingKnights)
 	    		return false;
 	    	
 	    }
@@ -529,9 +534,7 @@ public class BoardController {
 	private void selectEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
-		
-		deselectEdges();
-		
+				
 		Vertex v = vertices[xi][yi];
 		double xOffset = x - xi;
 		double yOffset = y - yi;
@@ -599,7 +602,6 @@ public class BoardController {
 	        		areas.put(castles.get(0).getPlayer(), playerAreas);
 	        	}
 	        	playerAreas.add(traversed);
-	        	//paintTiles(traversed, g);
 	        }
 	    } 	    
 	}
