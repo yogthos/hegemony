@@ -40,9 +40,9 @@ public Image draw() {
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,0,0,null);
 
-		Image highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		paintTiles(highlightsImage.getGraphics());
-		g.drawImage(highlightsImage,0,0,null);
+		g.drawImage(ResourceLoader.getImageWithOpacity(highlightsImage, 0.3f),0,0,null);
 		
 		Vertex[][] vertices = board.getVertices();
 		draw(vertices[0][0], g);
@@ -168,7 +168,7 @@ public Image draw() {
 		g.setColor(color);
 		g.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
 		
-		return ResourceLoader.getImageWithOpacity(image, 0.3f);
+		return image;
 	}
 	
 }
