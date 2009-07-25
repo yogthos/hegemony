@@ -8,6 +8,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,9 +20,14 @@ public class BoardRenderer {
 	private BoardController board;
 	private Image boardImage = null;
 	private Image terrainImage = null;
+	private Map<Player,Image> playerOverlays = new HashMap<Player,Image>();
 	
 	public BoardRenderer(BoardController board) {
 		this.board = board;
+		for (Player player : board.getPlayers()) {
+			playerOverlays.put(player, createOverlay(player.getColor()));
+		}
+		
 		boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 		drawTilesAndTerrain(board.getVertices()[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
@@ -149,7 +155,7 @@ public Image draw() {
 			for (Set<Tile> tiles : playerAreas) {
 				for (Tile t : tiles) {
 					Vertex v = vertices[t.getX()][t.getY()];
-					g.drawImage(createOverlay(p.getColor()), v.getPosX(), v.getPosY(), null);
+					g.drawImage(playerOverlays.get(p), v.getPosX(), v.getPosY(), null);
 				}
 			}			
 		}
