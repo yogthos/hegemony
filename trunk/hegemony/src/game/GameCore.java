@@ -155,5 +155,4 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	public void mouseMoved(MouseEvent e) {
 		
 	}
-	
 }
