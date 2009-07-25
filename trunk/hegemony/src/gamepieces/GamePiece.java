@@ -26,6 +26,6 @@ public abstract class GamePiece {
 	}
 		
 	public BufferedImage draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[frame]);
+		return ResourceLoader.INSTANCE.getSprite(sprites[frame]);
 	}
 }

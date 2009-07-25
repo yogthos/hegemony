@@ -79,7 +79,7 @@ public class Edge {
 	
 	public void setActive(boolean active) {
 		if (active)
-			ResourceLoader.getInstance().getSound(placeSound).play();
+			ResourceLoader.INSTANCE.getSound(placeSound).play();
 		
 		this.active = active;
 	}
@@ -88,11 +88,11 @@ public class Edge {
 
 		return (vertical ? 
 				(selected && !active?
-					ResourceLoader.getInstance().getSprite(sprites[0], 0.5f):
-					ResourceLoader.getInstance().getSprite(sprites[0])): 
+					ResourceLoader.INSTANCE.getSprite(sprites[0], 0.5f):
+					ResourceLoader.INSTANCE.getSprite(sprites[0])): 
 					(selected && !active?
-						ResourceLoader.getInstance().getSprite(sprites[1], 0.5f):
-						ResourceLoader.getInstance().getSprite(sprites[1])));	    						
+						ResourceLoader.INSTANCE.getSprite(sprites[1], 0.5f):
+						ResourceLoader.INSTANCE.getSprite(sprites[1])));	    						
 	}
 
 	public void setSelected(boolean selected) {
