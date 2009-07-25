@@ -1,7 +1,7 @@
 package game;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
+import java.awt.Graphics;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -44,18 +44,22 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		super.destroy();
 	}
 
+	/*
 	public void update() {
 		if (!bufferStrategy.contentsLost()) {
 			// Show bufferStrategy
 			bufferStrategy.show();
 		}
 	}
-
-	public void update(Graphics2D g) {
+	*/
+	
+	public void update() {
+		Graphics g = bufferStrategy.getDrawGraphics();
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.drawImage(renderer.draw(), 0, 0, this);
+		bufferStrategy.show();	
 		getToolkit().sync();
 	}
 
@@ -64,10 +68,12 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		board.updateWorld();
 	}
 
+	/*
 	public Graphics2D getGraphics() {				
 		return (Graphics2D) bufferStrategy.getDrawGraphics();
 	}
-
+	 */
+	
 	// Do not override this method
 	public void run() {
 		setSize(WIDTH, HEIGHT);
@@ -101,18 +107,16 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			currTime += elapsedTime;
 
 			// Flip or show the back buffer
-			update();
-
+			//update();
 			
 			// Update any sprites or other graphical objects
 			updateWorld(elapsedTime);
 
 			// Handle Drawing
-			Graphics2D g = getGraphics();
-			update(g);
+			update();
 
 			// Dispose of graphics context
-			g.dispose();
+			//g.dispose();
 			
 		}		
 	}

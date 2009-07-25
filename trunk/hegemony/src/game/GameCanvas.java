@@ -1,6 +1,7 @@
 package game;
 
 import java.awt.Canvas;
+import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -74,4 +75,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		e.consume();		
 	}
 
+	@Override
+	public boolean imageUpdate(Image img, int infoflags, int x, int y,
+			int width, int height) {
+		return false;
+	}	
 }
