@@ -1,15 +1,12 @@
 package game;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 public class Vertex {
 	
 	public static int SIZE = 4;
-	private static final String[] sprites = {"tower.png"};
-	
+	//private static final String[] sprites = {"tower.png"};
+	private static final String[] sprites = {"snow/tower.png"};
 	
 	private int x;
 	private int y;
@@ -56,7 +53,7 @@ public class Vertex {
 		this.rightEdge = rightEdge;
 	}
 	
-	public static Image draw() {
+	public static BufferedImage draw() {
 		return ResourceLoader.getInstance().getSprite(sprites[0]);
 	}
 

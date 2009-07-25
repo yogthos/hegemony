@@ -5,7 +5,8 @@ import java.awt.Image;
 
 public class Edge {
 		
-	protected static String[] sprites = {"wallv.png","wallh.png"};
+	//protected static String[] sprites = {"wallv.png","wallh.png"};
+	protected static String[] sprites = {"snow/wall-v.png","snow/wall-h.png"};
 	protected static String placeSound = "place_wall.wav";
 	
 	public static int LENGTH;
