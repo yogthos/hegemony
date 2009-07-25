@@ -4,11 +4,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class ControlsPanel extends JFrame {
+public class ControlsPanel extends JPanel {
 
 
 	private static final long serialVersionUID = 1L;
@@ -17,24 +16,21 @@ public class ControlsPanel extends JFrame {
 	private JLabel playerLabel = null;
 	private JLabel modeLabel = null;
 	public ControlsPanel(GameCanvas canvas) {
-		this.canvas = canvas;
-				
-		JPanel panel = new JPanel();
+		this.canvas = canvas;				
+		
 		JPanel buttons = new JPanel();
 		buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
 		buttons.add(new ModeButton(BoardController.MODE.PLACE_WALL));
 		buttons.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
 		buttons.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
         buttons.add(new TurnButton());
-        panel.add(buttons);
+        add(buttons);
         JPanel labels = new JPanel();
         playerLabel = new JLabel("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
         modeLabel = new JLabel("Current mode: " + canvas.getBoard().getCurrentMode());
         labels.add(playerLabel);
-        labels.add(modeLabel);
-        panel.add(labels);
-        add(panel);
-        pack();
+        labels.add(modeLabel);        
+        add(labels);
 
 	    setVisible(true);
 		
