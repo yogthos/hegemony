@@ -23,6 +23,7 @@ public class SnowTile extends Tile {
 			if (Math.random() > 0.2)
 				tileNumber = 0;
 		}
+		
 		sprite = potentialSprites[tileNumber];
 		
 	}
