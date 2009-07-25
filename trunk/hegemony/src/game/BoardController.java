@@ -20,6 +20,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import tiles.GrassTile;
+import tiles.SnowTile;
 import tiles.Tile;
 import tiles.WoodTile;
 
@@ -107,8 +108,9 @@ public class BoardController {
 				}
 				
 				//TODO: remove and replace with the generator
-				if (x < vertices.length - 1 && y < vertices[x].length - 1) {									
-					tiles[x][y] = new GrassTile(x,y);
+				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
+					tiles[x][y] = new SnowTile(x,y);
+					//tiles[x][y] = new GrassTile(x,y);
 					//tiles[x][y] = new WoodTile(x,y);
 				}
 			}

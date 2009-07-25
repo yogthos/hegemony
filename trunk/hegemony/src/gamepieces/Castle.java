@@ -9,7 +9,7 @@ public class Castle extends GamePiece {
 	
 	public Castle(Player player) {
 		
-		sprites = new String[]{"castle.png"};
+		sprites = new String[]{"snow/base0.png","snow/base1.png","snow/base2.png","snow/base3.png"};
 		frame = 0;
 		frameSpeed = 35;
 		this.player = player;

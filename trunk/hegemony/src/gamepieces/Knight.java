@@ -10,7 +10,8 @@ public class Knight extends GamePiece {
 	private Player player = null;
 	
 	public Knight(Player player) {
-		sprites = new String[]{"knight0.png","knight1.png"};
+		//sprites = new String[]{"knight0.png","knight1.png"};
+		sprites = new String[]{"snow/habitat0.png","snow/habitat1.png","snow/habitat2.png","snow/habitat3.png"};
 		
 		frame = 0;
 		frameSpeed = 60;
