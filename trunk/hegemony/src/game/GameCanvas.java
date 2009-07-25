@@ -19,6 +19,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		board.setCurrentMode(BoardController.MODE.PLACE_WALL);
+		setIgnoreRepaint(true);
 	}
 	
 	public void setCurrentMode(BoardController.MODE mode) {

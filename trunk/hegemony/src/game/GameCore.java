@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.BorderLayout;
+import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseEvent;
@@ -8,7 +10,10 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferStrategy;
 import java.applet.Applet;
 
-public class GameCore extends Applet implements Runnable, MouseListener, MouseMotionListener {
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
+public class GameCore extends Applet implements Runnable {
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -27,9 +32,14 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		renderer = new BoardRenderer(board);
 		Thread t = new Thread(this);
 		
+		setLayout (new BorderLayout ());
 		gameCanvas = new GameCanvas(board, BOARD_SIZE);						
-		
-		setIgnoreRepaint(true);
+		add ("North", gameCanvas);
+
+	    
+	    JPanel gamePanel = new ControlsPanel(gameCanvas); 
+		add("South", gamePanel);
+	    
 		t.start();
 	}
 	
@@ -65,18 +75,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		setSize(WIDTH, HEIGHT);
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
-		
-				
-		setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT));
-		//javax.swing.JPanel gamePanel = new javax.swing.JPanel();
-		//gamePanel.add(gameCanvas);
-		//add(gamePanel);		
-		//add(new ControlsPanel(gameCanvas));
-		
-	    
-		add(gameCanvas);					
-		new ControlsPanel(gameCanvas);
-		
 
 		gameCanvas.createBufferStrategy(2);
 		bufferStrategy = gameCanvas.getBufferStrategy();
@@ -84,6 +82,7 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		long startTime = System.currentTimeMillis();
 		long currTime = startTime;
 
+		
 		// animation loop
 		while (!stopped) {
 			//TODO: check phases
@@ -94,53 +93,9 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			
 			// Update any sprites or other graphical objects
 			updateWorld(elapsedTime);
-
+			
 			// Handle Drawing
 			update();
-
-			// Dispose of graphics context
-			//g.dispose();
-			
 		}	
-		bufferStrategy.getDrawGraphics().dispose();
-	}
-
-	@Override
-	public void mouseReleased( MouseEvent e ) {
-		
-	   }
-
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void mouseMoved(MouseEvent e) {
-		
 	}
 }
