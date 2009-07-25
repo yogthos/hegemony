@@ -15,20 +15,20 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
-public class ResourceLoader implements ImageObserver {
+public enum ResourceLoader implements ImageObserver {
 
-	
+	INSTANCE;
 	private Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();
 	private Map<String,AudioClip> sounds = new HashMap<String,AudioClip>();
 
-	private static ResourceLoader instance = new ResourceLoader();
+	//private static ResourceLoader instance = new ResourceLoader();
 	
 
 	private ResourceLoader() {}
 	
-	public static ResourceLoader getInstance() {
-		return instance;
-	}
+	//public static ResourceLoader getInstance() {
+	//	return instance;
+	//}
 	
 	public void cleanup() {
 		for (AudioClip sound : sounds.values()) {

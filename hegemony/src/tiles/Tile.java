@@ -13,7 +13,7 @@ public abstract class Tile implements Comparable<Tile> {
 	
 	static {
 		for (String sprite : sprites) {
-			ResourceLoader.getInstance().getSprite(sprite);
+			ResourceLoader.INSTANCE.getSprite(sprite);
 		}
 	}
 		
@@ -65,7 +65,7 @@ public abstract class Tile implements Comparable<Tile> {
 	}
 	
 	public Image draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
+		return ResourceLoader.INSTANCE.getSprite(sprites[0]);
 	}
 		
 	public Edge getTopEdge() {

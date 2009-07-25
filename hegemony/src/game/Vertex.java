@@ -54,7 +54,7 @@ public class Vertex {
 	}
 	
 	public static BufferedImage draw() {
-		return ResourceLoader.getInstance().getSprite(sprites[0]);
+		return ResourceLoader.INSTANCE.getSprite(sprites[0]);
 	}
 
 	public int getX() {
