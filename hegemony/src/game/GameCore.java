@@ -43,15 +43,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		/* Allow Applet to destroy any resources used by this applet */
 		super.destroy();
 	}
-
-	/*
-	public void update() {
-		if (!bufferStrategy.contentsLost()) {
-			// Show bufferStrategy
-			bufferStrategy.show();
-		}
-	}
-	*/
 	
 	public void update() {
 		Graphics g = bufferStrategy.getDrawGraphics();
@@ -59,7 +50,8 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 		g.fillRect(0, 0, getWidth(), getHeight());
 		
 		g.drawImage(renderer.draw(), 0, 0, this);
-		bufferStrategy.show();	
+		if (!bufferStrategy.contentsLost())
+			bufferStrategy.show();	
 		getToolkit().sync();
 	}
 
@@ -67,12 +59,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 	public void updateWorld(long time) {
 		board.updateWorld();
 	}
-
-	/*
-	public Graphics2D getGraphics() {				
-		return (Graphics2D) bufferStrategy.getDrawGraphics();
-	}
-	 */
 	
 	// Do not override this method
 	public void run() {
@@ -105,9 +91,6 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Get time past
 			long elapsedTime = System.currentTimeMillis() - currTime;
 			currTime += elapsedTime;
-
-			// Flip or show the back buffer
-			//update();
 			
 			// Update any sprites or other graphical objects
 			updateWorld(elapsedTime);
@@ -118,7 +101,8 @@ public class GameCore extends Applet implements Runnable, MouseListener, MouseMo
 			// Dispose of graphics context
 			//g.dispose();
 			
-		}		
+		}	
+		bufferStrategy.getDrawGraphics().dispose();
 	}
 
 	@Override
