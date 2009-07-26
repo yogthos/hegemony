@@ -1,12 +1,11 @@
 package game;
 
-import java.awt.image.BufferedImage;
+import gamepieces.GamePiece;
 
-public class Vertex {
+
+public class Vertex extends GamePiece {
 	
 	public static int SIZE = 4;
-	//private static final String[] sprites = {"tower.png"};
-	private static final String[] sprites = {"snow/tower.png"};
 	
 	private int x;
 	private int y;
@@ -17,6 +16,10 @@ public class Vertex {
 	private Edge rightEdge = null;	
 	
 	public Vertex(int x, int y) {
+		super();
+		sprites = new String[]{"snow/tower0.png"};
+		frame = 0;
+		frameSpeed = 35;
 		this.x = x;
 		this.y = y;				
 	}
@@ -53,10 +56,6 @@ public class Vertex {
 		this.rightEdge = rightEdge;
 	}
 	
-	public static BufferedImage draw() {
-		return ResourceLoader.INSTANCE.getSprite(sprites[0]);
-	}
-
 	public int getX() {
 		return x;
 	}
@@ -101,5 +100,11 @@ public class Vertex {
 	
 	public String toString() {
 			return "[" + x + "," + y + "]";
+	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

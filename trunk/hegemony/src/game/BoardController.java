@@ -7,11 +7,7 @@ import gamepieces.OverlayPiece;
 import gamepieces.Tree;
 
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -30,15 +26,11 @@ public class BoardController {
 	
 	private Vertex[][] vertices = null;
 	private Tile[][] tiles = null;
-	//private Image boardImage = null;
-	//private Image terrainImage = null;
 
 	private Edge lastSelected;
 	private Player[] players = null;
 	private int currentTurn = 0;
-		
-	//private Map<Player, List<Set<Tile>>> areas =  Collections.synchronizedMap(new HashMap<Player, List<Set<Tile>>>());
-	
+
 	private MODE currentMode;
 	public enum MODE {
 		PLACE_CASTLE,
@@ -66,23 +58,23 @@ public class BoardController {
 		}
 		
 		//TODO: comment out
-		tiles = new Tile[size-1][size-1];		
-		//boardImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-		//terrainImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-				
+		tiles = new Tile[size-1][size-1];				
 		generateEdgesAndVertices(size);
-		
-		//drawTilesAndTerrain(vertices[0][0], boardImage.getGraphics(), terrainImage.getGraphics());
 	}
 	
 	public void updateWorld() {
-		for (int x = 0; x < tiles.length; x++) {
-			for (int y = 0; y < tiles.length; y++) {
-				for (GamePiece item : tiles[x][y].getItems()) {
-					item.act();
+
+		for (int x = 0; x < vertices.length; x++) {
+			for (int y = 0; y < vertices[x].length; y++) {
+				if (x < vertices.length -1 && y < vertices[x].length -1) {
+					for (GamePiece item : tiles[x][y].getItems()) {
+						item.act();
+					}
 				}
+				vertices[x][y].act();
 			}
 		}
+		
 	}
 
 	////Initialize the board
