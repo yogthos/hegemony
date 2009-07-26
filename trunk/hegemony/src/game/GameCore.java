@@ -20,6 +20,7 @@ public class GameCore extends Applet implements Runnable {
 	public static final int WIDTH = 700;
 	public static final int HEIGHT = 700;
 	public static final int BOARD_SIZE = 550;
+	public static final int BOARD_OFFSET = 30;
 	
 	public BoardController board = null;
 	public BoardRenderer renderer = null;
@@ -36,7 +37,7 @@ public class GameCore extends Applet implements Runnable {
 		
 		
 		
-		gameCanvas = new GameCanvas(board, BOARD_SIZE);						
+		gameCanvas = new GameCanvas(board, BOARD_SIZE + BOARD_OFFSET);						
 		add (gameCanvas, BorderLayout.CENTER);
 
 		InfoPanel infoPanel = new InfoPanel(WIDTH - BOARD_SIZE, BOARD_SIZE);

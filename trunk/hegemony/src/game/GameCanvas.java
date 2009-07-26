@@ -56,7 +56,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
-		board.handlePlayerAction(e.getX(), e.getY(), true);
+		int x = e.getX() - GameCore.BOARD_OFFSET;
+		int y = e.getY() - GameCore.BOARD_OFFSET;
+		board.handlePlayerAction(x, y, true);
 	    e.consume();		
 	}
 
@@ -68,11 +70,13 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	
 	@Override
 	public void mouseMoved(MouseEvent e) {
-
-		if (e.getX()/Edge.LENGTH > BoardController.size - 1 || e.getY()/Edge.LENGTH > BoardController.size - 1) {
+		
+		int x = e.getX() - GameCore.BOARD_OFFSET;
+		int y = e.getY() - GameCore.BOARD_OFFSET;
+		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
 			return;
 		}
-		board.handlePlayerAction(e.getX(), e.getY(), false);
+		board.handlePlayerAction(x, y, false);
 		e.consume();		
 	}
 

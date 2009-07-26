@@ -189,11 +189,11 @@ public abstract class Tile implements Comparable<Tile> {
 	}
 	
 	public int getPosX() {
-		return x*Edge.LENGTH;
+		return topEdge.getFirst().getPosX();
 	}
 	
 	public int getPosY() {
-		return y*Edge.LENGTH;
+		return topEdge.getFirst().getPosY();
 	}
 	
 	public String toString() {
