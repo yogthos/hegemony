@@ -49,7 +49,7 @@ public class ControlsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			canvas.getBoard().updateCurrentTurn();
-			infoPanel.updatePlayer(canvas.getBoard().getCurrentPlayer());
+			infoPanel.updatePlayer(canvas.getBoard().getCurrentPlayer(), canvas.getBoard().getCurrentTurn());
 			//playerLabel.setText("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
 		}
 		
