@@ -11,8 +11,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	private static final long serialVersionUID = 1L;
 	
 	private BoardController board;
+	private InfoPanel infoPanel;
 	
-	public GameCanvas(BoardController board, int size) {
+	public GameCanvas(InfoPanel infoPanel, BoardController board, int size) {
+		this.infoPanel = infoPanel;
 		this.board = board;
 		setSize(size,size);
 		
@@ -59,6 +61,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		int x = e.getX() - GameCore.BOARD_OFFSET;
 		int y = e.getY() - GameCore.BOARD_OFFSET;
 		board.handlePlayerAction(x, y, true);
+		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
 	    e.consume();		
 	}
 

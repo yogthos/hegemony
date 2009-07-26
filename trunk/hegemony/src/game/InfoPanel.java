@@ -12,15 +12,22 @@ public class InfoPanel extends JPanel {
 	private JLabel currentPlayer = new JLabel("Current player");
 	private JLabel score = new JLabel("Score");
 	private JLabel currentMode = new JLabel("CurrentMode");
+	private JLabel knightsRemaining = new JLabel("Knights");
+	private JLabel castlesRemaining = new JLabel("Castles");
 	
 	public InfoPanel(int width, int height) {
 		
+		currentPlayer.setPreferredSize(new Dimension(width, 10));
+		score.setPreferredSize(new Dimension(width, 10));
+		currentMode.setPreferredSize(new Dimension(width, 10));
 		
 		Box bv = Box.createVerticalBox();
 		bv.setPreferredSize(new Dimension(width, height));
 		bv.add(currentPlayer);
 		bv.add(score);
-		bv.add(currentMode);		
+		bv.add(currentMode);
+		bv.add(knightsRemaining);
+		bv.add(castlesRemaining);
 		add(bv);
 		setPreferredSize(new Dimension(width, height));
 		setVisible(true);
@@ -28,6 +35,8 @@ public class InfoPanel extends JPanel {
 	
 	public void updatePlayer(Player player, int turn) {
 		currentPlayer.setText("Player: " + turn);
+		knightsRemaining.setText("Knights: " + player.getKnightsRemaining());
+		castlesRemaining.setText("Castles: " + player.getCastlesRemainig());
 		score.setText("Score: " + player.getScore());
 	}
 	
