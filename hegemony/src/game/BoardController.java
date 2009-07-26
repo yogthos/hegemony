@@ -37,7 +37,8 @@ public class BoardController {
 	}
 	
 	public enum PHASE {
-		
+		DRAW_CARD,
+		ACT,
 	}
 	
 		
@@ -127,6 +128,7 @@ public class BoardController {
 			}
 		}
 	}
+		
 
 	///////////Mode Actions/////////////
 	public void handlePlayerAction(int x, int y, boolean clicked) {
@@ -162,8 +164,11 @@ public class BoardController {
 			return false;
 
 		//TODO: check that castles aren't too close when placing
+		Castle castle = players[currentTurn].placeCastle();
+		if (null == castle)
+			return false;
 		
-		tile.setCastle(new Castle(players[currentTurn]));
+		tile.setCastle(castle);
 		return true;
 	}
 	
@@ -220,7 +225,11 @@ public class BoardController {
 	    if (null == castle && null == knight)
 	    	return false;	    	    	
 	    
-		tile.setKnight(new Knight(players[currentTurn]));
+	    Knight playerKnight = players[currentTurn].placeKnight();
+	    if (null == playerKnight)
+	    	return false;
+	    
+		tile.setKnight(playerKnight);
 		return true;
 	}
 	

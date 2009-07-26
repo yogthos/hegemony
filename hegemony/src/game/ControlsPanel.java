@@ -14,16 +14,21 @@ public class ControlsPanel extends JPanel {
 
 	private InfoPanel infoPanel;
 	private GameCanvas canvas;
-
+	
+	
 	public ControlsPanel(GameCanvas canvas, InfoPanel infoPanel) {
 		this.canvas = canvas;				
 		this.infoPanel = infoPanel;
 		
 		JPanel buttons = new JPanel();
-		buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
-		buttons.add(new ModeButton(BoardController.MODE.PLACE_WALL));
-		buttons.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
-		buttons.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+		JButton castleButton = new ModeButton(BoardController.MODE.PLACE_CASTLE);
+		JButton wallButton = new ModeButton(BoardController.MODE.PLACE_WALL);
+		JButton knightButton = new ModeButton(BoardController.MODE.PLACE_KNIGHT);
+		JButton areaButton = new ModeButton(BoardController.MODE.EXPAND_AREA);
+		buttons.add(castleButton);
+		buttons.add(wallButton);
+		buttons.add(knightButton);
+		buttons.add(areaButton);
         buttons.add(new TurnButton());
         add(buttons);
 
