@@ -4,7 +4,6 @@ import gamepieces.Castle;
 import gamepieces.GamePiece;
 import gamepieces.Knight;
 import gamepieces.OverlayPiece;
-import gamepieces.Tree;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -15,10 +14,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import tiles.GrassTile;
 import tiles.SnowTile;
 import tiles.Tile;
-import tiles.WoodTile;
 
 public class BoardController {
 
@@ -101,7 +98,7 @@ public class BoardController {
 				
 				//TODO: remove and replace with the generator
 				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
-					tiles[x][y] = new SnowTile(x,y);
+					tiles[x][y] = new SnowTile(x,y);					
 					//tiles[x][y] = new GrassTile(x,y);
 					//tiles[x][y] = new WoodTile(x,y);
 				}
@@ -156,7 +153,7 @@ public class BoardController {
 	}
 	
 	public boolean placeCastle(int x, int y) {
-		System.out.println("In castle mode");
+		
 		int xPos = (int)(x/(double)Edge.LENGTH);
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
@@ -171,7 +168,7 @@ public class BoardController {
 	}
 	
 	public boolean placeKnight(int x, int y) {
-		System.out.println("In knight mode");
+		
 		int xPos = (int)(x/(double)Edge.LENGTH);
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
@@ -228,8 +225,7 @@ public class BoardController {
 	}
 	
 	public boolean expandTerritory(int x, int y) {
-		System.out.println("In expand mode");
-		
+				
 		int xPos = (int)(x/(double)Edge.LENGTH);
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
@@ -259,35 +255,33 @@ public class BoardController {
 	    for (Player p :currentAreas.keySet()) {
 	    	for (Set<Tile> area : currentAreas.get(p)) {
 	    		
-	    		if (area.contains(tile)) 
-	    			areaOwner = p;	    		
-	    		if (area.contains(top)) {
+	    		if (area.contains(tile)) {
 	    			tileArea = area;
-	    			if (p.equals(players[currentTurn])) { 
-	    				topFriendly = true;
-	    				topArea = area;
-	    			}
+	    			areaOwner = p;	    	
 	    		}
-	    		if (area.contains(bottom)) {
-	    			tileArea = area;
-	    			if (p.equals(players[currentTurn])) {
-	    				bottomFriendly = true;
-	    				bottomArea = area;
+	    		if (area.contains(top)) {	    			
+	    			if (p.equals(players[currentTurn])) { 
+	    				topFriendly = true;	    				
 	    			}
+	    			topArea = area;
+	    		}
+	    		if (area.contains(bottom)) {	    			
+	    			if (p.equals(players[currentTurn])) {
+	    				bottomFriendly = true;	    				
+	    			}
+	    			bottomArea = area;
 	    		}
 	    		if (area.contains(left)) {
-	    			tileArea = area;
 	    			if (p.equals(players[currentTurn])) {
-	    				leftFriendly = true;
-	    				leftArea = area;
+	    				leftFriendly = true;	    				
 	    			}
+	    			leftArea = area;
 	    		}
-	    		if (area.contains(right)) {
-	    			tileArea = area;	    	
+	    		if (area.contains(right)) {  	
 	    			if (p.equals(players[currentTurn])) {
-	    				rightFriendly = true;
-	    				rightArea = area;
+	    				rightFriendly = true;	    				
 	    			}
+	    			rightArea = area;
 	    		}
 	    	}
 	    }
@@ -348,12 +342,12 @@ public class BoardController {
 	}
 	
 	private int countKnightsInArea(Set<Tile> area) {
-		int numOpposingKnights = 0;
+		int numKnights = 0;
     	for (Tile t : area) {
     		if (null != t.getKnight())
-    			numOpposingKnights++;
+    			numKnights++;
     	}
-    	return numOpposingKnights; 
+    	return numKnights; 
 	}
 	
 	public void placeEdge(int x, int y) {
@@ -492,6 +486,7 @@ public class BoardController {
 	        		playerAreas = new ArrayList<Set<Tile>>();
 	        		areas.put(castles.get(0).getPlayer(), playerAreas);
 	        	}
+	        	
 	        	playerAreas.add(traversed);
 	        }
 	    } 
@@ -550,10 +545,12 @@ public class BoardController {
 	}
 
 	public void updateCurrentTurn() {
-		this.currentTurn = (currentTurn + 1) % players.length;	
-		System.out.println(currentTurn);
+		this.currentTurn = (currentTurn + 1) % players.length;			
 	}
 
+	public int getCurrentTurn() {
+		return currentTurn;
+	}
 
 	public Vertex[][] getVertices() {
 		return vertices;

@@ -96,11 +96,11 @@ public class BoardRenderer {
 		}
 	}
 	
-	private void drawTileItems(int x, int y, Graphics g) {
-		Tile[][] tiles = board.getTiles();
-		for (GamePiece piece : tiles[x][y].getItems()) {
+	private void drawTileItems(Tile tile, Graphics g) {
+		
+		for (GamePiece piece : tile.getItems()) {						
 			if (!(piece instanceof Tree))
-				g.drawImage(piece.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
+				g.drawImage(piece.draw(),tile.getPosX(), tile.getPosY(), null);				
 		}
 	}
 	
@@ -112,8 +112,7 @@ public class BoardRenderer {
 				Edge leftEdge = vertices[x][y].getLeftEdge();
 				Edge bottomEdge = vertices[x][y].getBottomEdge();
 				
-												
-				
+																
 				if (null != leftEdge && (leftEdge.isActive() || leftEdge.isSelected())) {
 					g.drawImage(leftEdge.draw(),leftEdge.getPosX() - Vertex.SIZE, leftEdge.getPosY() - Vertex.SIZE*2, null);
 				}
@@ -123,7 +122,13 @@ public class BoardRenderer {
 				}
 				
 				if (x < vertices.length -1 && y < vertices[x].length -1) {
-					drawTileItems(x,y,g);
+					Tile[][] tiles = board.getTiles();
+					Tile tile = tiles[x][y];
+					GamePiece tree = tile.getForest();
+					if (null != tree) {
+						g.drawImage(tree.draw(),tiles[x][y].getPosX(), tiles[x][y].getPosY(), null);
+					}
+					drawTileItems(tile,g);
 				}
 				if (null != bottomEdge && (bottomEdge.isActive() || bottomEdge.isSelected())) {
 					g.drawImage(bottomEdge.draw(),bottomEdge.getPosX() - Vertex.SIZE, bottomEdge.getPosY() - Vertex.SIZE*2, null);
