@@ -12,11 +12,13 @@ public class ControlsPanel extends JPanel {
 
 	private static final long serialVersionUID = 1L;
 
+	private InfoPanel infoPanel;
 	private GameCanvas canvas;
-	private JLabel playerLabel = null;
-	private JLabel modeLabel = null;
-	public ControlsPanel(GameCanvas canvas) {
+	//private JLabel playerLabel = null;
+	//private JLabel modeLabel = null;
+	public ControlsPanel(GameCanvas canvas, InfoPanel infoPanel) {
 		this.canvas = canvas;				
+		this.infoPanel = infoPanel;
 		
 		JPanel buttons = new JPanel();
 		buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
@@ -25,12 +27,12 @@ public class ControlsPanel extends JPanel {
 		buttons.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
         buttons.add(new TurnButton());
         add(buttons);
-        JPanel labels = new JPanel();
-        playerLabel = new JLabel("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
-        modeLabel = new JLabel("Current mode: " + canvas.getBoard().getCurrentMode());
-        labels.add(playerLabel);
-        labels.add(modeLabel);        
-        add(labels);
+       // JPanel labels = new JPanel();
+        //playerLabel = new JLabel("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
+        //modeLabel = new JLabel("Current mode: " + canvas.getBoard().getCurrentMode());
+        //labels.add(playerLabel);
+        //labels.add(modeLabel);        
+        //add(labels);
 
 	    setVisible(true);
 		
@@ -47,7 +49,8 @@ public class ControlsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			canvas.getBoard().updateCurrentTurn();
-			playerLabel.setText("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
+			infoPanel.updatePlayer(canvas.getBoard().getCurrentPlayer());
+			//playerLabel.setText("Current player: " + canvas.getBoard().getCurrentPlayer().getColor());
 		}
 		
 	}
@@ -75,8 +78,9 @@ public class ControlsPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {		
-			canvas.setCurrentMode(mode);				
-			modeLabel.setText("Current mode: " +modeName);
+			canvas.setCurrentMode(mode);
+			infoPanel.updateMode(modeName);
+			//modeLabel.setText("Current mode: " +modeName);
 		}
 		
 	}
