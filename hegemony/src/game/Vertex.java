@@ -65,11 +65,11 @@ public class Vertex extends GamePiece {
 	}
 	
 	public int getPosX() {
-		return x*Edge.LENGTH;
+		return x*Edge.LENGTH + GameCore.BOARD_OFFSET;
 	}
 	
 	public int getPosY() {
-		return y*Edge.LENGTH;
+		return y*Edge.LENGTH + GameCore.BOARD_OFFSET;
 	}
 	
 	public boolean hasActiveEdges() {
