@@ -77,7 +77,7 @@ public class ControlsPanel extends JPanel {
 		@Override
 		public void actionPerformed(ActionEvent e) {		
 			canvas.setCurrentMode(mode);
-			infoPanel.updateMode(modeName);
+			infoPanel.updateMode(modeName);		
 		}
 		
 	}

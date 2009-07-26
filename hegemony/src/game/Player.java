@@ -49,4 +49,12 @@ public class Player {
 			return null;
 		return castles.remove(0);
 	}
+	
+	public int getKnightsRemaining() {
+		return knights.size();
+	}
+	
+	public int getCastlesRemainig() {
+		return castles.size();		
+	}
 }
