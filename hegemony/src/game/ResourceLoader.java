@@ -21,14 +21,6 @@ public enum ResourceLoader implements ImageObserver {
 	private Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();
 	private Map<String,AudioClip> sounds = new HashMap<String,AudioClip>();
 
-	//private static ResourceLoader instance = new ResourceLoader();
-	
-
-	private ResourceLoader() {}
-	
-	//public static ResourceLoader getInstance() {
-	//	return instance;
-	//}
 	
 	public void cleanup() {
 		for (AudioClip sound : sounds.values()) {
