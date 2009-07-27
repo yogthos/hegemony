@@ -10,10 +10,13 @@ public abstract class GamePiece {
 	protected int frameSpeed;
 	protected int actorSpeed;
 	protected String[] sprites = null; 
-			
+	protected String actionSound = null;
+	
 	public abstract int getValue();
 	
 	public void act() {
+		if (null != actionSound)
+			ResourceLoader.INSTANCE.getSound(actionSound).play();
 		updateFrame();
 	}
 	
@@ -27,5 +30,11 @@ public abstract class GamePiece {
 		
 	public BufferedImage draw() {
 		return ResourceLoader.INSTANCE.getSprite(sprites[frame]);
+	}
+	
+	public void initialize() {
+		for (String sprite : sprites) {
+			ResourceLoader.INSTANCE.getSprite(sprite);
+		}
 	}
 }
