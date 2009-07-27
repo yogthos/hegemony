@@ -2,7 +2,7 @@ package tiles;
 
 import game.ResourceLoader;
 
-import java.awt.Image;
+import java.awt.image.BufferedImage;
 
 public class SnowTile extends Tile {
 
@@ -33,9 +33,11 @@ public class SnowTile extends Tile {
 	public Type getType() {
 		return Type.GRASS;
 	}
-	
-	public Image draw() {
-		return ResourceLoader.INSTANCE.getSprite(sprite);
-	}
 
+	
+	public BufferedImage draw() {
+		return ResourceLoader.INSTANCE.getSprite(sprite);
+		
+	}
+	
 }

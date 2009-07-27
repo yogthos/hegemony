@@ -9,13 +9,7 @@ import java.util.Set;
 
 public abstract class Tile implements Comparable<Tile> {
 
-	protected static String[] sprites = {"grass.png"};
-	
-	static {
-		for (String sprite : sprites) {
-			ResourceLoader.INSTANCE.getSprite(sprite);
-		}
-	}
+	protected static String sprite = "grass.png";
 		
 	protected int x;
 	protected int y;
@@ -48,8 +42,14 @@ public abstract class Tile implements Comparable<Tile> {
 		DIAMOND,
 		CAPITAL	
 	}
+	
+	public Tile(int x, int y) {
+		this.x = x;
+		this.y = y;
+	}
 
 	public abstract Type getType();
+	
 	public int getValue() {
 		int value = 0;
 		for (GamePiece item : items) {
@@ -57,15 +57,10 @@ public abstract class Tile implements Comparable<Tile> {
 		}
 		
 		return value;
-	}
-	
-	public Tile(int x, int y) {
-		this.x = x;
-		this.y = y;
-	}
+	}		
 	
 	public Image draw() {
-		return ResourceLoader.INSTANCE.getSprite(sprites[0]);
+		return ResourceLoader.INSTANCE.getSprite(sprite);
 	}
 		
 	public Edge getTopEdge() {
