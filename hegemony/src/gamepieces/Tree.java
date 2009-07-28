@@ -1,11 +1,15 @@
 package gamepieces;
 
+import game.ResourceManager;
+
 public class Tree extends GamePiece {
 	
 	private int value = 1;
 	
 	public Tree () {
-		sprites = new String[]{"snow/crystal.png"};
+		super();
+		sprites = ResourceManager.FOREST.getSprites();
+		actionSound = ResourceManager.FOREST.getSound();
 		
 		frame = 0;
 		frameSpeed = 35;

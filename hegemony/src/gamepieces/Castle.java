@@ -1,6 +1,7 @@
 package gamepieces;
 
 import game.Player;
+import game.ResourceManager;
 
 public class Castle extends GamePiece {
 
@@ -9,7 +10,9 @@ public class Castle extends GamePiece {
 	
 	public Castle(Player player) {
 		
-		sprites = new String[]{"snow/base0.png","snow/base1.png","snow/base2.png","snow/base3.png", "snow/base2.png","snow/base1.png"};
+		sprites = ResourceManager.CASTLE.getSprites();
+		actionSound = ResourceManager.CASTLE.getSound();
+		
 		frame = 0;
 		frameSpeed = 35;
 		this.player = player;

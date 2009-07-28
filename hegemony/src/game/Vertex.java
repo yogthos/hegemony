@@ -17,7 +17,8 @@ public class Vertex extends GamePiece {
 	
 	public Vertex(int x, int y) {
 		super();
-		sprites = new String[]{"snow/tower0.png"};
+		sprites = ResourceManager.TOWER.getSprites();
+		actionSound = ResourceManager.TOWER.getSound();
 		frame = 0;
 		frameSpeed = 35;
 		this.x = x;

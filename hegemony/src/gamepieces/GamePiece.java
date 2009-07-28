@@ -19,7 +19,7 @@ public abstract class GamePiece {
 			ResourceLoader.INSTANCE.getSound(actionSound).play();
 		updateFrame();
 	}
-	
+		
 	protected void updateFrame() {
 		time++;
 		if (time % frameSpeed == 0) {
