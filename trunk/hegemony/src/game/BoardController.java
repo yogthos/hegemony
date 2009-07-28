@@ -366,7 +366,8 @@ public class BoardController {
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
-		updateEdgeStatus(xPos,yPos);									
+		updateEdgeStatus(xPos,yPos);
+		deselectEdgesInTerritories();
 	}
 	
 	private void updateEdgeStatus(double x, double y){
@@ -542,6 +543,41 @@ public class BoardController {
 	            findConnected(right, traversed, visited, toVisit, castles);
 	        }
 	    }
+	}
+	
+	private void deselectEdgesInTerritories() {
+		Map<Player, List<Set<Tile>>> playerAreas = getPlayerAreas();
+		for (Player player : playerAreas.keySet()) {
+			for (Set<Tile> tiles : playerAreas.get(player)) {
+				for (Tile tile : tiles) {
+					Edge topEdge = tile.getTopEdge();
+					Edge bottomEdge = tile.getBottomEdge();
+					Edge leftEdge = tile.getLeftEdge();
+					Edge rightEdge = tile.getRightEdge();
+					
+					if (topEdge.isActive()) {
+						if (tiles.contains(tile.getTopTile())) {
+							topEdge.setActive(false);
+						}
+					}
+					if (bottomEdge.isActive()) {
+						if (tiles.contains(tile.getBottomTile())) {
+							bottomEdge.setActive(false);
+						}
+					}
+					if (leftEdge.isActive()) {
+						if (tiles.contains(tile.getLeftTile())) {
+							leftEdge.setActive(false);
+						}
+					}
+					if (rightEdge.isActive()) {
+						if (tiles.contains(tile.getRightTile())) {
+							rightEdge.setActive(false);
+						}
+					}
+				}
+			} 
+		}
 	}
 	
 	public void setCurrentMode(MODE currentMode) {
