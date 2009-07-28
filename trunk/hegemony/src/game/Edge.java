@@ -7,7 +7,7 @@ public class Edge {
 		
 	//protected static String[] sprites = {"wallv.png","wallh.png"};
 	protected static String[] sprites = {"snow/wall-v.png","snow/wall-h.png"};
-	protected static String placeSound = "place_wall.wav";
+	protected static String actionSound = "place_wall.wav";
 	
 	public static int LENGTH;
 	Vertex first = null;
@@ -79,7 +79,7 @@ public class Edge {
 	
 	public void setActive(boolean active) {
 		if (active)
-			ResourceLoader.INSTANCE.getSound(placeSound).play();
+			ResourceLoader.INSTANCE.getSound(actionSound).play();
 		
 		this.active = active;
 	}
