@@ -1,7 +1,7 @@
 package game;
 	 
 public enum ResourceManager {
-	CAPITAL(new String[]{"snow/temple0","snow/temple1","snow/temple2","snow/temple3","snow/temple2","snow/temple1"}, null),	
+	CAPITAL(new String[]{"snow/temple0.png","snow/temple1.png","snow/temple2.png","snow/temple3.png","snow/temple2.png","snow/temple1.png"}, null),	
 	CASTLE(new String[]{"snow/base0.png","snow/base1.png","snow/base2.png","snow/base3.png", "snow/base2.png","snow/base1.png"}, null),
 	FOREST(new String[]{"tree.png"}, null),
 	GRASS(new String[]{"grass.png"}, null),			
