@@ -30,4 +30,14 @@ public enum ResourceManager {
 	public String getSound() {
 		return sound;
 	}
+	
+	public static void initialize() {
+		for (ResourceManager value : ResourceManager.values()) {
+			for (String sprite : value.sprites) {
+				ResourceLoader.INSTANCE.getSprite(sprite);
+			}
+			if (null != value.sound)
+				ResourceLoader.INSTANCE.getSound(value.sound);
+		}
+	}
 }
