@@ -1,14 +1,12 @@
 package game;
 
-import java.awt.Image;
+import gamepieces.GamePiece;
+
+import java.awt.image.BufferedImage;
 
 
-public class Edge {
-		
-	//protected static String[] sprites = {"wallv.png","wallh.png"};
-	protected static String[] sprites = {"snow/wall-v.png","snow/wall-h.png"};
-	protected static String actionSound = "place_wall.wav";
-	
+public class Edge extends GamePiece {
+			
 	public static int LENGTH;
 	Vertex first = null;
 	Vertex second = null;
@@ -24,6 +22,10 @@ public class Edge {
 	}
 	
 	public Edge(Vertex first, Vertex second, boolean vertical) {
+		super();
+		sprites = ResourceManager.WALL.getSprites();
+		actionSound = ResourceManager.WALL.getSound();
+		
 		this.first = first;
 		this.second = second;
 		this.vertical = vertical;
@@ -79,12 +81,11 @@ public class Edge {
 	
 	public void setActive(boolean active) {
 		if (active)
-			ResourceLoader.INSTANCE.getSound(actionSound).play();
-		
+			ResourceLoader.INSTANCE.getSound(actionSound).play();		
 		this.active = active;
 	}
 	
-	public Image draw() {
+	public BufferedImage draw() {
 
 		return (vertical ? 
 				(selected && !active?
@@ -105,5 +106,11 @@ public class Edge {
 	
 	public String toString() {
 		return "[" + first.getX() + "," + first.getY() + "]-" + (active?"active":"inactive") + "->[" + second.getX() + "," + second.getY() + "]";
+	}
+
+	@Override
+	public int getValue() {
+		// TODO Auto-generated method stub
+		return 0;
 	}	
 }
