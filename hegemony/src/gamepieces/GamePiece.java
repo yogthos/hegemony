@@ -30,11 +30,5 @@ public abstract class GamePiece {
 		
 	public BufferedImage draw() {
 		return ResourceLoader.INSTANCE.getSprite(sprites[frame]);
-	}
-	
-	public void initialize() {
-		for (String sprite : sprites) {
-			ResourceLoader.INSTANCE.getSprite(sprite);
-		}
-	}
+	}	
 }
