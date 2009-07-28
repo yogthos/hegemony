@@ -28,7 +28,8 @@ public class GameCore extends Applet implements Runnable {
 	private GameCanvas gameCanvas;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
-	public void init() {						
+	public void init() {	
+		ResourceManager.initialize();
 		board = new BoardController(12, 2);	
 		renderer = new BoardRenderer(board);
 		Thread t = new Thread(this);
