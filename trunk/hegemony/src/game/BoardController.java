@@ -307,35 +307,44 @@ public class BoardController {
 	    
 	    if (!(topFriendly  || bottomFriendly || leftFriendly  || rightFriendly))
 	    	return false;
-	    	   
 	    
+	    Set<Tile> expandArea = null;
 	    //check if the area is valid for expansion
 	    if (null != areaOwner && !players[currentTurn].equals(areaOwner)) {
 	    	int numOpposingKnights = countKnightsInArea(tileArea);
 	    	int numFriendlyKnights = 0;
 	    	if (topFriendly) {
 	    		int knights = countKnightsInArea(topArea);
-	    		if (knights > numFriendlyKnights)
+	    		if (knights >= numFriendlyKnights) {
 	    			numFriendlyKnights = knights;
+	    			expandArea = topArea;
+	    		}
 	    	}
 	    	if (bottomFriendly) {
 	    		int knights = countKnightsInArea(bottomArea);
-	    		if (knights > numFriendlyKnights)
+	    		if (knights >= numFriendlyKnights) {
 	    			numFriendlyKnights = knights;
+	    			expandArea = bottomArea;
+	    		}
 	    	}
 	    	if (leftFriendly) {
 	    		int knights = countKnightsInArea(leftArea);
-	    		if (knights > numFriendlyKnights)
+	    		if (knights >= numFriendlyKnights) {
 	    			numFriendlyKnights = knights;
+	    			expandArea = leftArea;
+	    		}
 	    	}
 	    	if (rightFriendly) {
 	    		int knights = countKnightsInArea(rightArea);
-	    		if (knights > numFriendlyKnights)
+	    		if (knights >= numFriendlyKnights) {
 	    			numFriendlyKnights = knights;
+	    			expandArea = rightArea;
+	    		}
 	    	}
 	    	if (numFriendlyKnights <= numOpposingKnights)
-	    		return false;
-	    	
+	    		return false;	    	
+	    } else {
+	    	expandArea = (topFriendly?topArea:(leftFriendly?leftArea:(rightFriendly?rightArea:bottomArea)));
 	    }
 	    
 	    //expand area
@@ -344,16 +353,16 @@ public class BoardController {
     	tile.getRightEdge().setActive(true);
     	tile.getBottomEdge().setActive(true);
     	
-	    if (tileArea.contains(top)) {
+	    if (expandArea.contains(top)) {
 	    	tile.getTopEdge().setActive(false);
 	    } 
-	    if (tileArea.contains(bottom)) {
+	    if (expandArea.contains(bottom)) {
 	    	tile.getBottomEdge().setActive(false);
 	    }
-	    if (tileArea.contains(left)) {
+	    if (expandArea.contains(left)) {
 	    	tile.getLeftEdge().setActive(false);
 	    }
-	    if (tileArea.contains(right)) {
+	    if (expandArea.contains(right)) {
 	    	tile.getRightEdge().setActive(false);
 	    }
 
