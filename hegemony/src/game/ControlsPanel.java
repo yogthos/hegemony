@@ -2,6 +2,8 @@ package game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -13,30 +15,33 @@ public class ControlsPanel extends JPanel {
 	private static final long serialVersionUID = 1L;
 
 	private InfoPanel infoPanel;
-	private GameCanvas canvas;
+	private BoardController board;
 	
+	JPanel buttonsPanel = new JPanel();
 	
-	public ControlsPanel(GameCanvas canvas, InfoPanel infoPanel) {
-		this.canvas = canvas;				
+	public ControlsPanel(BoardController board, InfoPanel infoPanel) {
+
+		this.board = board;
 		this.infoPanel = infoPanel;
 		
-		JPanel buttons = new JPanel();
-		JButton castleButton = new ModeButton(BoardController.MODE.PLACE_CASTLE);
-		JButton wallButton = new ModeButton(BoardController.MODE.PLACE_WALL);
-		JButton knightButton = new ModeButton(BoardController.MODE.PLACE_KNIGHT);
-		JButton areaButton = new ModeButton(BoardController.MODE.EXPAND_AREA);
-		buttons.add(castleButton);
-		buttons.add(wallButton);
-		buttons.add(knightButton);
-		buttons.add(areaButton);
-        buttons.add(new TurnButton());
-        add(buttons);
-
-
+        add(buttonsPanel);
 	    setVisible(true);
 		
 	}
 	
+	public void initSetupPhase() {		
+		//buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
+	}
+	
+	public void initMainPhase() {
+		buttonsPanel.removeAll();
+		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
+		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
+		buttonsPanel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+	}
+	
+	
+	/*
 	private class TurnButton extends JButton implements ActionListener {
 
 		private static final long serialVersionUID = 1L;
@@ -47,11 +52,12 @@ public class ControlsPanel extends JPanel {
 		}
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			canvas.getBoard().updateCurrentTurn();
-			infoPanel.updatePlayer(canvas.getBoard().getCurrentPlayer(), canvas.getBoard().getCurrentTurn());
+			board.updateCurrentTurn();
+			infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
 		}
 		
 	}
+	*/
 	
 	private class ModeButton  extends JButton implements ActionListener {
 
@@ -76,9 +82,10 @@ public class ControlsPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {		
-			canvas.setCurrentMode(mode);
+			board.setCurrentMode(mode);
 			infoPanel.updateMode(modeName);		
 		}
 		
 	}
+	
 }

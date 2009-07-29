@@ -138,8 +138,10 @@ public class BoardController {
 		highlightedPiece.setActive(false);
 		deselectEdges();
 		if (clicked) {
-			if (MODE.PLACE_CASTLE == currentMode)
-				placeCastle(x, y);
+			if (MODE.PLACE_CASTLE == currentMode) {
+				if (placeCastle(x, y))
+					updateCurrentTurn();
+			}
 			else if (MODE.EXPAND_AREA == currentMode)
 				expandTerritory(x, y);
 			else if (MODE.PLACE_KNIGHT == currentMode)

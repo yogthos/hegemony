@@ -12,22 +12,21 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	
 	private BoardController board;
 	private InfoPanel infoPanel;
+	private ControlsPanel controlsPanel;
 	
-	public GameCanvas(InfoPanel infoPanel, BoardController board, int size) {
+	public GameCanvas(InfoPanel infoPanel, ControlsPanel controlsPanel, BoardController board, int size) {
 		this.infoPanel = infoPanel;
+		this.controlsPanel = controlsPanel;
 		this.board = board;
 		setSize(size,size);
 		
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		board.setCurrentMode(BoardController.MODE.PLACE_WALL);
+		controlsPanel.initSetupPhase();
+		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 		setIgnoreRepaint(true);
 	}
-	
-	public void setCurrentMode(BoardController.MODE mode) {
-		board.setCurrentMode(mode);
-	}
-	
+		
 	public BoardController getBoard() {
 		return board;
 	}
@@ -60,8 +59,20 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX() - GameCore.BOARD_OFFSET;
 		int y = e.getY() - GameCore.BOARD_OFFSET;
+						
 		board.handlePlayerAction(x, y, true);
 		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
+		if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE) {
+			boolean castlesPlaced = true;
+			for (Player player : board.getPlayers()) {
+				if (player.getCastlesRemainig() > 0) {
+					castlesPlaced = false;
+					break;
+				}				
+			}
+			if (castlesPlaced)
+				controlsPanel.initMainPhase();
+		}
 	    e.consume();		
 	}
 
