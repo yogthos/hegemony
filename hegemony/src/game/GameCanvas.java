@@ -72,6 +72,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 			}
 			if (castlesPlaced)
 				controlsPanel.initMainPhase();
+				
 		}
 	    e.consume();		
 	}
