@@ -30,7 +30,7 @@ public class GameCore extends Applet implements Runnable {
 	
 	public void init() {	
 		ResourceManager.initialize();
-		board = new BoardController(13, 2);	
+		board = new BoardController(12, 2);	
 		renderer = new BoardRenderer(board);
 		Thread t = new Thread(this);
 		
@@ -41,11 +41,12 @@ public class GameCore extends Applet implements Runnable {
 		InfoPanel infoPanel = new InfoPanel(WIDTH - BOARD_SIZE, BOARD_SIZE);
 	    add(infoPanel,BorderLayout.WEST);
 	    
-		gameCanvas = new GameCanvas(infoPanel, board, BOARD_SIZE + BOARD_OFFSET);						
-		add (gameCanvas, BorderLayout.CENTER);
+	    ControlsPanel controlPanel = new ControlsPanel(board, infoPanel);
 	    
-	    JPanel gamePanel = new ControlsPanel(gameCanvas, infoPanel); 
-		add(gamePanel,BorderLayout.PAGE_END);
+	    gameCanvas = new GameCanvas(infoPanel, controlPanel, board, BOARD_SIZE + BOARD_OFFSET);						
+		add (gameCanvas, BorderLayout.CENTER);
+	    	    
+		add(controlPanel, BorderLayout.PAGE_END);
 	    
 		t.start();
 	}
