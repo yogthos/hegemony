@@ -30,7 +30,7 @@ public class GameCore extends Applet implements Runnable {
 	
 	public void init() {	
 		ResourceManager.initialize();
-		board = new BoardController(12, 2);	
+		board = new BoardController(13, 2);	
 		renderer = new BoardRenderer(board);
 		Thread t = new Thread(this);
 		
