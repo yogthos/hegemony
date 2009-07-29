@@ -12,11 +12,13 @@ public class ControlsPanel extends JPanel {
 
 	private InfoPanel infoPanel;
 	private BoardController board;
+	private GameCore mainWindow; 
 	
 	JPanel buttonsPanel = new JPanel();
 	
-	public ControlsPanel(BoardController board, InfoPanel infoPanel) {
+	public ControlsPanel(GameCore mainWindow, BoardController board, InfoPanel infoPanel) {
 
+		this.mainWindow = mainWindow;
 		this.board = board;
 		this.infoPanel = infoPanel;
 		
@@ -36,27 +38,8 @@ public class ControlsPanel extends JPanel {
 	
 	public void initMainPhase() {
 		buttonsPanel.setVisible(true);
-		repaint();
+		mainWindow.validate();
 	}
-	
-	
-	/*
-	private class TurnButton extends JButton implements ActionListener {
-
-		private static final long serialVersionUID = 1L;
-		public TurnButton() {
-			super();
-			setText("Next Turn");
-			addActionListener(this);
-		}
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			board.updateCurrentTurn();
-			infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
-		}
-		
-	}
-	*/
 	
 	private class ModeButton  extends JButton implements ActionListener {
 
