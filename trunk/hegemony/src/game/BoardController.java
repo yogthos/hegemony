@@ -14,6 +14,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import tiles.GameBoard;
 import tiles.GrassTile;
 import tiles.SnowTile;
 import tiles.Tile;
@@ -109,7 +110,7 @@ public class BoardController {
 			}
 		}
 		//TODO: generate tiles with tile generator:
-		//tiles = new GameBoard(size - 1).getBoard(); 
+		tiles = GameBoard.generateBoard(3, 3, (size - 1)/3); 
 		
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {
