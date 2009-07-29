@@ -344,16 +344,16 @@ public class BoardController {
     	tile.getRightEdge().setActive(true);
     	tile.getBottomEdge().setActive(true);
     	
-	    if (topFriendly) {
+	    if (tileArea.contains(top)) {
 	    	tile.getTopEdge().setActive(false);
 	    } 
-	    if (bottomFriendly) {
+	    if (tileArea.contains(bottom)) {
 	    	tile.getBottomEdge().setActive(false);
 	    }
-	    if (leftFriendly) {
+	    if (tileArea.contains(left)) {
 	    	tile.getLeftEdge().setActive(false);
 	    }
-	    if (rightFriendly) {
+	    if (tileArea.contains(right)) {
 	    	tile.getRightEdge().setActive(false);
 	    }
 
