@@ -166,7 +166,7 @@ public class BoardController {
 		int yPos = (int)(y/(double)Edge.LENGTH);
 		Tile tile = tiles[xPos][yPos];
 		
-		if(null != tile.getCastle())
+		if(tile.getItems().size() > 0)
 			return false;
 
 		//TODO: check that castles aren't too close when placing
