@@ -7,6 +7,7 @@ public class Capital extends GamePiece {
 	private int value = 1;
 	
 	public Capital () {
+		super();
 		sprites = ResourceManager.CAPITAL.getSprites();
 		actionSound = ResourceManager.CAPITAL.getSound();
 	}

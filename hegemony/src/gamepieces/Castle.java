@@ -9,7 +9,7 @@ public class Castle extends GamePiece {
 	private Player player;
 	
 	public Castle(Player player) {
-		
+		super();
 		sprites = ResourceManager.CASTLE.getSprites();
 		actionSound = ResourceManager.CASTLE.getSound();
 		
