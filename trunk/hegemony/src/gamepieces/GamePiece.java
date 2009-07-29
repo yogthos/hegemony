@@ -12,6 +12,11 @@ public abstract class GamePiece {
 	protected String[] sprites = null; 
 	protected String actionSound = null;
 	
+	public GamePiece() {
+		frame = 0;
+		frameSpeed = 35;
+	}
+	
 	public abstract int getValue();
 	
 	public void act() {

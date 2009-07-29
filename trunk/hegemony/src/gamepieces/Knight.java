@@ -11,6 +11,7 @@ public class Knight extends GamePiece {
 	private Player player = null;
 	
 	public Knight(Player player) {
+		super();
 		sprites = ResourceManager.KNIGHT.getSprites();
 		actionSound = ResourceManager.KNIGHT.getSound();
 		
