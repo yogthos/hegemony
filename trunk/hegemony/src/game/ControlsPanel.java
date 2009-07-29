@@ -2,11 +2,7 @@ package game;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.swing.JButton;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class ControlsPanel extends JPanel {
@@ -24,9 +20,14 @@ public class ControlsPanel extends JPanel {
 		this.board = board;
 		this.infoPanel = infoPanel;
 		
-        add(buttonsPanel);
-	    setVisible(true);
-		
+		buttonsPanel.removeAll();
+		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
+		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
+		buttonsPanel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));		
+		buttonsPanel.setVisible(true);
+		buttonsPanel.setVisible(false);
+
+        add(buttonsPanel);		
 	}
 	
 	public void initSetupPhase() {		
@@ -34,10 +35,8 @@ public class ControlsPanel extends JPanel {
 	}
 	
 	public void initMainPhase() {
-		buttonsPanel.removeAll();
-		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
-		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
-		buttonsPanel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));
+		buttonsPanel.setVisible(true);
+		repaint();
 	}
 	
 	
