@@ -188,6 +188,10 @@ public class BoardController {
 			return false;
 		if (null != tile.getKnight())
 			return false;
+		if (null != tile.getCapital())
+			return false;
+		if (null != tile.getVillage())
+			return false;
 		
 		boolean isInArea = false;
 		
