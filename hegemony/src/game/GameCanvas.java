@@ -55,6 +55,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		
 	}
 
+	
 	private boolean moreCastlesToPlace() {
 		boolean castlesPlaced = false;
 		for (Player player : board.getPlayers()) {
@@ -104,6 +105,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 			return;
 		}
 		board.handlePlayerAction(x, y, false);
+		if (ControlsPanel.Phase.MAIN == controlsPanel.getPhase()) {
+			board.updateCurrentTurn();
+		}
 		e.consume();		
 	}
 
