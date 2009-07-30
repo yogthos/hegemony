@@ -34,6 +34,7 @@ public class BoardController {
 	private MODE currentMode;
 	public enum MODE {
 		PLACE_CASTLE,
+		PLACE_KNIGHT_SIMPLE,
 		PLACE_KNIGHT,
 		PLACE_WALL,
 		EXPAND_AREA
@@ -135,20 +136,20 @@ public class BoardController {
 		
 
 	///////////Mode Actions/////////////
-	public void handlePlayerAction(int x, int y, boolean clicked) {
+	public boolean handlePlayerAction(int x, int y, boolean clicked) {
 		highlightedPiece.setActive(false);
 		deselectEdges();
 		if (clicked) {
-			if (MODE.PLACE_CASTLE == currentMode) {
-				if (placeCastle(x, y))
-					updateCurrentTurn();
-			}
+			if (MODE.PLACE_CASTLE == currentMode)
+				return placeCastle(x, y);					
 			else if (MODE.EXPAND_AREA == currentMode)
-				expandTerritory(x, y);
+				return expandTerritory(x, y);
+			else if (MODE.PLACE_KNIGHT_SIMPLE == currentMode) 
+				return placeKnightSimple(x, y);
 			else if (MODE.PLACE_KNIGHT == currentMode)
-				placeKnight(x, y);
+				return placeKnight(x, y);
 			else if (MODE.PLACE_WALL == currentMode)
-				placeEdge(x, y);
+				return placeEdge(x, y);
 		}
 		else {
 			if (MODE.PLACE_WALL == currentMode)			
@@ -157,7 +158,9 @@ public class BoardController {
 				createCastleOverlay(x, y);
 			else if (MODE.PLACE_KNIGHT == currentMode)
 				createKnightOverlay(x, y);
+			
 		}
+		return true;
 	}
 	
 	public boolean placeCastle(int x, int y) {
@@ -176,6 +179,24 @@ public class BoardController {
 		
 		tile.setCastle(castle);
 		return true;
+	}
+	
+	public boolean placeKnightSimple(int x, int y) {
+		int xPos = (int)(x/(double)Edge.LENGTH);
+		int yPos = (int)(y/(double)Edge.LENGTH);
+		Tile tile = tiles[xPos][yPos];
+		
+		if(null != tile.getCastle())
+			return false;
+		if (null != tile.getKnight())
+			return false;
+		if (null != tile.getCapital())
+			return false;
+		if (null != tile.getVillage())
+			return false;
+		
+		tile.setKnight(players[currentTurn].placeKnight());
+		return true;		
 	}
 	
 	public boolean placeKnight(int x, int y) {
@@ -378,15 +399,17 @@ public class BoardController {
     	return numKnights; 
 	}
 	
-	public void placeEdge(int x, int y) {
+	public boolean placeEdge(int x, int y) {
+		
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
-		updateEdgeStatus(xPos,yPos);
+		boolean placed = updateEdgeStatus(xPos,yPos);
 		deselectEdgesInTerritories();
+		return placed;
 	}
 	
-	private void updateEdgeStatus(double x, double y){
+	private boolean updateEdgeStatus(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
 
@@ -400,7 +423,7 @@ public class BoardController {
 			} else {				
 				Vertex v1 = v.getLeftEdge().getSecond(); 
 				if (null == v1.getBottomEdge())
-					return;
+					return false;
 				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());				
 			}
 		}
@@ -408,12 +431,13 @@ public class BoardController {
 			if (yOffset > 0.5) {			
 				Vertex v1 = v.getBottomEdge().getSecond();
 				if (null == v1.getLeftEdge())
-					return;
+					return false;
 				v1.getLeftEdge().setActive(!v1.getLeftEdge().isActive());
 			} else {
 				v.getLeftEdge().setActive(!v.getLeftEdge().isActive());
 			}
 		}	
+		return true;
 	}
 	
 	
