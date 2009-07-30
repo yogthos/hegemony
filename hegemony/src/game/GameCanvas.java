@@ -81,7 +81,10 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE && result) {
 			board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 			if (moreCastlesToPlace()) board.updateCurrentTurn();
-			else 				      controlsPanel.initMainPhase();
+			else {
+				board.setCurrentMode(BoardController.MODE.EMPTY);
+				controlsPanel.initMainPhase();
+			}
 		}
 	    e.consume();		
 	}
