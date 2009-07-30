@@ -55,24 +55,33 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		
 	}
 
+	private boolean moreCastlesToPlace() {
+		boolean castlesPlaced = false;
+		for (Player player : board.getPlayers()) {
+			if (player.getCastlesRemainig() > 0) {
+				castlesPlaced = true;
+				break;
+			}								
+		}
+		return castlesPlaced;
+	}
+	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX() - GameCore.BOARD_OFFSET;
 		int y = e.getY() - GameCore.BOARD_OFFSET;
-						
-		board.handlePlayerAction(x, y, true);
+		
+		
+		boolean result = board.handlePlayerAction(x, y, true);
 		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
-		if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE) {
-			boolean castlesPlaced = true;
-			for (Player player : board.getPlayers()) {
-				if (player.getCastlesRemainig() > 0) {
-					castlesPlaced = false;
-					break;
-				}				
-			}
-			if (castlesPlaced)
-				controlsPanel.initMainPhase();
-				
+		if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE && result) {
+			
+			board.setCurrentMode(BoardController.MODE.PLACE_KNIGHT_SIMPLE);
+		}
+		else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE && result) {
+			board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
+			if (moreCastlesToPlace()) board.updateCurrentTurn();
+			else 				      controlsPanel.initMainPhase();
 		}
 	    e.consume();		
 	}
