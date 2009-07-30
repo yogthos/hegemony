@@ -156,7 +156,7 @@ public class BoardController {
 				createWallOverlay(x,y);					
 			else if (MODE.PLACE_CASTLE == currentMode)
 				createCastleOverlay(x, y);
-			else if (MODE.PLACE_KNIGHT == currentMode)
+			else if (MODE.PLACE_KNIGHT == currentMode || MODE.PLACE_KNIGHT_SIMPLE == currentMode)
 				createKnightOverlay(x, y);
 			
 		}
