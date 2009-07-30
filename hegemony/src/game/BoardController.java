@@ -37,7 +37,8 @@ public class BoardController {
 		PLACE_KNIGHT_SIMPLE,
 		PLACE_KNIGHT,
 		PLACE_WALL,
-		EXPAND_AREA
+		EXPAND_AREA,
+		EMPTY
 	}
 	
 	public enum PHASE {
