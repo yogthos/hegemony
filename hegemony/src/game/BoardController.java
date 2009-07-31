@@ -196,6 +196,24 @@ public class BoardController {
 		if (null != tile.getVillage())
 			return false;
 		
+		Tile top = tile.getTopTile();
+	    Tile bottom = tile.getBottomTile();
+	    Tile left = tile.getLeftTile();
+	    Tile right = tile.getRightTile();
+	    
+	    boolean adjacentFriendlyCastle = false;
+	    if (null != top && null != top.getCastle() && ((Castle)top.getCastle()).getPlayer().equals(players[currentTurn]))
+	    	adjacentFriendlyCastle = true;
+	    if (null != bottom && null != bottom.getCastle() && ((Castle)bottom.getCastle()).getPlayer().equals(players[currentTurn]))
+	    	adjacentFriendlyCastle = true;
+	    if (null != left && null != left.getCastle() && ((Castle)left.getCastle()).getPlayer().equals(players[currentTurn]))
+	    	adjacentFriendlyCastle = true;
+	    if (null != right && null != right.getCastle() && ((Castle)right.getCastle()).getPlayer().equals(players[currentTurn]))
+	    	adjacentFriendlyCastle = true;
+	    	
+	    if(!adjacentFriendlyCastle)
+	    	return false;
+	    
 		tile.setKnight(players[currentTurn].placeKnight());
 		return true;		
 	}
