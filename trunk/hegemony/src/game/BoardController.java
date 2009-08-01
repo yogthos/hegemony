@@ -66,9 +66,7 @@ public class BoardController {
 		for (int i = 0; i < players.length; i++) {
 			players[i].setColor(playerColors[i]);
 		}
-		
-		//TODO: comment out
-		tiles = new Tile[size-1][size-1];				
+						
 		generateEdgesAndVertices(size);
 	}
 	
@@ -107,18 +105,10 @@ public class BoardController {
 				}
 				if (y < vertices[x].length - 1) {					
 					new Edge(vertices[x][y], vertices[x][y + 1], true);
-				}
-				
-				//TODO: remove and replace with the generator
-				if (x < vertices.length - 1 && y < vertices[x].length - 1) {
-					//tiles[x][y] = new SnowTile(x,y);
-					//tiles[x][y] = new VillageTile(x,y);
-					tiles[x][y] = new GrassTile(x,y);
-					//tiles[x][y] = new WoodTile(x,y);
-				}
+				}				
 			}
 		}
-		//TODO: generate tiles with tile generator:
+
 		tiles = GameBoard.generateBoard(3, 3, (size - 1)/3); 
 		
 		for (int x = 0; x < tiles.length; x++) {
@@ -497,7 +487,6 @@ public class BoardController {
 		Tile t1 = tiles[xi][yi];
 		Tile t2 = null;
 		
-		//TODO check that wall placement is valid
 		if (t1.getTopEdge().equals(edge)) {
 			t2 = t1.getTopTile();
 		}
