@@ -87,6 +87,9 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 				controlsPanel.initMainPhase();
 			}
 		}
+		if (result && ControlsPanel.Phase.MAIN == controlsPanel.getPhase()) {
+			board.updateCurrentTurn();
+		}
 	    e.consume();		
 	}
 
@@ -104,10 +107,7 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
 			return;
 		}
-		board.handlePlayerAction(x, y, false);
-		if (ControlsPanel.Phase.MAIN == controlsPanel.getPhase()) {
-			board.updateCurrentTurn();
-		}
+		board.handlePlayerAction(x, y, false);		
 		e.consume();		
 	}
 
