@@ -1,6 +1,7 @@
 package game;
 
 import gamepieces.Castle;
+import gamepieces.ExpandPiece;
 import gamepieces.GamePiece;
 import gamepieces.Knight;
 import gamepieces.OverlayPiece;
@@ -159,6 +160,8 @@ public class BoardController {
 				createCastleOverlay(x, y);
 			else if (MODE.PLACE_KNIGHT == currentMode || MODE.PLACE_KNIGHT_SIMPLE == currentMode)
 				createKnightOverlay(x, y);
+			else if (MODE.EXPAND_AREA == currentMode)
+				createTileOverlay(x, y);
 			
 		}
 		return true;
@@ -607,6 +610,12 @@ public class BoardController {
 	private void createKnightOverlay(int x, int y) {		
 		highlightedPiece.setXY(x,y);
 		highlightedPiece.setPiece(new Knight(players[currentTurn]));
+		highlightedPiece.setActive(true);
+	}
+	
+	private void createTileOverlay(int x, int y) {
+		highlightedPiece.setXY(x,y);
+		highlightedPiece.setPiece(new ExpandPiece(players[currentTurn].getColor()));
 		highlightedPiece.setActive(true);
 	}
 	
