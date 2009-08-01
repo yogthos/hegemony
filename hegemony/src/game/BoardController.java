@@ -164,16 +164,41 @@ public class BoardController {
 		return true;
 	}
 	
-	public boolean placeCastle(int x, int y) {
+	private boolean friendlyCastlesInRange(Tile t) {
+		/*
+		int xStart = (t.getX() - 5 > -1? t.getX() - 5: 0);
+		int yStart = (t.getY() - 5 > -1? t.getY() - 5: 0);
+		int xEnd = (xStart + 10 < tiles.length ? xStart + 10: tiles.length);
+		int yEnd = (yStart + 10 < tiles[xStart].length ? yStart + 10: tiles.length);
+				
+		for (int x = xStart; x < xEnd; x++) {
+			for (int y = yStart; y < yEnd; y++) {
+				Castle castle = (Castle)tiles[x][y].getCastle(); 
+				if (null != castle && castle.getPlayer().equals(players[currentTurn]))
+					return true;
+			}
+		}
 		
+		*/
+		return false;
+	}
+	
+	public boolean placeCastle(int x, int y) {
+				
 		int xPos = (int)(x/(double)Edge.LENGTH);
 		int yPos = (int)(y/(double)Edge.LENGTH);
+		
+		if (xPos > tiles.length || yPos > tiles[xPos].length)
+			return false;
+		
 		Tile tile = tiles[xPos][yPos];
 		
 		if(tile.getItems().size() > 0)
 			return false;
 
-		//TODO: check that castles aren't too close when placing
+		if (friendlyCastlesInRange(tile))
+			return false;
+
 		Castle castle = players[currentTurn].placeCastle();
 		if (null == castle)
 			return false;
@@ -423,12 +448,68 @@ public class BoardController {
 		double xPos = x/(double)Edge.LENGTH;
 		double yPos = y/(double)Edge.LENGTH;
 		
-		boolean placed = updateEdgeStatus(xPos,yPos);
+		boolean placed = placeWall(xPos,yPos);
 		deselectEdgesInTerritories();
 		return placed;
 	}
 	
-	private boolean updateEdgeStatus(double x, double y){
+	private boolean isValidWallPlacement(Tile t1, Tile t2) {
+
+		if (null == t2)
+			return true;
+		
+		Knight knight = (Knight)t1.getKnight();
+		Castle castle = (Castle)t1.getCastle();
+		
+		if (null == knight && null == castle)
+			return true;
+		
+		Player p1 = (null == knight?castle.getPlayer():knight.getPLayer());
+		
+		knight = (Knight)t2.getKnight();
+		castle = (Castle)t2.getCastle();
+		
+		if (null == knight && null == castle)
+			return true;
+		
+		Player p2 = (null == knight?castle.getPlayer():knight.getPLayer());
+		
+		return !p1.equals(p2);
+	}
+	
+	public boolean placeWall(double x, double y) {
+
+		Edge edge = findSelectedEdge(x, y);
+		if (edge.isActive())
+			return false;
+		
+		int xi = (int)x;
+		int yi = (int)y;
+		Tile t1 = tiles[xi][yi];
+		Tile t2 = null;
+		
+		//TODO check that wall placement is valid
+		if (t1.getTopEdge().equals(edge)) {
+			t2 = t1.getTopTile();
+		}
+		else if (t1.getBottomEdge().equals(edge)) {
+			t2 = t1.getBottomTile();
+		}
+		else if (t1.getRightEdge().equals(edge)) {
+			t2 = t1.getRightTile();
+		}
+		else if (t1.getLeftEdge().equals(edge)) {
+			t2 = t1.getLeftTile();
+		}
+		
+		if (null != t2 && !isValidWallPlacement(t1, t2))
+			return false;
+		
+		edge.setActive(true);
+		return true;
+	}
+	
+	private Edge findSelectedEdge(double x, double y){
 		int xi = (int)x;
 		int yi = (int)y;
 
@@ -438,27 +519,25 @@ public class BoardController {
 		
 		if (Math.abs(0.5 - xOffset) > Math.abs(0.5 - yOffset)) {
 			if (0.5 > xOffset) {
-				v.getBottomEdge().setActive(!v.getBottomEdge().isActive());				
+				return v.getBottomEdge();				
 			} else {				
 				Vertex v1 = v.getLeftEdge().getSecond(); 
 				if (null == v1.getBottomEdge())
-					return false;
-				v1.getBottomEdge().setActive(!v1.getBottomEdge().isActive());				
+					return null;
+				return v1.getBottomEdge();				
 			}
 		}
 		else {
 			if (yOffset > 0.5) {			
 				Vertex v1 = v.getBottomEdge().getSecond();
 				if (null == v1.getLeftEdge())
-					return false;
-				v1.getLeftEdge().setActive(!v1.getLeftEdge().isActive());
+					return null;
+				return v1.getLeftEdge();
 			} else {
-				v.getLeftEdge().setActive(!v.getLeftEdge().isActive());
+				return v.getLeftEdge();
 			}
 		}	
-		return true;
-	}
-	
+	}				
 	
 	private void deselectEdges() {
 		for (int x = 0; x < vertices.length -1; x++) {
