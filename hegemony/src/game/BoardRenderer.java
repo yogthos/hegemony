@@ -40,10 +40,11 @@ public class BoardRenderer {
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,0,0,null);
 
-		BufferedImage highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
-		paintTiles(highlightsImage.getGraphics());
-		g.drawImage(ResourceLoader.getImageWithOpacity(highlightsImage, 0.3f),0,0,null);
-				
+		if (BoardController.GamePhase.SETUP != board.getGamePhase()) {
+			BufferedImage highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
+			paintTiles(highlightsImage.getGraphics());
+			g.drawImage(ResourceLoader.getImageWithOpacity(highlightsImage, 0.3f),0,0,null);
+		}
 		g.drawImage(terrainImage,0,0,null);
 		
 		Vertex[][] vertices = board.getVertices();

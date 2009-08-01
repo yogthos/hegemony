@@ -6,20 +6,16 @@ import cards.Card;
 
 public class ControlsPanel extends JPanel {
 
-
-	public enum Phase {
-		SETUP,
-		MAIN
-	}
-	
+		
 	private static final long serialVersionUID = 1L;
 
 	private InfoPanel infoPanel;
 	private BoardController board;
 	private GameCore mainWindow; 
-	private Phase phase;
 	
-	JPanel buttonsPanel = new JPanel();
+	JPanel deckPanel = new JPanel();
+	JPanel bazaar = new JPanel();
+	JPanel playerHand = new JPanel();
 	
 	public ControlsPanel(GameCore mainWindow, BoardController board, InfoPanel infoPanel) {
 
@@ -27,30 +23,25 @@ public class ControlsPanel extends JPanel {
 		this.board = board;
 		this.infoPanel = infoPanel;
 		
-		buttonsPanel.removeAll();
-		/*
-		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_WALL));
-		buttonsPanel.add(new ModeButton(BoardController.MODE.PLACE_KNIGHT));
-		buttonsPanel.add(new ModeButton(BoardController.MODE.EXPAND_AREA));		
-		*/
-		buttonsPanel.add(new Card(this, BoardController.MODE.PLACE_WALL));
-		buttonsPanel.add(new Card(this, BoardController.MODE.PLACE_KNIGHT));
-		buttonsPanel.add(new Card(this, BoardController.MODE.EXPAND_AREA));
-		
-		buttonsPanel.setVisible(true);
-		buttonsPanel.setVisible(false);
+		playerHand.removeAll();
 
-        add(buttonsPanel);		
+		playerHand.add(new Card(this, BoardController.MODE.PLACE_WALL));
+		playerHand.add(new Card(this, BoardController.MODE.PLACE_KNIGHT));
+		playerHand.add(new Card(this, BoardController.MODE.EXPAND_AREA));
+		
+		playerHand.setVisible(true);
+		playerHand.setVisible(false);
+
+        add(playerHand);		
 	}
 	
 	public void initSetupPhase() {	
-		phase = Phase.SETUP;
-		//buttons.add(new ModeButton(BoardController.MODE.PLACE_CASTLE));
+		board.setGamePhase(BoardController.GamePhase.SETUP);
 	}
 	
 	public void initMainPhase() {
-		phase = Phase.MAIN;
-		buttonsPanel.setVisible(true);
+		board.setGamePhase(BoardController.GamePhase.MAIN);
+		playerHand.setVisible(true);
 		mainWindow.validate();
 	}
 	
@@ -59,7 +50,7 @@ public class ControlsPanel extends JPanel {
 		infoPanel.updateMode(modeName);	
 	}
 
-	public Phase getPhase() {
-		return phase;
+	public BoardController.GamePhase getPhase() {
+		return board.getGamePhase();
 	}	
 }

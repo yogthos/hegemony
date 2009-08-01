@@ -31,7 +31,8 @@ public class BoardController {
 	private Edge lastSelected;
 	private Player[] players = null;
 	private int currentTurn = 0;
-
+	private GamePhase gamePhase;
+	
 	private MODE currentMode;
 	public enum MODE {
 		PLACE_CASTLE,
@@ -42,7 +43,12 @@ public class BoardController {
 		EMPTY
 	}
 	
-	public enum PHASE {
+	public enum GamePhase {
+		SETUP,
+		MAIN
+	}
+	
+	public enum TurnPhase {
 		DRAW_CARD,
 		ACT,
 	}
@@ -757,5 +763,13 @@ public class BoardController {
 
 	public Player[] getPlayers() {
 		return players;
+	}
+	
+	public GamePhase getGamePhase() {
+		return gamePhase;
+	}
+	
+	public void setGamePhase(GamePhase gamePhase) {
+		this.gamePhase = gamePhase;
 	}
 } 
