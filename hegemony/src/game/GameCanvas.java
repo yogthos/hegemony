@@ -1,10 +1,13 @@
 package game;
 
 import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferStrategy;
 
 public class GameCanvas extends Canvas implements MouseListener, MouseMotionListener {
 
@@ -13,20 +16,37 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 	private BoardController board;
 	private InfoPanel infoPanel;
 	private ControlsPanel controlsPanel;
+	private BoardRenderer renderer;
+	
 	
 	public GameCanvas(InfoPanel infoPanel, ControlsPanel controlsPanel, BoardController board, int size) {
 		this.infoPanel = infoPanel;
 		this.controlsPanel = controlsPanel;
 		this.board = board;
-		setSize(size,size);
+		this.renderer = new BoardRenderer(board);	
 		
+		setSize(size,size);		
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		controlsPanel.initSetupPhase();
 		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 		setIgnoreRepaint(true);
 	}
+	
+	public void draw() {
+	
+		renderer.setDrawOverlay((BoardController.GamePhase.SETUP == board.getGamePhase()? false : true));
+		BufferStrategy bufferStrategy = getBufferStrategy();
+		Graphics g = bufferStrategy.getDrawGraphics();
+		g.setColor(Color.BLACK);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		
+		g.drawImage(renderer.draw(), 0, 0, this);
+		if (!bufferStrategy.contentsLost())
+			bufferStrategy.show();	
+		getToolkit().sync();
+	}
+	
 	public BoardController getBoard() {
 		return board;
 	}
