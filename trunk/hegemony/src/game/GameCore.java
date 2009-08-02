@@ -2,8 +2,6 @@ package game;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.image.BufferStrategy;
 import java.applet.Applet;
 
 public class GameCore extends Applet implements Runnable {
@@ -16,21 +14,18 @@ public class GameCore extends Applet implements Runnable {
 	public static final int BOARD_OFFSET = 30;
 	
 	public BoardController board = null;
-	public BoardRenderer renderer = null;
-	private BufferStrategy bufferStrategy;
+	
+	
 	private GameCanvas gameCanvas;/* Drawing Canvas */
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {	
 		ResourceManager.initialize();
-		board = new BoardController(13, 2);	
-		renderer = new BoardRenderer(board);
+		board = new BoardController(13, 2);			
 		Thread t = new Thread(this);
 		
 		setLayout (new BorderLayout ());
-		
-		
-
+				
 		InfoPanel infoPanel = new InfoPanel(WIDTH - BOARD_SIZE, BOARD_SIZE);
 	    add(infoPanel,BorderLayout.WEST);
 	    
@@ -56,14 +51,7 @@ public class GameCore extends Applet implements Runnable {
 	}
 	
 	public void update() {
-		Graphics g = bufferStrategy.getDrawGraphics();
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
-		
-		g.drawImage(renderer.draw(), 0, 0, this);
-		if (!bufferStrategy.contentsLost())
-			bufferStrategy.show();	
-		getToolkit().sync();
+		gameCanvas.draw();
 	}
 
 	// Update any sprites, images, or primitives
@@ -76,9 +64,7 @@ public class GameCore extends Applet implements Runnable {
 		setSize(WIDTH, HEIGHT);
 		setBounds(0, 0, WIDTH, HEIGHT);
 		setBackground(Color.black);
-
 		gameCanvas.createBufferStrategy(2);
-		bufferStrategy = gameCanvas.getBufferStrategy();
 		
 		long startTime = System.currentTimeMillis();
 		long currTime = startTime;

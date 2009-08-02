@@ -16,10 +16,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import tiles.GameBoard;
-import tiles.GrassTile;
-import tiles.SnowTile;
 import tiles.Tile;
-import tiles.VillageTile;
 
 public class BoardController {
 
@@ -163,7 +160,21 @@ public class BoardController {
 		return true;
 	}
 	
+	/*
+	private boolean findFriendlyCastle(Tile t, int range) {
+		if (null != t.getCastle() && ((Castle)t.getCastle()).getPlayer().equals(players[currentTurn]))
+			return true;
+		else if(range < 0)
+			return false;
+		else {
+			findFriendlyCastle(t.getBottomTile(), --range);
+			findFriendlyCastle(t.getBottomTile(), --range);
+		}
+	}
+	*/
 	private boolean friendlyCastlesInRange(Tile t) {
+		
+		
 		/*
 		int xStart = (t.getX() - 5 > -1? t.getX() - 5: 0);
 		int yStart = (t.getY() - 5 > -1? t.getY() - 5: 0);

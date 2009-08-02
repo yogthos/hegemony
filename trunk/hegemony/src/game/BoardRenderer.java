@@ -17,9 +17,10 @@ import tiles.Tile;
 
 public class BoardRenderer {
 
-	private BoardController board;
+	private BoardController board = null;
 	private Image boardImage = null;
 	private Image terrainImage = null;
+	private boolean drawOverlay = false;
 	private Map<Player,Image> playerOverlays = new HashMap<Player,Image>();
 	
 	public BoardRenderer(BoardController board) {
@@ -40,7 +41,7 @@ public class BoardRenderer {
 		Graphics g = currentBoard.getGraphics();
 		g.drawImage(boardImage,0,0,null);
 
-		if (BoardController.GamePhase.SETUP != board.getGamePhase()) {
+		if (drawOverlay) {
 			BufferedImage highlightsImage = ResourceLoader.createCompatible(GameCore.BOARD_SIZE,GameCore.BOARD_SIZE, BufferedImage.TYPE_INT_ARGB);
 			paintTiles(highlightsImage.getGraphics());
 			g.drawImage(ResourceLoader.getImageWithOpacity(highlightsImage, 0.3f),0,0,null);
@@ -166,6 +167,14 @@ public class BoardRenderer {
 		g.fillRect(0, 0, Edge.LENGTH, Edge.LENGTH);
 		
 		return image;
+	}
+
+	public void setDrawOverlay(boolean drawOverlay) {
+		this.drawOverlay = drawOverlay;
+	}
+
+	public boolean isDrawOverlay() {
+		return drawOverlay;
 	}
 	
 }
