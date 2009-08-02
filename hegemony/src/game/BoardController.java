@@ -267,6 +267,8 @@ public class BoardController {
 			return false;
 		if (null != tile.getVillage())
 			return false;
+		if (null != tile.getMine())
+			return false;
 		
 		boolean isInArea = false;
 		
