@@ -50,8 +50,6 @@ public class ControlsPanel extends JPanel {
 		for (Card card : cards) {
 			playerHand.add(card);
 		}
-		//repaint();
-		//mainWindow.validate();
 	}
 	
 }

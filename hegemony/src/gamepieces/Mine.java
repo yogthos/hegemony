@@ -4,8 +4,8 @@ import game.ResourceManager;
 
 public class Mine extends GamePiece {
 
-	private int type;
-	private Types mine_type;
+	public static int MONOPOLY_VALUE = 5;
+	private Types mineType;
 	private int value = 1;
 	
 	public enum Types {
@@ -16,30 +16,33 @@ public class Mine extends GamePiece {
 	}
 	
 	
-	public Mine(Types mine_type) {
+	public Mine(Types mineType) {
 		super();
-		if (mine_type.equals(Types.DIAMOND)) {
+		if (mineType.equals(Types.DIAMOND)) {
 			sprites = ResourceManager.DIAMOND_MINE.getSprites();
 			actionSound = ResourceManager.DIAMOND_MINE.getSound();
 		}
-		else if (mine_type.equals(Types.COPPER)) {
+		else if (mineType.equals(Types.COPPER)) {
 			sprites = ResourceManager.COPPER_MINE.getSprites();
 			actionSound = ResourceManager.COPPER_MINE.getSound();
 		}
-		else if (mine_type.equals(Types.GOLD)) {
+		else if (mineType.equals(Types.GOLD)) {
 			sprites = ResourceManager.GOLD_MINE.getSprites();
 			actionSound = ResourceManager.GOLD_MINE.getSound();
 		}
-		else if (mine_type.equals(Types.SILVER)) {
+		else if (mineType.equals(Types.SILVER)) {
 			sprites = ResourceManager.SILVER_MINE.getSprites();
 			actionSound = ResourceManager.SILVER_MINE.getSound();
 		}
 		
 		frame = 0;
 		frameSpeed = 35;
-		this.mine_type = mine_type;
+		this.mineType = mineType;
 	}
 
+	public Types getType() {
+		return mineType;
+	}
 	
 	public int getValue() {
 		return value;

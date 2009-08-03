@@ -4,6 +4,7 @@ import gamepieces.Castle;
 import gamepieces.ExpandPiece;
 import gamepieces.GamePiece;
 import gamepieces.Knight;
+import gamepieces.Mine;
 import gamepieces.OverlayPiece;
 
 import java.awt.Color;
@@ -773,5 +774,72 @@ public class BoardController {
 	
 	public void setGamePhase(GamePhase gamePhase) {
 		this.gamePhase = gamePhase;
+	}
+
+	public void updateCurrentPlayerResources() {
+		Player player = players[currentTurn];
+		boolean hasGold = false;
+		boolean hasSilver = false;
+		boolean hasDiamond = false;
+		boolean hasCopper = false;
+	
+		List<Set<Tile>> areas = getPlayerAreas().get(player);
+		for (Set<Tile> area : areas) {
+			for (Tile tile : area) {
+				Mine mine = (Mine)tile.getMine();
+				if (null == mine) continue;
+					
+				if (!hasCopper && Mine.Types.COPPER == mine.getType()) {
+					player.addResources(mine.getValue());
+					hasCopper = true;
+				}
+				else if (!hasGold && Mine.Types.GOLD == mine.getType()) {
+					player.addResources(mine.getValue());
+					hasGold = true;
+				}
+				else if (!hasSilver && Mine.Types.SILVER == mine.getType()) {
+					player.addResources(mine.getValue());
+					hasSilver = true;
+				}
+				else if (!hasDiamond && Mine.Types.DIAMOND == mine.getType()) {
+					player.addResources(mine.getValue());
+					hasDiamond = true;
+				}
+			}
+		}				
+	}
+	
+	public void updateCurrentPlayerScore() {
+		Player player = players[currentTurn];
+		
+		List<Mine> gold = new ArrayList<Mine>();
+		List<Mine> silver = new ArrayList<Mine>();
+		List<Mine> diamond = new ArrayList<Mine>();
+		List<Mine> copper = new ArrayList<Mine>();
+		
+		List<Set<Tile>> areas = getPlayerAreas().get(player);
+		for (Set<Tile> area : areas) {
+			for (Tile tile : area) {
+				for (GamePiece item : tile.getItems()) {
+					if (item instanceof Mine) {
+						Mine mine = (Mine)item;
+						if (Mine.Types.COPPER == mine.getType())
+							copper.add(mine);
+						else if (Mine.Types.GOLD == mine.getType())
+							gold.add(mine);
+						else if (Mine.Types.SILVER == mine.getType())
+							silver.add(mine);
+						else if (Mine.Types.DIAMOND == mine.getType())
+							diamond.add(mine);
+					} else {
+						player.updateScore(item.getValue());
+					}
+				}
+			}
+		}
+		player.addResources(gold.size() < 1 ? 0 : (gold.size() >= 3 ? Mine.MONOPOLY_VALUE : gold.get(0).getValue()));
+		player.addResources(gold.size() < 1 ? 0 : (silver.size() >= 3 ? Mine.MONOPOLY_VALUE : silver.get(0).getValue()));
+		player.addResources(gold.size() < 1 ? 0 : (diamond.size() >= 3 ? Mine.MONOPOLY_VALUE : diamond.get(0).getValue()));
+		player.addResources(gold.size() < 1 ? 0 : (copper.size() >= 3 ? Mine.MONOPOLY_VALUE : copper.get(0).getValue()));
 	}
 } 
