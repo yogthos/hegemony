@@ -15,6 +15,7 @@ public class Player {
 	private List<Castle> castles = new ArrayList<Castle>();
 	private List<Knight> knights = new ArrayList<Knight>();
 	private int score = 0;
+	private int resources = 5;
 	private Color color;
 	
 	public Player() {
@@ -46,6 +47,10 @@ public class Player {
 		return score;
 	}
 	
+	public void updateScore(int value) {
+		score += value;
+	}
+	
 	public Knight placeKnight() {
 		if (knights.size() < 1)
 			return null;
@@ -64,5 +69,13 @@ public class Player {
 	
 	public int getCastlesRemainig() {
 		return castles.size();		
+	}
+
+	public void addResources(int resources) {
+		this.resources += resources;
+	}
+
+	public int getResources() {
+		return resources;
 	}
 }

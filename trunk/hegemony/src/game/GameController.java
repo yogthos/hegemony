@@ -59,6 +59,10 @@ public class GameController {
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 	}
 	
+	private void initTurn() {
+		board.updateCurrentPlayerResources();
+	}
+	
 	public void handleModeChangeAction(BoardController.MODE mode, String modeName) {
 		board.setCurrentMode(mode);
 		infoPanel.updateMode(modeName);	
