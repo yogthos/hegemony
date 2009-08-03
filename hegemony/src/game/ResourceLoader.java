@@ -3,6 +3,7 @@ package game;
 import java.applet.Applet;
 import java.applet.AudioClip;
 import java.awt.AlphaComposite;
+import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsEnvironment;
@@ -11,7 +12,9 @@ import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.imageio.ImageIO;
 
@@ -43,6 +46,26 @@ public enum ResourceLoader implements ImageObserver {
 		}		
 		
 		return sound;
+	}
+	
+	/**
+	 * creates an animation given an image and number of animation frames
+	 * @param animationFile file containing the animation
+	 * @param frames number of frames in the animation
+	 * @return list of images composing the animation
+	 */
+	public List<BufferedImage> createAnimation(String animationFile, int frames) {
+		BufferedImage sprites = getSprite(animationFile);
+		List<BufferedImage> animation = new ArrayList<BufferedImage>();
+		int xOffset = sprites.getWidth()/frames;
+		int dx = 0;
+		while(dx < sprites.getWidth()) {
+			BufferedImage sprite = createCompatible(xOffset, sprites.getHeight(), BufferedImage.TYPE_INT_ARGB);
+			Graphics g = sprite.getGraphics();
+			g.drawImage(sprites, 0, 0, xOffset, sprites.getHeight(), dx, 0, (dx += xOffset), sprites.getHeight(), this);
+			animation.add(sprite);
+		}
+		return animation;		
 	}
 	
 	/**
