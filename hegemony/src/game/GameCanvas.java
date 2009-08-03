@@ -3,7 +3,6 @@ package game;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -13,29 +12,22 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 
 	private static final long serialVersionUID = 1L;
 	
-	private BoardController board;
-	private InfoPanel infoPanel;
-	private ControlsPanel controlsPanel;
+	private GameController gameController;
 	private BoardRenderer renderer;
 	
-	
-	public GameCanvas(InfoPanel infoPanel, ControlsPanel controlsPanel, BoardController board, int size) {
-		this.infoPanel = infoPanel;
-		this.controlsPanel = controlsPanel;
-		this.board = board;
-		this.renderer = new BoardRenderer(board);	
+	public GameCanvas(GameController gameController, BoardRenderer renderer, int size) {
+		this.gameController = gameController;
+		this.renderer = renderer;	
 		
 		setSize(size,size);		
 		addMouseListener(this);
-		addMouseMotionListener(this);
-		controlsPanel.initSetupPhase();
-		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
+		addMouseMotionListener(this);				
 		setIgnoreRepaint(true);
 	}
-	
+				
 	public void draw() {
 	
-		renderer.setDrawOverlay((BoardController.GamePhase.SETUP == board.getGamePhase()? false : true));
+		renderer.setDrawOverlay(gameController.drawOverlay());
 		BufferStrategy bufferStrategy = getBufferStrategy();
 		Graphics g = bufferStrategy.getDrawGraphics();
 		g.setColor(Color.BLACK);
@@ -47,93 +39,41 @@ public class GameCanvas extends Canvas implements MouseListener, MouseMotionList
 		getToolkit().sync();
 	}
 	
-	public BoardController getBoard() {
-		return board;
-	}
-	
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	
-	private boolean moreCastlesToPlace() {
-		boolean castlesPlaced = false;
-		for (Player player : board.getPlayers()) {
-			if (player.getCastlesRemainig() > 0) {
-				castlesPlaced = true;
-				break;
-			}								
-		}
-		return castlesPlaced;
-	}
-	
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		int x = e.getX() - GameCore.BOARD_OFFSET;
 		int y = e.getY() - GameCore.BOARD_OFFSET;
 		
-		
-		boolean result = board.handlePlayerAction(x, y, true);
-		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
-		if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE && result) {
-			
-			board.setCurrentMode(BoardController.MODE.PLACE_KNIGHT_SIMPLE);
-		}
-		else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE && result) {
-			board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
-			if (moreCastlesToPlace()) board.updateCurrentTurn();
-			else {
-				board.setCurrentMode(BoardController.MODE.EMPTY);
-				controlsPanel.initMainPhase();
-			}
-		}
-		if (result && BoardController.GamePhase.MAIN == controlsPanel.getPhase()) {
-			board.updateCurrentTurn();
-		}
+		gameController.handleBoardAction(x, y, true);
 	    e.consume();		
 	}
 
-	@Override
-	public void mouseDragged(MouseEvent e) {
-		// TODO Auto-generated method stub		
-	}
-
-	
 	@Override
 	public void mouseMoved(MouseEvent e) {
 		
 		int x = e.getX() - GameCore.BOARD_OFFSET;
 		int y = e.getY() - GameCore.BOARD_OFFSET;
-		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
-			return;
-		}
-		board.handlePlayerAction(x, y, false);		
+		gameController.handleBoardAction(x, y, false);		
 		e.consume();		
+	}
+	
+	@Override
+	public void mouseClicked(MouseEvent e) {
 	}
 
 	@Override
-	public boolean imageUpdate(Image img, int infoflags, int x, int y,
-			int width, int height) {
-		return false;
-	}	
+	public void mouseEntered(MouseEvent e) {
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+	}
+		
+	@Override
+	public void mouseDragged(MouseEvent e) {
+	}			
 }
