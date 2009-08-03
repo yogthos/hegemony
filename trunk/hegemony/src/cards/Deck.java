@@ -1,26 +1,29 @@
 package cards;
 
 import game.BoardController;
-import game.ControlsPanel;
+import game.GameController;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Stack;
 
-public class Deck extends Stack<Card>{
+public class Deck {
 
 	private static final long serialVersionUID = 1L;
 	
-	List<Card> cards = new ArrayList<Card>();
+	private Stack<Card> cards = new Stack<Card>();
 	
-	public Deck(ControlsPanel controls) {
-		generateDeck(controls);
+	public Deck(GameController controller) {
+		generateDeck(controller);
+	}
+			
+	private void generateDeck(GameController controller) {
+		for (int i = 0; i < 100; i++) {
+				cards.push(new Card(controller, BoardController.MODE.PLACE_KNIGHT));
+				cards.push(new Card(controller, BoardController.MODE.PLACE_WALL));
+				cards.push(new Card(controller, BoardController.MODE.EXPAND_AREA));
+		}
 	}
 	
-	private void generateDeck(ControlsPanel controls) {
-		for (BoardController.MODE mode : BoardController.MODE.values()) {
-			cards.add(new Card(controls, mode));
-		}
-		
+	public Card draw() {
+		return cards.pop();
 	}
 }

@@ -11,7 +11,7 @@ import cards.Card;
 
 public class Player {
 
-	private Card[] cards = new Card[3];
+	private List<Card> cards = new ArrayList<Card>();
 	private List<Castle> castles = new ArrayList<Castle>();
 	private List<Knight> knights = new ArrayList<Knight>();
 	private int score = 0;
@@ -24,6 +24,14 @@ public class Player {
 		for (int i = 0; i < 15; i++) {
 			knights.add(new Knight(this));
 		}
+	}
+	
+	public void drawCard(Card card) {
+		cards.add(card);
+	}
+	
+	public List<Card> getCards() {
+		return cards;
 	}
 	
 	public void setColor(Color color) {
