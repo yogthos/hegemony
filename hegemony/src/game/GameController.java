@@ -25,8 +25,7 @@ public class GameController {
 		this.board = board;
 		this.deck = new Deck(this);
 		
-		//initSetupPhase();
-		initMainPhase();
+		initSetupPhase();
 	}
 	
 	private void initSetupPhase() {	
@@ -84,6 +83,7 @@ public class GameController {
 		board.getCurrentPlayer().removeCard(card);
 		board.getCurrentPlayer().addResources(card.getResellValue());
 		board.getCurrentPlayer().setLastSold(card);
+		controlsPanel.addCardToBazaar(card);
 		nextTurn();
 	}
 
@@ -91,6 +91,7 @@ public class GameController {
 	public void takeFromBazaar(Card card) {
 		if (card.equals(board.getCurrentPlayer().getLastSold()))
 			return;
+		card.setActive(true);
 		board.getCurrentPlayer().drawCard(card);
 		controlsPanel.showDrawControls(false);
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
