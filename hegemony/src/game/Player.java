@@ -17,6 +17,7 @@ public class Player {
 	private int score = 0;
 	private int resources = 5;
 	private Color color;
+	private Card lastSold = null;
 	
 	public Player() {
 		for (int i = 0; i < 3; i++) {
@@ -33,6 +34,10 @@ public class Player {
 	
 	public List<Card> getCards() {
 		return cards;
+	}
+	
+	public void removeCard(Card card) {
+		cards.remove(card);
 	}
 	
 	public void setColor(Color color) {
@@ -74,8 +79,20 @@ public class Player {
 	public void addResources(int resources) {
 		this.resources += resources;
 	}
+	
+	public void subtractResources(int resources) {
+		this.resources -= resources;
+	}
 
 	public int getResources() {
 		return resources;
+	}
+
+	public void setLastSold(Card lastSold) {
+		this.lastSold = lastSold;
+	}
+
+	public Card getLastSold() {
+		return lastSold;
 	}
 }

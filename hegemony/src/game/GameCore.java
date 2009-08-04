@@ -26,17 +26,11 @@ public class GameCore extends Applet implements Runnable {
 		
 		setLayout (new BorderLayout ());
 				
-		InfoPanel infoPanel = new InfoPanel(WIDTH - BOARD_SIZE, BOARD_SIZE);
-	    add(infoPanel,BorderLayout.WEST);
-	    
-	    ControlsPanel controlPanel = new ControlsPanel(this, board, infoPanel);
-	    
-	    
-	    gameCanvas = new GameCanvas(new GameController(infoPanel, controlPanel, board), new BoardRenderer(board), BOARD_SIZE + BOARD_OFFSET);						
+		InfoPanel infoPanel = new InfoPanel(WIDTH - GameCore.BOARD_SIZE, GameCore.BOARD_SIZE);
+		add(infoPanel,BorderLayout.WEST);
+	    gameCanvas = new GameCanvas(new GameController(this, infoPanel, board), new BoardRenderer(board), BOARD_SIZE + BOARD_OFFSET);						
 		add (gameCanvas, BorderLayout.CENTER);
-	    	    
-		add(controlPanel, BorderLayout.PAGE_END);
-	    
+	    	    			    
 		t.start();
 	}
 	

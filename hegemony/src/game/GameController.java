@@ -1,12 +1,14 @@
 package game;
 
+import java.awt.BorderLayout;
+
+import cards.Card;
 import cards.Deck;
 
 public class GameController {
 
 	private Deck deck;
 	private BoardController board;
-	private InfoPanel infoPanel;
 	private ControlsPanel controlsPanel;
 	
 	public enum Actions {
@@ -15,10 +17,11 @@ public class GameController {
 		DISCARD
 	}
 	
-	public GameController(InfoPanel infoPanel, ControlsPanel controlsPanel, BoardController board) {
+	public GameController(GameCore gameCore, InfoPanel infoPanel, BoardController board) {
 	
-		this.infoPanel = infoPanel;
-		this.controlsPanel = controlsPanel;
+		controlsPanel = new ControlsPanel(gameCore, infoPanel, this, board);
+		gameCore.add(controlsPanel, BorderLayout.PAGE_END);
+		
 		this.board = board;
 		this.deck = new Deck(this);
 		
@@ -26,6 +29,7 @@ public class GameController {
 	}
 	
 	private void initSetupPhase() {	
+		controlsPanel.showDrawControls(false);
 		board.setGamePhase(BoardController.GamePhase.SETUP);
 		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 	}
@@ -39,8 +43,63 @@ public class GameController {
 				player.drawCard(deck.draw());
 			}
 		}
-		displayPlayerHand();
-		controlsPanel.showMainPhaseControls();		
+		
+		controlsPanel.showMainPhaseControls();
+		nextTurn();
+	}
+	
+		
+	private void nextTurn() {
+		board.updateCurrentTurn();
+		board.updateCurrentPlayerResources();
+		Player player = board.getCurrentPlayer();
+		int resources = player.getResources();
+		for (Card card : player.getCards()) {
+			card.setActive((card.getCost() > resources? false: true));
+		}
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
+		controlsPanel.updateInfoPanel();
+		controlsPanel.showDrawControls(true);
+		System.out.println("Current turn: " + board.getCurrentTurn());
+	}
+	
+	public void handleModeChangeAction(BoardController.MODE mode, String modeName, Card card) {
+		Player player = board.getCurrentPlayer();
+		int playerResources = player.getResources();
+		if (card.getCost() > playerResources)
+			return;
+		
+		player.subtractResources(card.getCost());
+		player.removeCard(card);
+		board.setCurrentMode(mode);
+		controlsPanel.updateMode(modeName);	
+	}
+			
+	
+	public void handleDiscardAction(Card card) {		
+		nextTurn();
+	}
+	
+	public void handleSellAction(Card card) {
+		System.out.println("Current turn: " + board.getCurrentTurn());
+		board.getCurrentPlayer().removeCard(card);
+		board.getCurrentPlayer().addResources(card.getResellValue());
+		board.getCurrentPlayer().setLastSold(card);
+		nextTurn();
+	}
+
+	public void takeFromBazaar(Card card) {
+		if (card.equals(board.getCurrentPlayer().getLastSold()))
+			return;
+		board.getCurrentPlayer().drawCard(card);
+		controlsPanel.showDrawControls(false);
+	}
+			
+	public void drawCardFromDeck() {
+		if (deck.isEmpty())
+			return;
+		board.getCurrentPlayer().drawCard(deck.draw());
+		controlsPanel.showDrawControls(false);
 	}
 	
 	private boolean moreCastlesToPlace() {
@@ -54,33 +113,10 @@ public class GameController {
 		return castlesPlaced;
 	}
 	
-	private void displayPlayerHand() {
-		
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
-	}
-	
-	private void initTurn() {
-		board.updateCurrentPlayerResources();
-	}
-	
-	public void handleModeChangeAction(BoardController.MODE mode, String modeName) {
-		board.setCurrentMode(mode);
-		infoPanel.updateMode(modeName);	
-	}
-			
-	
-	public void handleDiscardAction() {
-		
-	}
-	
-	public void handleSellAction() {
-		
-	}
-	
 	public void handleBoardAction(int x, int y, boolean clicked) {
 		if (clicked) {
 			boolean result = board.handlePlayerAction(x, y, true);
-			infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
+			controlsPanel.updateInfoPanel();
 			
 			//Setup phase of the game where players place their initial castles and knights
 			if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE && result) {				
@@ -89,8 +125,7 @@ public class GameController {
 			else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE && result) {
 				board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 				if (moreCastlesToPlace()) {
-					board.updateCurrentTurn();
-					displayPlayerHand();				
+					board.updateCurrentTurn();				
 				}
 				else {
 					board.setCurrentMode(BoardController.MODE.EMPTY);
@@ -98,11 +133,10 @@ public class GameController {
 				}
 			}
 			//Main phase of the game, where players draw cards and play them
-			if (result && BoardController.GamePhase.MAIN == controlsPanel.getPhase()) {
+			//if (result && BoardController.GamePhase.MAIN == controlsPanel.getPhase()) {
 				
-				board.updateCurrentTurn();
-				displayPlayerHand();
-			}
+				//board.updateCurrentTurn();
+			//}
 		}
 		else {
 			if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
