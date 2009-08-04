@@ -123,6 +123,7 @@ public class ControlsPanel extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			removeCardFromBazaar(card);
 			controller.takeFromBazaar(card);
 		}
 	}

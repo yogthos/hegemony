@@ -29,8 +29,8 @@ public class Card extends JPanel {
 		this.mode = mode;
 		
 		String modeName = "";
-		if (BoardController.MODE.EXPAND_AREA == mode) {
-			modeName = "Expand Mode";
+		if (BoardController.MODE.EXPAND_AREA == mode) {			
+			modeName = "Expand Mode";			
 			cost = 1;	
 			resellValue = 1;
 		}
@@ -45,7 +45,7 @@ public class Card extends JPanel {
 			resellValue = 1;
 		}
 		
-		
+		setName(modeName);
 		buttons.add(new ActionButton(ButtonType.SELL, "Sell", this));
 		buttons.add(new ActionButton(ButtonType.ACTION, modeName, this));
 		add(buttons);
