@@ -231,6 +231,8 @@ public class BoardController {
 			return false;
 		if (null != tile.getVillage())
 			return false;
+		if (null != tile.getMine())
+			return false;
 		
 		Tile top = tile.getTopTile();
 	    Tile bottom = tile.getBottomTile();
@@ -784,6 +786,9 @@ public class BoardController {
 		boolean hasCopper = false;
 	
 		List<Set<Tile>> areas = getPlayerAreas().get(player);
+		if (null == areas)
+			return;
+		
 		for (Set<Tile> area : areas) {
 			for (Tile tile : area) {
 				Mine mine = (Mine)tile.getMine();
