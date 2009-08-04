@@ -1,6 +1,7 @@
 package game;
 
 import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import cards.Card;
@@ -35,6 +36,8 @@ public class ControlsPanel extends JPanel {
 		this.controller = controller;
 		this.infoPanel = infoPanel;
 	    
+		bazaar.add(new JLabel("The Bazaar"));
+		
 	    ActionListener drawListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -56,7 +59,7 @@ public class ControlsPanel extends JPanel {
 	public void showDrawControls(boolean show) {
 		drawButton.setVisible(show);
 		controls.setVisible(show);
-		bazaar.setVisible(show);
+		bazaar.setVisible(show);		
 		mainWindow.validate();
 		
 	}
@@ -75,7 +78,7 @@ public class ControlsPanel extends JPanel {
 		playerHand.removeAll();
 		for (Card card : cards) {
 			playerHand.add(card);
-		}
+		}		
 		mainWindow.validate();
 	}
 	
@@ -83,8 +86,7 @@ public class ControlsPanel extends JPanel {
 		bazaar.removeAll();
 		for (Card card : bazaarCards) {
 			bazaar.add(new BazaarButton(card));
-		}
-		mainWindow.validate();	
+		}	
 	}
 	
 	public void addCardToBazaar(Card card) {
@@ -100,10 +102,12 @@ public class ControlsPanel extends JPanel {
 	
 	public void updateMode(String modeName) {
 		infoPanel.updateMode(modeName);
+		mainWindow.validate();
 	}
 	
 	public void updateInfoPanel() {
 		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
+		mainWindow.validate();
 	}
 	
 	private class BazaarButton extends JButton implements ActionListener {

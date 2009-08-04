@@ -47,14 +47,12 @@ public class Card extends JPanel {
 		
 		
 		buttons.add(new ActionButton(ButtonType.SELL, "Sell", this));
-		buttons.add(new ActionButton(ButtonType.DISCARD, "Discard", this));
 		buttons.add(new ActionButton(ButtonType.ACTION, modeName, this));
 		add(buttons);
 	}
 		
 	private enum ButtonType {
 		SELL,
-		DISCARD,
 		ACTION
 	}
 	
@@ -87,8 +85,6 @@ public class Card extends JPanel {
 		public void actionPerformed(ActionEvent e) {
 			if (ButtonType.ACTION == type)
 				controller.handleModeChangeAction(mode, label, card);
-			else if (ButtonType.DISCARD == type)
-				controller.handleDiscardAction(card);
 			else if (ButtonType.SELL == type) {
 				controller.handleSellAction(card);
 			}

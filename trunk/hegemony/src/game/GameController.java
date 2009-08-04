@@ -25,7 +25,8 @@ public class GameController {
 		this.board = board;
 		this.deck = new Deck(this);
 		
-		initSetupPhase();				
+		//initSetupPhase();
+		initMainPhase();
 	}
 	
 	private void initSetupPhase() {	
@@ -50,6 +51,7 @@ public class GameController {
 	
 		
 	private void nextTurn() {
+		board.setCurrentMode(BoardController.MODE.EMPTY);
 		board.updateCurrentTurn();
 		board.updateCurrentPlayerResources();
 		Player player = board.getCurrentPlayer();
@@ -57,12 +59,14 @@ public class GameController {
 		for (Card card : player.getCards()) {
 			card.setActive((card.getCost() > resources? false: true));
 		}
+		System.out.println("Current turn: " + board.getCurrentTurn());
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 		controlsPanel.updateInfoPanel();
 		controlsPanel.showDrawControls(true);
-		System.out.println("Current turn: " + board.getCurrentTurn());
+		
 	}
 	
+	//Handle card actions
 	public void handleModeChangeAction(BoardController.MODE mode, String modeName, Card card) {
 		Player player = board.getCurrentPlayer();
 		int playerResources = player.getResources();
@@ -71,28 +75,25 @@ public class GameController {
 		
 		player.subtractResources(card.getCost());
 		player.removeCard(card);
-		board.setCurrentMode(mode);
-		controlsPanel.updateMode(modeName);	
+		board.setCurrentMode(mode);		
+		controlsPanel.updateMode(modeName);		
 	}
-			
-	
-	public void handleDiscardAction(Card card) {		
-		nextTurn();
-	}
-	
+
 	public void handleSellAction(Card card) {
-		System.out.println("Current turn: " + board.getCurrentTurn());
+		System.out.println("In handle action, Current turn: " + board.getCurrentTurn());
 		board.getCurrentPlayer().removeCard(card);
 		board.getCurrentPlayer().addResources(card.getResellValue());
 		board.getCurrentPlayer().setLastSold(card);
 		nextTurn();
 	}
 
+	//handle control actions
 	public void takeFromBazaar(Card card) {
 		if (card.equals(board.getCurrentPlayer().getLastSold()))
 			return;
 		board.getCurrentPlayer().drawCard(card);
 		controlsPanel.showDrawControls(false);
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 	}
 			
 	public void drawCardFromDeck() {
@@ -100,8 +101,11 @@ public class GameController {
 			return;
 		board.getCurrentPlayer().drawCard(deck.draw());
 		controlsPanel.showDrawControls(false);
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 	}
 	
+	
+	//utility method for checking if setup phase is over
 	private boolean moreCastlesToPlace() {
 		boolean castlesPlaced = false;
 		for (Player player : board.getPlayers()) {
@@ -113,6 +117,7 @@ public class GameController {
 		return castlesPlaced;
 	}
 	
+	//handle clicks on the board
 	public void handleBoardAction(int x, int y, boolean clicked) {
 		if (clicked) {
 			boolean result = board.handlePlayerAction(x, y, true);
@@ -132,18 +137,14 @@ public class GameController {
 					initMainPhase();
 				}
 			}
-			//Main phase of the game, where players draw cards and play them
-			//if (result && BoardController.GamePhase.MAIN == controlsPanel.getPhase()) {
-				
-				//board.updateCurrentTurn();
-			//}
+			nextTurn();
 		}
 		else {
 			if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
 				return;
 			}
 			board.handlePlayerAction(x, y, false);
-		}
+		}		
 	}
 	
 	/**
