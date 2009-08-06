@@ -25,7 +25,8 @@ public class GameController {
 		this.board = board;
 		this.deck = new Deck(this);
 		
-		initSetupPhase();
+		//initSetupPhase();
+		initMainPhase();
 	}
 	
 	private void initSetupPhase() {	
@@ -39,30 +40,26 @@ public class GameController {
 		board.setGamePhase(BoardController.GamePhase.MAIN);
 		Player[] players = board.getPlayers();
 		for (Player player : players) {
-			for (int i = 0; i < 3; i++) {
+			for (int i = 0; i < 2; i++) {
 				player.drawCard(deck.draw());
 			}
 		}
-		
+				
 		controlsPanel.showMainPhaseControls();
 		nextTurn();
 	}
 	
 		
 	private void nextTurn() {
-		board.setCurrentMode(BoardController.MODE.EMPTY);
+		
 		board.updateCurrentTurn();
 		board.updateCurrentPlayerResources();
-		Player player = board.getCurrentPlayer();
-		int resources = player.getResources();
-		for (Card card : player.getCards()) {
-			card.setActive((card.getCost() > resources? false: true));
-		}
-		System.out.println("Current turn: " + board.getCurrentTurn());
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
-		controlsPanel.updateInfoPanel();
+		board.setCurrentMode(BoardController.MODE.EMPTY);
+		
+		controlsPanel.setCardsEnabled(-1);		
 		controlsPanel.showDrawControls(true);
 		
+		System.out.println("Current turn: " + board.getCurrentTurn());
 	}
 	
 	//Handle card actions
@@ -78,8 +75,7 @@ public class GameController {
 		controlsPanel.updateMode(modeName);		
 	}
 
-	public void handleSellAction(Card card) {
-		System.out.println("In handle action, Current turn: " + board.getCurrentTurn());
+	public void handleSellAction(Card card) {		
 		board.getCurrentPlayer().removeCard(card);
 		board.getCurrentPlayer().addResources(card.getResellValue());
 		board.getCurrentPlayer().setLastSold(card);
@@ -89,20 +85,25 @@ public class GameController {
 
 	//handle control actions
 	public void takeFromBazaar(Card card) {
-		if (card.equals(board.getCurrentPlayer().getLastSold()))
+		Player player = board.getCurrentPlayer();
+		if (card.equals(player.getLastSold()))
 			return;
 		card.setActive(true);
 		board.getCurrentPlayer().drawCard(card);
 		controlsPanel.showDrawControls(false);
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());				
+		controlsPanel.setCardsEnabled(player.getResources());
 	}
 			
 	public void drawCardFromDeck() {
 		if (deck.isEmpty())
 			return;
-		board.getCurrentPlayer().drawCard(deck.draw());
+		Player player = board.getCurrentPlayer();
+		
+		player.drawCard(deck.draw());
 		controlsPanel.showDrawControls(false);
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());		
+		controlsPanel.setCardsEnabled(player.getResources());
 	}
 	
 	

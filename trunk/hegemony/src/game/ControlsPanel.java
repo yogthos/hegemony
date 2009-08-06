@@ -6,6 +6,7 @@ import javax.swing.JPanel;
 
 import cards.Card;
 
+import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -56,7 +57,16 @@ public class ControlsPanel extends JPanel {
         add(bazaar);
 	}
 	
+	public void setCardsEnabled(int availableResources) {
+		for (Component cardComponent : playerHand.getComponents()) {
+			Card card = (Card)cardComponent;
+			card.setActive(card.getCost() > availableResources? false: true);
+		}
+		mainWindow.validate();
+	}
+	
 	public void showDrawControls(boolean show) {
+		
 		drawButton.setVisible(show);
 		controls.setVisible(show);
 		bazaar.setVisible(show);		
