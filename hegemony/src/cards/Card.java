@@ -46,7 +46,7 @@ public class Card extends JPanel {
 		}
 		
 		setName(modeName);
-		buttons.add(new ActionButton(ButtonType.SELL, "Sell", this));
+		buttons.add(new ActionButton(ButtonType.SELL, "Sell: " + this.resellValue, this));
 		buttons.add(new ActionButton(ButtonType.ACTION, modeName, this));
 		add(buttons);
 	}
