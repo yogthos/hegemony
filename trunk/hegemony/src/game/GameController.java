@@ -46,16 +46,17 @@ public class GameController {
 		}
 				
 		controlsPanel.showMainPhaseControls();
-		nextTurn();
+		startTurn();
 	}
 	
 		
-	private void nextTurn() {
+	private void startTurn() {
 		
 		board.updateCurrentTurn();
 		board.updateCurrentPlayerResources();
 		board.setCurrentMode(BoardController.MODE.EMPTY);
 		
+		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 		controlsPanel.setCardsEnabled(-1);		
 		controlsPanel.showDrawControls(true);
 		
@@ -75,12 +76,13 @@ public class GameController {
 		controlsPanel.updateMode(modeName);		
 	}
 
-	public void handleSellAction(Card card) {		
-		board.getCurrentPlayer().removeCard(card);
-		board.getCurrentPlayer().addResources(card.getResellValue());
-		board.getCurrentPlayer().setLastSold(card);
+	public void handleSellAction(Card card) {	
+		Player player = board.getCurrentPlayer(); 
+		player.removeCard(card);
+		player.addResources(card.getResellValue());
+		player.setLastSold(card);
 		controlsPanel.addCardToBazaar(card);
-		nextTurn();
+		startTurn();
 	}
 
 	//handle control actions
@@ -88,11 +90,13 @@ public class GameController {
 		Player player = board.getCurrentPlayer();
 		if (card.equals(player.getLastSold()))
 			return;
+		if (player.getResources() < card.getCost())
+			return;
+		
+		controlsPanel.removeCardFromBazaar(card);
 		card.setActive(true);
-		board.getCurrentPlayer().drawCard(card);
-		controlsPanel.showDrawControls(false);
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());				
-		controlsPanel.setCardsEnabled(player.getResources());
+		player.drawCard(card);		
+		updatePlayerCardsInControlPanel(player);
 	}
 			
 	public void drawCardFromDeck() {
@@ -101,11 +105,14 @@ public class GameController {
 		Player player = board.getCurrentPlayer();
 		
 		player.drawCard(deck.draw());
-		controlsPanel.showDrawControls(false);
-		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());		
-		controlsPanel.setCardsEnabled(player.getResources());
+		updatePlayerCardsInControlPanel(player);
 	}
 	
+	private void updatePlayerCardsInControlPanel(Player player) {
+		controlsPanel.showDrawControls(false);
+		controlsPanel.setPlayerCards(player.getCards());		
+		controlsPanel.setCardsEnabled(player.getResources());
+	}
 	
 	//utility method for checking if setup phase is over
 	private boolean moreCastlesToPlace() {
@@ -139,7 +146,7 @@ public class GameController {
 					initMainPhase();
 				}
 			}
-			nextTurn();
+			startTurn();
 		}
 		else {
 			if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {

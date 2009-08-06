@@ -97,6 +97,7 @@ public class ControlsPanel extends JPanel {
 		for (Card card : bazaarCards) {
 			bazaar.add(new BazaarButton(card));
 		}	
+		bazaar.repaint();
 	}
 	
 	public void addCardToBazaar(Card card) {
@@ -127,13 +128,12 @@ public class ControlsPanel extends JPanel {
 		private Card card;
 		public BazaarButton (Card card) {
 			this.card = card;
-			setText(card.getName());
+			setText(card.getName() + ": " + card.getCost());
 			addActionListener(this);
 		}
 
 		@Override
-		public void actionPerformed(ActionEvent e) {
-			removeCardFromBazaar(card);
+		public void actionPerformed(ActionEvent e) {			
 			controller.takeFromBazaar(card);
 		}
 	}
