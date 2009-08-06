@@ -2,9 +2,13 @@
 
 = Introduction =
 
-Hegemony is a game where player vie for territory control. A territory is any single base that is completely walled off from the rest of the map. The players gain score for valuable resources contained within the territory. 
+Hegemony is a game where player vie for territory control. A territory is any single castle that is completely walled off from the rest of the map (edges of the map count as walls). The players gain score for valuable resources contained within the territory. 
 
-== Details ==
+== Game Phases ==
+
+The game begins with each player placing one of their castles and a knight adjacent to it. Once this process is completed, the main phase of the game will begin. The main phase continues until the players run out of cards in the deck. At the end of the main phase the score will be added up based on the resources each player controls. The winner of the game is the player who controls the most valuable resources.
+
+== Main phase turn order ==
 
 The turn order consists of the following actions:
   * gain resources for any mines that you control.
