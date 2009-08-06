@@ -25,8 +25,7 @@ public class GameController {
 		this.board = board;
 		this.deck = new Deck(this);
 		
-		//initSetupPhase();
-		initMainPhase();
+		initSetupPhase();		
 	}
 	
 	private void initSetupPhase() {	
