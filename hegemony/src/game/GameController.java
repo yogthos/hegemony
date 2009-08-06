@@ -89,8 +89,8 @@ public class GameController {
 		Player player = board.getCurrentPlayer();
 		if (card.equals(player.getLastSold()))
 			return;
-		if (player.getResources() < card.getCost())
-			return;
+		//if (player.getResources() < card.getCost())
+		//	return;
 		
 		controlsPanel.removeCardFromBazaar(card);
 		card.setActive(true);
