@@ -11,12 +11,6 @@ public class GameController {
 	private BoardController board;
 	private ControlsPanel controlsPanel;
 	
-	public enum Actions {
-		DRAW,
-		PLAY_CARD,
-		DISCARD
-	}
-	
 	public GameController(GameCore gameCore, InfoPanel infoPanel, BoardController board) {
 	
 		controlsPanel = new ControlsPanel(gameCore, infoPanel, this, board);
@@ -60,6 +54,7 @@ public class GameController {
 		controlsPanel.showDrawControls(true);
 		
 		System.out.println("Current turn: " + board.getCurrentTurn());
+		System.out.println(board.getCurrentPlayer().getCards().size());
 	}
 	
 	//Handle card actions
@@ -70,14 +65,12 @@ public class GameController {
 			return;
 		
 		player.subtractResources(card.getCost());
-		player.removeCard(card);
+		player.playCard(card);
 		board.setCurrentMode(mode);		
 		controlsPanel.updateMode(modeName);		
 	}
 
 	public void handleSellAction(Card card) {	
-		//if (controlsPanel.bazaarSize() > 5)
-		//	return;
 		
 		Player player = board.getCurrentPlayer();		
 		player.removeCard(card);
@@ -128,12 +121,16 @@ public class GameController {
 	
 	//handle clicks on the board
 	public void handleBoardAction(int x, int y, boolean clicked) {
-		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
+		if (board.getCurrentMode().equals(BoardController.MODE.EMPTY))
 			return;
-		}
+		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1)
+			return;
+	
 		if (clicked) {
-			if(!board.handlePlayerAction(x, y, true))
+			if(!board.handlePlayerAction(x, y, true)) {
+				board.getCurrentPlayer().undoPlayCard();
 				return;
+			}
 			
 			controlsPanel.updateInfoPanel();
 			
@@ -151,7 +148,10 @@ public class GameController {
 					initMainPhase();
 				}
 			}
-			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {
+			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {				
+				Player player = board.getCurrentPlayer();
+				
+				player.commitPlay();
 				startTurn();
 			}
 		}
