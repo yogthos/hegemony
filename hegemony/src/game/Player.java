@@ -18,6 +18,7 @@ public class Player {
 	private int resources = 5;
 	private Color color;
 	private Card lastSold = null;
+	private Card currentCard = null;
 	
 	public Player() {
 		for (int i = 0; i < 3; i++) {
@@ -34,6 +35,23 @@ public class Player {
 	
 	public List<Card> getCards() {
 		return cards;
+	}
+	
+	public void commitPlay() {
+		if (null != currentCard)
+			currentCard = null;
+	}
+	
+	public void playCard(Card card) {
+		currentCard = card;
+		cards.remove(card);
+	}
+	
+	public void undoPlayCard() {
+		if (null != currentCard)
+			cards.add(currentCard);
+		
+		currentCard = null;
 	}
 	
 	public void removeCard(Card card) {

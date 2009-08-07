@@ -39,6 +39,7 @@ public class ControlsPanel extends JPanel {
 	    
 		bazaar.add(new JLabel("The Bazaar"));
 		
+		
 	    ActionListener drawListener = new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -46,15 +47,12 @@ public class ControlsPanel extends JPanel {
 				
 			}	    	
 	    };
-	    drawButton.addActionListener(drawListener);		
-		controls.add(bazaar);		
-		playerHand.setVisible(true);
-		playerHand.setVisible(false);
-
-		add(drawButton);
+	    drawButton.addActionListener(drawListener);
+	    infoPanel.add(drawButton);
+	    infoPanel.add(bazaar);
+	    				
 		add(controls);
         add(playerHand);	
-        add(bazaar);
 	}
 	
 	public void setCardsEnabled(int availableResources) {
