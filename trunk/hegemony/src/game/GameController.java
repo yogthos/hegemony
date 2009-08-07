@@ -54,7 +54,6 @@ public class GameController {
 		controlsPanel.showDrawControls(true);
 		
 		System.out.println("Current turn: " + board.getCurrentTurn());
-		System.out.println(board.getCurrentPlayer().getCards().size());
 	}
 	
 	//Handle card actions
