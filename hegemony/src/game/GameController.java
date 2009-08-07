@@ -76,7 +76,10 @@ public class GameController {
 	}
 
 	public void handleSellAction(Card card) {	
-		Player player = board.getCurrentPlayer(); 
+		//if (controlsPanel.bazaarSize() > 5)
+		//	return;
+		
+		Player player = board.getCurrentPlayer();		
 		player.removeCard(card);
 		player.addResources(card.getResellValue());
 		player.setLastSold(card);
@@ -89,8 +92,6 @@ public class GameController {
 		Player player = board.getCurrentPlayer();
 		if (card.equals(player.getLastSold()))
 			return;
-		//if (player.getResources() < card.getCost())
-		//	return;
 		
 		controlsPanel.removeCardFromBazaar(card);
 		card.setActive(true);
@@ -127,15 +128,20 @@ public class GameController {
 	
 	//handle clicks on the board
 	public void handleBoardAction(int x, int y, boolean clicked) {
+		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
+			return;
+		}
 		if (clicked) {
-			boolean result = board.handlePlayerAction(x, y, true);
+			if(!board.handlePlayerAction(x, y, true))
+				return;
+			
 			controlsPanel.updateInfoPanel();
 			
 			//Setup phase of the game where players place their initial castles and knights
-			if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE && result) {				
+			if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE) {				
 				board.setCurrentMode(BoardController.MODE.PLACE_KNIGHT_SIMPLE);
 			}
-			else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE && result) {
+			else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE) {
 				board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 				if (moreCastlesToPlace()) {
 					board.updateCurrentTurn();				
@@ -145,12 +151,12 @@ public class GameController {
 					initMainPhase();
 				}
 			}
-			startTurn();
+			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {
+				startTurn();
+			}
 		}
 		else {
-			if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) {
-				return;
-			}
+			//paint the overlay
 			board.handlePlayerAction(x, y, false);
 		}		
 	}

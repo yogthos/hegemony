@@ -1,5 +1,6 @@
 package game;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -24,11 +25,10 @@ public class ControlsPanel extends JPanel {
 	
 	private List<Card> bazaarCards = new ArrayList<Card>();
 	
-	private JButton drawButton = new JButton("Draw Card");
-	JPanel deckPanel = new JPanel();
-	JPanel bazaar = new JPanel();
-	JPanel playerHand = new JPanel();
-	JPanel controls = new JPanel();
+	private JButton drawButton = new JButton("Draw Card");	
+	private JPanel playerHand = new JPanel();
+	private JPanel controls = new JPanel();
+	private Box bazaar = Box.createVerticalBox();
 	
 	public ControlsPanel(GameCore mainWindow, InfoPanel infoPanel, final GameController controller, BoardController board) {
 
@@ -98,6 +98,10 @@ public class ControlsPanel extends JPanel {
 			bazaar.add(new BazaarButton(card));
 		}	
 		bazaar.repaint();
+	}
+	
+	public int bazaarSize() {
+		return bazaarCards.size();
 	}
 	
 	public void addCardToBazaar(Card card) {
