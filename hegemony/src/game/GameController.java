@@ -23,7 +23,7 @@ public class GameController {
 	}
 	
 	private void initSetupPhase() {	
-		controlsPanel.showDrawControls(false);
+		controlsPanel.enableDrawControls(false);
 		board.setGamePhase(BoardController.GamePhase.SETUP);
 		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
 	}
@@ -51,7 +51,7 @@ public class GameController {
 		
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 		controlsPanel.setCardsEnabled(-1);		
-		controlsPanel.showDrawControls(true);
+		controlsPanel.enableDrawControls(true);
 		
 		System.out.println("Current turn: " + board.getCurrentTurn());
 	}
@@ -88,7 +88,7 @@ public class GameController {
 		controlsPanel.removeCardFromBazaar(card);
 		card.setActive(true);
 		player.drawCard(card);		
-		updatePlayerCardsInControlPanel(player);
+		updatePlayerCardsInControlPanel(player);		
 	}
 			
 	public void drawCardFromDeck() {
@@ -101,7 +101,7 @@ public class GameController {
 	}
 	
 	private void updatePlayerCardsInControlPanel(Player player) {
-		controlsPanel.showDrawControls(false);
+		controlsPanel.enableDrawControls(false);
 		controlsPanel.setPlayerCards(player.getCards());		
 		controlsPanel.setCardsEnabled(player.getResources());
 	}

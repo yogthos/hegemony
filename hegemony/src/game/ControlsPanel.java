@@ -63,12 +63,12 @@ public class ControlsPanel extends JPanel {
 		mainWindow.validate();
 	}
 	
-	public void showDrawControls(boolean show) {
+	public void enableDrawControls(boolean enable) {
 		
-		drawButton.setEnabled(show);
-		controls.setEnabled(show);
+		drawButton.setEnabled(enable);
+		controls.setEnabled(enable);
 		for (Component c : bazaar.getComponents()) {
-			c.setEnabled(show);
+			c.setEnabled(enable);
 		}
 		mainWindow.validate();
 		
