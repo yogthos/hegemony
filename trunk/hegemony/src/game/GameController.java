@@ -49,9 +49,11 @@ public class GameController {
 		board.updateCurrentPlayerResources();
 		board.setCurrentMode(BoardController.MODE.EMPTY);
 		
+		
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 		controlsPanel.setCardsEnabled(-1);		
 		controlsPanel.enableDrawControls(true);
+		controlsPanel.updateInfoPanel();
 		
 		System.out.println("Current turn: " + board.getCurrentTurn());
 	}
