@@ -48,8 +48,8 @@ public class ControlsPanel extends JPanel {
 			}	    	
 	    };
 	    drawButton.addActionListener(drawListener);
-	    infoPanel.add(drawButton);
-	    infoPanel.add(bazaar);
+	    infoPanel.addComponent(drawButton);
+	    infoPanel.addComponent(bazaar);
 	    				
 		add(controls);
         add(playerHand);	
@@ -65,9 +65,11 @@ public class ControlsPanel extends JPanel {
 	
 	public void showDrawControls(boolean show) {
 		
-		drawButton.setVisible(show);
-		controls.setVisible(show);
-		bazaar.setVisible(show);		
+		drawButton.setEnabled(show);
+		controls.setEnabled(show);
+		for (Component c : bazaar.getComponents()) {
+			c.setEnabled(show);
+		}
 		mainWindow.validate();
 		
 	}
@@ -92,6 +94,7 @@ public class ControlsPanel extends JPanel {
 	
 	private void repaintBazaar() {
 		bazaar.removeAll();
+		bazaar.add(new JLabel("The Bazaar"));
 		for (Card card : bazaarCards) {
 			bazaar.add(new BazaarButton(card));
 		}	
