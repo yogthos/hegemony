@@ -55,10 +55,19 @@ public class ControlsPanel extends JPanel {
         add(playerHand);	
 	}
 	
-	public void setCardsEnabled(int availableResources) {
+	public void setCardActionsEnabled(int availableResources) {
+		setCardsEnabled(true);
 		for (Component cardComponent : playerHand.getComponents()) {
 			Card card = (Card)cardComponent;
-			card.setActive(card.getCost() > availableResources? false: true);
+			card.setActionActive(card.getCost() > availableResources? false: true);
+		}
+		mainWindow.validate();
+	}
+	
+	public void setCardsEnabled(boolean enabled) {
+		for (Component cardComponent : playerHand.getComponents()) {
+			Card card = (Card)cardComponent;
+			card.setActive(enabled);
 		}
 		mainWindow.validate();
 	}
