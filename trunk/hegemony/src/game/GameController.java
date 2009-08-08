@@ -51,8 +51,9 @@ public class GameController {
 		
 		
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
-		controlsPanel.setCardsEnabled(-1);		
+		controlsPanel.setCardsEnabled(false);		
 		controlsPanel.enableDrawControls(true);
+		
 		controlsPanel.updateInfoPanel();
 		
 		System.out.println("Current turn: " + board.getCurrentTurn());
@@ -61,12 +62,10 @@ public class GameController {
 	//Handle card actions
 	public void handleModeChangeAction(BoardController.MODE mode, String modeName, Card card) {
 		Player player = board.getCurrentPlayer();
-		int playerResources = player.getResources();
-		if (card.getCost() > playerResources)
+
+		if (!player.playCard(card))
 			return;
 		
-		player.subtractResources(card.getCost());
-		player.playCard(card);
 		board.setCurrentMode(mode);		
 		controlsPanel.updateMode(modeName);		
 	}
@@ -98,14 +97,14 @@ public class GameController {
 			return;
 		Player player = board.getCurrentPlayer();
 		
-		player.drawCard(deck.draw());
+		player.drawCard(deck.draw());		
 		updatePlayerCardsInControlPanel(player);
 	}
 	
 	private void updatePlayerCardsInControlPanel(Player player) {
 		controlsPanel.enableDrawControls(false);
 		controlsPanel.setPlayerCards(player.getCards());		
-		controlsPanel.setCardsEnabled(player.getResources());
+		controlsPanel.setCardActionsEnabled(player.getResources());
 	}
 	
 	//utility method for checking if setup phase is over

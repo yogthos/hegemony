@@ -20,7 +20,9 @@ public class Card extends JPanel {
 	private int cost;
 	private int resellValue;
 	private BoardController.MODE mode;
-	private GameController controller;		
+	private GameController controller;	
+	private ActionButton actionButton;
+	private ActionButton sellButton;
 	private Box buttons = Box.createVerticalBox();
 	
 	public Card(GameController controller, BoardController.MODE mode) {
@@ -46,8 +48,10 @@ public class Card extends JPanel {
 		}
 		
 		setName(modeName);
-		buttons.add(new ActionButton(ButtonType.SELL, "Sell: " + this.resellValue, this));
-		buttons.add(new ActionButton(ButtonType.ACTION, modeName, this));
+		actionButton = new ActionButton(ButtonType.ACTION, modeName, this);
+		sellButton = new ActionButton(ButtonType.SELL, "Sell: " + this.resellValue, this);
+		buttons.add(sellButton);
+		buttons.add(actionButton);
 		add(buttons);
 	}
 		
@@ -95,9 +99,13 @@ public class Card extends JPanel {
 		return cost;
 	}
 
-	public void setActive(boolean isActive) {		
-		for (Component button : buttons.getComponents()) {
-			button.setEnabled(isActive);
+	public void setActionActive(boolean active) {
+		actionButton.setEnabled(active);
+	}
+	
+	public void setActive(boolean active) {		
+		for (Component button : buttons.getComponents()) {			
+			button.setEnabled(active);
 		}
 	}
 }

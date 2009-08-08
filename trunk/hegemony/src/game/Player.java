@@ -38,13 +38,18 @@ public class Player {
 	}
 	
 	public void commitPlay() {
-		if (null != currentCard)
-			currentCard = null;
+		if (null == currentCard)
+			return;		
+		resources -= currentCard.getCost();
+		currentCard = null;		
 	}
 	
-	public void playCard(Card card) {
+	public boolean playCard(Card card) {
+		if (card.getCost() > resources)
+			return false;
 		currentCard = card;
 		cards.remove(card);
+		return true;
 	}
 	
 	public void undoPlayCard() {
