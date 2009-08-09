@@ -133,8 +133,8 @@ public class BoardController {
 
 	///////////Mode Actions/////////////
 	public boolean handlePlayerAction(int x, int y, boolean clicked) {
-		highlightedPiece.setActive(false);
 		deselectEdges();
+		highlightedPiece.setActive(false);		
 		if (clicked) {
 			if (MODE.PLACE_CASTLE == currentMode)
 				return placeCastle(x, y);					
@@ -554,10 +554,12 @@ public class BoardController {
 	}				
 	
 	private void deselectEdges() {
-		for (int x = 0; x < vertices.length -1; x++) {
-			for (int y = 0; y < vertices[x].length - 1; y++) {
-				vertices[x][y].getLeftEdge().setSelected(false);
-				vertices[x][y].getBottomEdge().setSelected(false);
+		for (int x = 0; x < vertices.length; x++) {
+			for (int y = 0; y < vertices[x].length ; y++) {
+				if (null != vertices[x][y].getLeftEdge())
+					vertices[x][y].getLeftEdge().setSelected(false);
+				if (null != vertices[x][y].getBottomEdge()) 
+					vertices[x][y].getBottomEdge().setSelected(false);
 			}
 		}
 	}
