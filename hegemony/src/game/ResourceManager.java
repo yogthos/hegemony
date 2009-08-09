@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 public enum ResourceManager {
 	
 	CAPITAL("snow/temple0.png", 1, 35, null),
-	CASTLE("snow/base.png", 4, 65, null),
+	CASTLE("snow/base.png", 4, 100, null),
 	FOREST("tree.png", 1, 35, null),
 	GRASS("grass.png", 1, 35, null),			
 	KNIGHT("snow/habitat.png", 4, 35, null),
