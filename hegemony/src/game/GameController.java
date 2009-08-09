@@ -49,14 +49,14 @@ public class GameController {
 		board.updateCurrentPlayerResources();
 		board.setCurrentMode(BoardController.MODE.EMPTY);
 		
+		System.out.println("=====Turn start=====");
+		System.out.println("Current turn: " + board.getCurrentTurn());
+		System.out.println("Num player cards before draw: " + board.getCurrentPlayer().getCards().size());
 		
 		controlsPanel.setPlayerCards(board.getCurrentPlayer().getCards());
 		controlsPanel.setCardsEnabled(false);		
-		controlsPanel.enableDrawControls(true);
-		
-		controlsPanel.updateInfoPanel();
-		
-		System.out.println("Current turn: " + board.getCurrentTurn());
+		controlsPanel.enableDrawControls(true);						
+		controlsPanel.updateInfoPanel();				
 	}
 	
 	//Handle card actions
@@ -73,9 +73,7 @@ public class GameController {
 	public void handleSellAction(Card card) {	
 		
 		Player player = board.getCurrentPlayer();		
-		player.removeCard(card);
-		player.addResources(card.getResellValue());
-		player.setLastSold(card);
+		player.sellCard(card);		
 		controlsPanel.addCardToBazaar(card);
 		startTurn();
 	}
@@ -129,11 +127,9 @@ public class GameController {
 			return;
 	
 		if (clicked) {
-			if (!board.handlePlayerAction(x, y, true)) {
-				if(BoardController.GamePhase.MAIN == board.getGamePhase()) 
-					board.getCurrentPlayer().undoPlayCard();
+			
+			if (!board.handlePlayerAction(x, y, true)) 
 				return;
-			}
 			
 			controlsPanel.updateInfoPanel();
 			
@@ -153,7 +149,8 @@ public class GameController {
 					}
 				}
 			}
-			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {				
+			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {
+				//main phase of the game
 				board.getCurrentPlayer().commitPlay();
 				startTurn();
 			}
