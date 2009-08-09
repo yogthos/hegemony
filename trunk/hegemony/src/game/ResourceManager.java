@@ -13,7 +13,7 @@ public enum ResourceManager {
 	DIAMOND_MINE("snow/mine.png", 1, 35, null),
 	GOLD_MINE("snow/mine_yellow.png", 1, 35, null),
 	SILVER_MINE("snow/mine_orange.png", 1, 35, null),
-	TOWER("snow/tower0.png", 1, 35, null),
+	TOWER("snow/tower.png", 1, 35, null),
 	VILLAGE("snow/beacon0.png", 1, 35, null),
 	V_WALL("snow/wall-v.png", 1, 35, "place_wall.wav"),
 	H_WALL("snow/wall-h.png", 1, 35, "place_wall.wav");
