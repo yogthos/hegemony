@@ -1,15 +1,14 @@
 package game;
 
-import java.applet.AudioClip;
 import java.awt.image.BufferedImage;
 	 
 public enum ResourceManager {
 	
 	CAPITAL("snow/temple0.png", 1, 35, null),
-	CASTLE("snow/base.png", 4, 35, null),
+	CASTLE("snow/base.png", 4, 65, null),
 	FOREST("tree.png", 1, 35, null),
 	GRASS("grass.png", 1, 35, null),			
-	KNIGHT("snow/habitat0.png", 1, 35, null),
+	KNIGHT("snow/habitat.png", 4, 35, null),
 	COPPER_MINE("snow/mine_green.png", 1, 35, null),
 	DIAMOND_MINE("snow/mine.png", 1, 35, null),
 	GOLD_MINE("snow/mine_yellow.png", 1, 35, null),
