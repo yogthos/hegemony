@@ -553,7 +553,7 @@ public class BoardController {
 		}	
 	}				
 	
-	private void deselectEdges() {
+	public void deselectEdges() {
 		for (int x = 0; x < vertices.length; x++) {
 			for (int y = 0; y < vertices[x].length ; y++) {
 				if (null != vertices[x][y].getLeftEdge())
