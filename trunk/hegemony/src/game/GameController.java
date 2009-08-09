@@ -80,7 +80,7 @@ public class GameController {
 		startTurn();
 	}
 
-	//handle control actions
+	//handle start of turn actions (player must draw from the deck or bazaar
 	public void takeFromBazaar(Card card) {
 		Player player = board.getCurrentPlayer();
 		if (card.equals(player.getLastSold()))
@@ -99,13 +99,14 @@ public class GameController {
 		
 		player.drawCard(deck.draw());		
 		updatePlayerCardsInControlPanel(player);
-	}
+	}	
 	
 	private void updatePlayerCardsInControlPanel(Player player) {
 		controlsPanel.enableDrawControls(false);
 		controlsPanel.setPlayerCards(player.getCards());		
 		controlsPanel.setCardActionsEnabled(player.getResources());
 	}
+	//////
 	
 	//utility method for checking if setup phase is over
 	private boolean moreCastlesToPlace() {
@@ -123,35 +124,37 @@ public class GameController {
 	public void handleBoardAction(int x, int y, boolean clicked) {
 		if (board.getCurrentMode().equals(BoardController.MODE.EMPTY))
 			return;
-		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1)
+		
+		if (x/Edge.LENGTH > BoardController.size - 1 || y/Edge.LENGTH > BoardController.size - 1) 
 			return;
 	
 		if (clicked) {
-			if(!board.handlePlayerAction(x, y, true)) {
-				board.getCurrentPlayer().undoPlayCard();
+			if (!board.handlePlayerAction(x, y, true)) {
+				if(BoardController.GamePhase.MAIN == board.getGamePhase()) 
+					board.getCurrentPlayer().undoPlayCard();
 				return;
 			}
 			
 			controlsPanel.updateInfoPanel();
 			
-			//Setup phase of the game where players place their initial castles and knights
-			if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE) {				
-				board.setCurrentMode(BoardController.MODE.PLACE_KNIGHT_SIMPLE);
-			}
-			else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE) {
-				board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
-				if (moreCastlesToPlace()) {
-					board.updateCurrentTurn();				
+			if (BoardController.GamePhase.SETUP == board.getGamePhase()) {
+				//Setup phase of the game where players place their initial castles and knights
+				if (board.getCurrentMode() == BoardController.MODE.PLACE_CASTLE) {				
+					board.setCurrentMode(BoardController.MODE.PLACE_KNIGHT_SIMPLE);
 				}
-				else {
-					board.setCurrentMode(BoardController.MODE.EMPTY);
-					initMainPhase();
+				else if (board.getCurrentMode() == BoardController.MODE.PLACE_KNIGHT_SIMPLE) {
+					board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);
+					if (moreCastlesToPlace()) {
+						board.updateCurrentTurn();				
+					}
+					else {
+						board.setCurrentMode(BoardController.MODE.EMPTY);
+						initMainPhase();
+					}
 				}
 			}
 			else if (BoardController.GamePhase.MAIN == board.getGamePhase()) {				
-				Player player = board.getCurrentPlayer();
-				
-				player.commitPlay();
+				board.getCurrentPlayer().commitPlay();
 				startTurn();
 			}
 		}
