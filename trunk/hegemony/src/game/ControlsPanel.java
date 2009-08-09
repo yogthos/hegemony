@@ -142,7 +142,7 @@ public class ControlsPanel extends JPanel {
 		private Card card;
 		public BazaarButton (Card card) {
 			this.card = card;
-			setText(card.getName() + ": " + card.getCost());
+			setText(card.getName());
 			addActionListener(this);
 		}
 
