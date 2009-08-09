@@ -23,7 +23,7 @@ public enum ResourceLoader implements ImageObserver {
 	INSTANCE;
 	private Map<String,BufferedImage> images = new HashMap<String,BufferedImage>();
 	private Map<String,AudioClip> sounds = new HashMap<String,AudioClip>();
-
+	private Map<String,List<BufferedImage>> animations = new HashMap<String, List<BufferedImage>>();
 	
 	public void cleanup() {
 		for (AudioClip sound : sounds.values()) {
@@ -54,7 +54,7 @@ public enum ResourceLoader implements ImageObserver {
 	 * @param frames number of frames in the animation
 	 * @return list of images composing the animation
 	 */
-	public List<BufferedImage> createAnimation(String animationFile, int frames) {
+	public void createAnimation(String animationFile, int frames) {
 		BufferedImage sprites = getSprite(animationFile);
 		List<BufferedImage> animation = new ArrayList<BufferedImage>();
 		int xOffset = sprites.getWidth()/frames;
@@ -65,7 +65,7 @@ public enum ResourceLoader implements ImageObserver {
 			g.drawImage(sprites, 0, 0, xOffset, sprites.getHeight(), dx, 0, (dx += xOffset), sprites.getHeight(), this);
 			animation.add(sprite);
 		}
-		return animation;		
+		animations.put(animationFile, animation);		
 	}
 	
 	/**
@@ -128,6 +128,10 @@ public enum ResourceLoader implements ImageObserver {
 	
 	public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
 		return (infoflags & (ALLBITS|ABORT)) == 0;
+	}
+	public BufferedImage getAnimationFrame(String animationName, int frame) {
+		List<BufferedImage> animation = animations.get(animationName);
+		return (null == animation ? null : animation.get(frame));
 	}
 
 }

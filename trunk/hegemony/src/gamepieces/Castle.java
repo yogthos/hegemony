@@ -1,5 +1,7 @@
 package gamepieces;
 
+import java.awt.image.BufferedImage;
+
 import game.Player;
 import game.ResourceManager;
 
@@ -8,21 +10,27 @@ public class Castle extends GamePiece {
 	private int value = 0;
 	private Player player;
 	
-	public Castle(Player player) {
-		super();
-		sprites = ResourceManager.CASTLE.getSprites();
-		actionSound = ResourceManager.CASTLE.getSound();
-		
-		frame = 0;
-		frameSpeed = 35;
+	public Castle(Player player) {		
 		this.player = player;
 	}
+
+	public Player getPlayer() {
+		return player;
+	}
 	
+	@Override
+	public void act() {		
+		ResourceManager.CASTLE.updateFrame();
+		ResourceManager.CASTLE.playSound();
+	}
+	
+	@Override
 	public int getValue() {
 		return value;
 	}
 	
-	public Player getPlayer() {
-		return player;
+	@Override
+	public BufferedImage draw() {
+		return ResourceManager.CASTLE.getSprite();
 	}
 }

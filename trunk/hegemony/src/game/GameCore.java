@@ -20,7 +20,7 @@ public class GameCore extends Applet implements Runnable {
 	private boolean stopped = false;/* True if the applet has been destroyed */
 	
 	public void init() {	
-		ResourceManager.initialize();
+
 		board = new BoardController(13, 2);			
 		Thread t = new Thread(this);
 		

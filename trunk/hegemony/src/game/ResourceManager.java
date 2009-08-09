@@ -1,43 +1,67 @@
 package game;
+
+import java.applet.AudioClip;
+import java.awt.image.BufferedImage;
 	 
 public enum ResourceManager {
-	CAPITAL(new String[]{"snow/temple0.png","snow/temple1.png","snow/temple2.png","snow/temple3.png","snow/temple2.png","snow/temple1.png"}, null),	
-	CASTLE(new String[]{"snow/base0.png","snow/base1.png","snow/base2.png","snow/base3.png", "snow/base2.png","snow/base1.png"}, null),
-	FOREST(new String[]{"tree.png"}, null),
-	GRASS(new String[]{"grass.png"}, null),			
-	KNIGHT(new String[]{"snow/habitat0.png","snow/habitat1.png","snow/habitat2.png","snow/habitat3.png","snow/habitat2.png","snow/habitat1.png"}, null),
-	COPPER_MINE(new String[]{"snow/mine_green.png"}, null),
-	DIAMOND_MINE(new String[]{"snow/mine.png"}, null),
-	GOLD_MINE(new String[]{"snow/mine_yellow.png"}, null),
-	SILVER_MINE(new String[]{"snow/mine_orange.png"}, null),
-	TOWER(new String[]{"snow/tower0.png"}, null),
-	VILLAGE(new String[]{"snow/beacon0.png","snow/beacon1.png","snow/beacon2.png","snow/beacon1.png"}, null),
-	WALL(new String[]{"snow/wall-v.png","snow/wall-h.png"}, "place_wall.wav");
 	
+	CAPITAL("snow/temple0.png", 1, 35, null),
+	CASTLE("snow/base.png", 4, 35, null),
+	FOREST("tree.png", 1, 35, null),
+	GRASS("grass.png", 1, 35, null),			
+	KNIGHT("snow/habitat0.png", 1, 35, null),
+	COPPER_MINE("snow/mine_green.png", 1, 35, null),
+	DIAMOND_MINE("snow/mine.png", 1, 35, null),
+	GOLD_MINE("snow/mine_yellow.png", 1, 35, null),
+	SILVER_MINE("snow/mine_orange.png", 1, 35, null),
+	TOWER("snow/tower0.png", 1, 35, null),
+	VILLAGE("snow/beacon0.png", 1, 35, null),
+	V_WALL("snow/wall-v.png", 1, 35, "place_wall.wav"),
+	H_WALL("snow/wall-h.png", 1, 35, "place_wall.wav");
 	
-	private String[] sprites = null;
 	private String sound = null;
-	
-	private ResourceManager(String[] sprites, String sound) {
-		this.sprites = sprites;
-		this.sound = sound;
-	}
+	private String animation = null;
+	int animationLength;
+	int time;
+	int frame;
+	int frameSpeed;
 		
-	public String[] getSprites() {
-		return sprites;
+	private ResourceManager(String animation, int length, int frameSpeed, String sound) {
+		
+		this.animation = animation;
+		this.animationLength = length;
+		this.sound = sound;
+		this.time = 0;
+		this.frameSpeed = frameSpeed;
+		
+		//preload the resources
+		ResourceLoader.INSTANCE.createAnimation(animation, length);	
+		if(null != sound)
+			ResourceLoader.INSTANCE.getSound(sound);
+					
 	}
 	
-	public String getSound() {
-		return sound;
-	}
 	
-	public static void initialize() {
-		for (ResourceManager value : ResourceManager.values()) {
-			for (String sprite : value.sprites) {
-				ResourceLoader.INSTANCE.getSprite(sprite);
-			}
-			if (null != value.sound)
-				ResourceLoader.INSTANCE.getSound(value.sound);
+	public void updateFrame() {
+		time++;
+		if (time % frameSpeed == 0) {
+			time = 0;
+			frame = (frame + 1) % animationLength;
 		}
+	}
+	
+	public BufferedImage getSprite() {
+		return ResourceLoader.INSTANCE.getAnimationFrame(animation, frame);
+	}
+	
+	public BufferedImage getSprite(float opacity) {
+		return ResourceLoader.getImageWithOpacity(getSprite(), opacity);
+	}
+	
+	public void playSound() {
+		if (null == sound)
+			return;
+		
+		ResourceLoader.INSTANCE.getSound(sound).play();
 	}
 }
