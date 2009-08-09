@@ -25,4 +25,8 @@ public class ExpandPiece extends GamePiece {
 	public BufferedImage draw() {
 		return image;
 	}
+
+	@Override
+	public void act() {
+	}
 }

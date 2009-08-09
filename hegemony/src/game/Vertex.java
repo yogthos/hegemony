@@ -1,5 +1,7 @@
 package game;
 
+import java.awt.image.BufferedImage;
+
 import gamepieces.GamePiece;
 
 
@@ -16,11 +18,6 @@ public class Vertex extends GamePiece {
 	private Edge rightEdge = null;	
 	
 	public Vertex(int x, int y) {
-		super();
-		sprites = ResourceManager.TOWER.getSprites();
-		actionSound = ResourceManager.TOWER.getSound();
-		frame = 0;
-		frameSpeed = 35;
 		this.x = x;
 		this.y = y;				
 	}
@@ -105,7 +102,17 @@ public class Vertex extends GamePiece {
 
 	@Override
 	public int getValue() {
-		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public void act() {
+		ResourceManager.TOWER.updateFrame();
+		ResourceManager.TOWER.playSound();
+	}
+
+	@Override
+	public BufferedImage draw() {
+		return ResourceManager.TOWER.getSprite();
 	}
 }

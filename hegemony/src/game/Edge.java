@@ -22,9 +22,6 @@ public class Edge extends GamePiece {
 	}
 	
 	public Edge(Vertex first, Vertex second, boolean vertical) {
-		super();
-		sprites = ResourceManager.WALL.getSprites();
-		actionSound = ResourceManager.WALL.getSound();
 		
 		this.first = first;
 		this.second = second;
@@ -80,20 +77,25 @@ public class Edge extends GamePiece {
 	}
 	
 	public void setActive(boolean active) {
-		if (active)
-			ResourceLoader.INSTANCE.getSound(actionSound).play();		
+		if (active) {
+			if (vertical)
+				ResourceManager.V_WALL.playSound();
+			else
+				ResourceManager.H_WALL.playSound();
+		}
 		this.active = active;
 	}
 	
 	public BufferedImage draw() {
 
+		
 		return (vertical ? 
 				(selected && !active?
-					ResourceLoader.INSTANCE.getSprite(sprites[0], 0.5f):
-					ResourceLoader.INSTANCE.getSprite(sprites[0])): 
+					ResourceManager.V_WALL.getSprite(0.5f):
+						ResourceManager.V_WALL.getSprite()): 
 					(selected && !active?
-						ResourceLoader.INSTANCE.getSprite(sprites[1], 0.5f):
-						ResourceLoader.INSTANCE.getSprite(sprites[1])));	    						
+							ResourceManager.H_WALL.getSprite(0.5f):
+							ResourceManager.H_WALL.getSprite()));	    						
 	}
 
 	public void setSelected(boolean selected) {
@@ -109,8 +111,18 @@ public class Edge extends GamePiece {
 	}
 
 	@Override
-	public int getValue() {
-		// TODO Auto-generated method stub
+	public int getValue() {		
 		return 0;
+	}
+
+	@Override
+	public void act() {
+		if (vertical) {
+			ResourceManager.V_WALL.updateFrame();
+			ResourceManager.V_WALL.playSound();
+		} else {
+			ResourceManager.H_WALL.updateFrame();
+			ResourceManager.H_WALL.playSound();
+		}
 	}	
 }

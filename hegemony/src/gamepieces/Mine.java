@@ -1,5 +1,7 @@
 package gamepieces;
 
+import java.awt.image.BufferedImage;
+
 import game.ResourceManager;
 
 public class Mine extends GamePiece {
@@ -16,27 +18,7 @@ public class Mine extends GamePiece {
 	}
 	
 	
-	public Mine(Types mineType) {
-		super();
-		if (mineType.equals(Types.DIAMOND)) {
-			sprites = ResourceManager.DIAMOND_MINE.getSprites();
-			actionSound = ResourceManager.DIAMOND_MINE.getSound();
-		}
-		else if (mineType.equals(Types.COPPER)) {
-			sprites = ResourceManager.COPPER_MINE.getSprites();
-			actionSound = ResourceManager.COPPER_MINE.getSound();
-		}
-		else if (mineType.equals(Types.GOLD)) {
-			sprites = ResourceManager.GOLD_MINE.getSprites();
-			actionSound = ResourceManager.GOLD_MINE.getSound();
-		}
-		else if (mineType.equals(Types.SILVER)) {
-			sprites = ResourceManager.SILVER_MINE.getSprites();
-			actionSound = ResourceManager.SILVER_MINE.getSound();
-		}
-		
-		frame = 0;
-		frameSpeed = 35;
+	public Mine(Types mineType) {				
 		this.mineType = mineType;
 	}
 
@@ -44,7 +26,45 @@ public class Mine extends GamePiece {
 		return mineType;
 	}
 	
+	@Override
 	public int getValue() {
 		return value;
+	}
+
+	@Override
+	public void act() {
+		if (mineType.equals(Types.DIAMOND)) {
+			ResourceManager.DIAMOND_MINE.updateFrame();
+			ResourceManager.DIAMOND_MINE.playSound();
+		}
+		else if (mineType.equals(Types.COPPER)) {
+			ResourceManager.COPPER_MINE.updateFrame();
+			ResourceManager.COPPER_MINE.playSound();
+		}
+		else if (mineType.equals(Types.GOLD)) {
+			ResourceManager.GOLD_MINE.updateFrame();
+			ResourceManager.GOLD_MINE.playSound();
+		}
+		else if (mineType.equals(Types.SILVER)) {
+			ResourceManager.SILVER_MINE.updateFrame();
+			ResourceManager.SILVER_MINE.playSound();
+		}		
+	}
+
+	@Override
+	public BufferedImage draw() {
+		if (mineType.equals(Types.DIAMOND)) 
+			return ResourceManager.DIAMOND_MINE.getSprite();
+		
+		else if (mineType.equals(Types.COPPER)) 
+			return ResourceManager.COPPER_MINE.getSprite();
+
+		else if (mineType.equals(Types.GOLD)) 
+			return ResourceManager.GOLD_MINE.getSprite();
+
+		else if (mineType.equals(Types.SILVER)) 
+			return ResourceManager.SILVER_MINE.getSprite();
+		
+		return null;
 	}
 }

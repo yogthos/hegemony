@@ -2,13 +2,16 @@ package network;
 		
 	import java.util.HashMap;
 	import java.util.Map;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
+
 	import org.jivesoftware.smack.ConnectionConfiguration;
 	import org.jivesoftware.smack.PacketListener;
 	import org.jivesoftware.smack.XMPPConnection;
 	import org.jivesoftware.smack.filter.PacketTypeFilter;
 	import org.jivesoftware.smack.packet.Message;
 	import org.jivesoftware.smack.packet.Packet;
-	import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Presence;
 
 
 	public enum ConnectionManager {
@@ -19,7 +22,12 @@ package network;
 	    private String host = "talk.google.com";
 	    private int port = 5222;
 	    private String type = "gmail.com";
+	    private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
 	    int reconnectTimeout = 30000;
+	    
+	    public BlockingQueue<String> getQueue() {
+	    	return queue;
+	    }
 
 	    /**
 	     * 
@@ -123,6 +131,7 @@ package network;
 
 	                                //user is ok, process the message contents and see if we have an applicable plugin
 	                                //TODO: handle incoming player action
+	                                queue.add(msg.getBody());
 	                            }
 	                        }
 	                    }
