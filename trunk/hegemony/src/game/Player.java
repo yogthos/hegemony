@@ -15,7 +15,7 @@ public class Player {
 	private List<Castle> castles = new ArrayList<Castle>();
 	private List<Knight> knights = new ArrayList<Knight>();
 	private int score = 0;
-	private int resources = 5;
+	private int resources = 1;
 	private Color color;
 	private Card lastSold = null;
 	private Card currentCard = null;
@@ -41,26 +41,24 @@ public class Player {
 		if (null == currentCard)
 			return;		
 		resources -= currentCard.getCost();
+		cards.remove(currentCard);
 		currentCard = null;		
 	}
 	
 	public boolean playCard(Card card) {
-		if (card.getCost() > resources)
+		if (card.getCost() > resources) {
+			currentCard = null;
 			return false;
-		currentCard = card;
-		cards.remove(card);
+		}
+		currentCard = card;		
 		return true;
 	}
 	
-	public void undoPlayCard() {
-		if (null != currentCard)
-			cards.add(currentCard);
-		
-		currentCard = null;
-	}
 	
-	public void removeCard(Card card) {
+	public void sellCard(Card card) {
 		cards.remove(card);
+		resources += card.getResellValue();
+		lastSold = card;
 	}
 	
 	public void setColor(Color color) {
@@ -109,10 +107,6 @@ public class Player {
 
 	public int getResources() {
 		return resources;
-	}
-
-	public void setLastSold(Card lastSold) {
-		this.lastSold = lastSold;
 	}
 
 	public Card getLastSold() {
