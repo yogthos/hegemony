@@ -18,7 +18,17 @@ public class Mine extends GamePiece {
 	}
 	
 	
-	public Mine(Types mineType) {				
+	public Mine(Types mineType) {	
+		super(Types.DIAMOND == mineType ?
+				ResourceManager.DIAMOND_MINE.getMediaController() :
+				Types.COPPER == mineType ?
+					ResourceManager.COPPER_MINE.getMediaController() :
+					Types.GOLD == mineType ?
+						ResourceManager.GOLD_MINE.getMediaController() :
+						Types.SILVER == mineType ?
+							ResourceManager.SILVER_MINE.getMediaController():
+							null);
+		
 		this.mineType = mineType;
 	}
 
@@ -33,38 +43,12 @@ public class Mine extends GamePiece {
 
 	@Override
 	public void act() {
-		if (mineType.equals(Types.DIAMOND)) {
-			ResourceManager.DIAMOND_MINE.updateFrame();
-			ResourceManager.DIAMOND_MINE.playSound();
-		}
-		else if (mineType.equals(Types.COPPER)) {
-			ResourceManager.COPPER_MINE.updateFrame();
-			ResourceManager.COPPER_MINE.playSound();
-		}
-		else if (mineType.equals(Types.GOLD)) {
-			ResourceManager.GOLD_MINE.updateFrame();
-			ResourceManager.GOLD_MINE.playSound();
-		}
-		else if (mineType.equals(Types.SILVER)) {
-			ResourceManager.SILVER_MINE.updateFrame();
-			ResourceManager.SILVER_MINE.playSound();
-		}		
+		mc.updateFrame();
+		mc.playSound();				
 	}
 
 	@Override
 	public BufferedImage draw() {
-		if (mineType.equals(Types.DIAMOND)) 
-			return ResourceManager.DIAMOND_MINE.getSprite();
-		
-		else if (mineType.equals(Types.COPPER)) 
-			return ResourceManager.COPPER_MINE.getSprite();
-
-		else if (mineType.equals(Types.GOLD)) 
-			return ResourceManager.GOLD_MINE.getSprite();
-
-		else if (mineType.equals(Types.SILVER)) 
-			return ResourceManager.SILVER_MINE.getSprite();
-		
-		return null;
+		return mc.getSprite();
 	}
 }

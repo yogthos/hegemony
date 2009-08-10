@@ -6,6 +6,10 @@ import game.ResourceManager;
 
 public class Capital extends GamePiece {
 
+	public Capital() {
+		super(ResourceManager.CAPITAL.getMediaController());
+	}
+
 	private int value = 1;
 
 	public int getValue() {
@@ -14,12 +18,12 @@ public class Capital extends GamePiece {
 
 	@Override
 	public void act() {
-		ResourceManager.CAPITAL.updateFrame();
-		ResourceManager.CAPITAL.playSound();
+		mc.updateFrame();
+		mc.playSound();
 	}
 
 	@Override
 	public BufferedImage draw() {
-		return ResourceManager.CAPITAL.getSprite();
+		return mc.getSprite();
 	}
 }

@@ -11,6 +11,7 @@ public class ExpandPiece extends GamePiece {
 
 	private BufferedImage image = ResourceLoader.createCompatible(Edge.LENGTH,Edge.LENGTH, BufferedImage.TYPE_INT_ARGB);
 	public ExpandPiece(Color color) {		
+		super(null);
 		Graphics  g = image.getGraphics();
 		g.setColor(color);
 		g.fillRoundRect(0, 0, Edge.LENGTH, Edge.LENGTH, 3, 3);

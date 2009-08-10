@@ -8,6 +8,9 @@ public class Tree extends GamePiece {
 	
 	private int value = 1;
 	
+	public Tree () {
+		super (ResourceManager.FOREST.getMediaController());
+	}
 	@Override
 	public int getValue() {
 		return value;
@@ -15,13 +18,13 @@ public class Tree extends GamePiece {
 
 	@Override
 	public void act() {
-		ResourceManager.FOREST.updateFrame();
-		ResourceManager.FOREST.playSound();
+		mc.updateFrame();
+		mc.playSound();
 		
 	}
 
 	@Override
 	public BufferedImage draw() {
-		return ResourceManager.FOREST.getSprite();
+		return mc.getSprite();
 	}
 }
