@@ -31,20 +31,21 @@ public class Card extends JPanel {
 		this.mode = mode;
 		
 		String modeName = "";
-		if (BoardController.MODE.EXPAND_AREA == mode) {			
-			modeName = "Expand Mode";			
+		if (BoardController.MODE.EXPAND_AREA == mode) {								
 			cost = 1;	
 			resellValue = 1;
+			modeName = "Expand Mode: " + cost;
 		}
 		else if (BoardController.MODE.PLACE_KNIGHT == mode) {
-			modeName = "Knight Mode";
 			cost = 2;
 			resellValue = 1;
+			modeName = "Knight Mode: " + cost;
+
 		}
 		else if (BoardController.MODE.PLACE_WALL == mode) {
-			modeName = "Wall Mode";
 			cost = 1;
 			resellValue = 1;
+			modeName = "Wall Mode: " + cost;
 		}
 		
 		setName(modeName);
