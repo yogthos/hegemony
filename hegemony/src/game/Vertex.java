@@ -18,6 +18,7 @@ public class Vertex extends GamePiece {
 	private Edge rightEdge = null;	
 	
 	public Vertex(int x, int y) {
+		super(ResourceManager.TOWER.getMediaController());
 		this.x = x;
 		this.y = y;				
 	}
@@ -107,12 +108,12 @@ public class Vertex extends GamePiece {
 
 	@Override
 	public void act() {
-		ResourceManager.TOWER.updateFrame();
-		ResourceManager.TOWER.playSound();
+		mc.updateFrame();
+		mc.playSound();
 	}
 
 	@Override
 	public BufferedImage draw() {
-		return ResourceManager.TOWER.getSprite();
+		return mc.getSprite();
 	}
 }

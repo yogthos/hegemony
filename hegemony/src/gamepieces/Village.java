@@ -8,6 +8,9 @@ public class Village extends GamePiece {
 
 	private int value = 1;
 
+	public Village() {
+		super(ResourceManager.VILLAGE.getMediaController());
+	}
 	@Override
 	public int getValue() {				
 		return value;
@@ -15,13 +18,13 @@ public class Village extends GamePiece {
 
 	@Override
 	public void act() {
-		ResourceManager.VILLAGE.updateFrame();
-		ResourceManager.VILLAGE.playSound();
+		mc.updateFrame();
+		mc.playSound();
 		
 	}
 
 	@Override
 	public BufferedImage draw() {		
-		return ResourceManager.VILLAGE.getSprite();
+		return mc.getSprite();
 	}
 }

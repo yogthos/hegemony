@@ -22,6 +22,8 @@ public class Edge extends GamePiece {
 	}
 	
 	public Edge(Vertex first, Vertex second, boolean vertical) {
+
+		super(vertical?ResourceManager.V_WALL.getMediaController():ResourceManager.H_WALL.getMediaController()); 
 		
 		this.first = first;
 		this.second = second;
@@ -79,9 +81,9 @@ public class Edge extends GamePiece {
 	public void setActive(boolean active) {
 		if (active) {
 			if (vertical)
-				ResourceManager.V_WALL.playSound();
+				mc.playSound();
 			else
-				ResourceManager.H_WALL.playSound();
+				mc.playSound();
 		}
 		this.active = active;
 	}
@@ -91,11 +93,11 @@ public class Edge extends GamePiece {
 		
 		return (vertical ? 
 				(selected && !active?
-					ResourceManager.V_WALL.getSprite(0.5f):
-						ResourceManager.V_WALL.getSprite()): 
+						mc.getSprite(0.5f):
+						mc.getSprite()): 
 					(selected && !active?
-							ResourceManager.H_WALL.getSprite(0.5f):
-							ResourceManager.H_WALL.getSprite()));	    						
+							mc.getSprite(0.5f):
+							mc.getSprite()));	    						
 	}
 
 	public void setSelected(boolean selected) {
@@ -118,11 +120,11 @@ public class Edge extends GamePiece {
 	@Override
 	public void act() {
 		if (vertical) {
-			ResourceManager.V_WALL.updateFrame();
-			ResourceManager.V_WALL.playSound();
+			mc.updateFrame();
+			mc.playSound();
 		} else {
-			ResourceManager.H_WALL.updateFrame();
-			ResourceManager.H_WALL.playSound();
+			mc.updateFrame();
+			mc.playSound();
 		}
 	}	
 }

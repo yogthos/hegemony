@@ -10,7 +10,8 @@ public class Castle extends GamePiece {
 	private int value = 0;
 	private Player player;
 	
-	public Castle(Player player) {		
+	public Castle(Player player) {
+		super(ResourceManager.CASTLE.getMediaController());
 		this.player = player;
 	}
 
@@ -20,8 +21,8 @@ public class Castle extends GamePiece {
 	
 	@Override
 	public void act() {		
-		ResourceManager.CASTLE.updateFrame();
-		ResourceManager.CASTLE.playSound();
+		mc.updateFrame();
+		mc.playSound();
 	}
 	
 	@Override
@@ -31,6 +32,6 @@ public class Castle extends GamePiece {
 	
 	@Override
 	public BufferedImage draw() {
-		return ResourceManager.CASTLE.getSprite();
+		return mc.getSprite();
 	}
 }

@@ -11,6 +11,7 @@ public class Knight extends GamePiece {
 	private Player player = null;
 	
 	public Knight(Player player) {
+		super(ResourceManager.KNIGHT.getMediaController());
 		this.player = player;
 	}
 
@@ -25,14 +26,14 @@ public class Knight extends GamePiece {
 
 	@Override
 	public void act() {
-		ResourceManager.KNIGHT.updateFrame();
-		ResourceManager.KNIGHT.playSound();
+		mc.updateFrame();
+		mc.playSound();
 		
 	}
 
 	@Override
 	public BufferedImage draw() {
-		return ResourceManager.KNIGHT.getSprite();
+		return mc.getSprite();
 	}
 	
 }
