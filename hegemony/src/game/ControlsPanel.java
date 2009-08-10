@@ -131,7 +131,7 @@ public class ControlsPanel extends JPanel {
 	}
 	
 	public void updateInfoPanel() {
-		infoPanel.updatePlayer(board.getCurrentPlayer(), board.getCurrentTurn());
+		infoPanel.updatePlayer(board.getCurrentPlayer());
 		mainWindow.validate();
 	}
 	

@@ -38,8 +38,8 @@ public class InfoPanel extends JPanel {
 		setVisible(true);
 	}
 	
-	public void updatePlayer(Player player, int turn) {
-		currentPlayer.setText("Player: " + turn);
+	public void updatePlayer(Player player) {
+		currentPlayer.setText("Player: " + player.getName());
 		knightsRemaining.setText("Knights: " + player.getKnightsRemaining());
 		castlesRemaining.setText("Castles: " + player.getCastlesRemainig());
 		resources.setText("Resources: " + player.getResources());

@@ -52,19 +52,9 @@ public class BoardController {
 	}
 	
 		
-	public BoardController(int size, int numPlayers) {
-		BoardController.size = size;	
-		players = new Player[numPlayers];
-				
-		for (int i = 0; i < numPlayers; i++) {
-			players[i] = new Player();
-		}
-		//TODO: find a way to generate colors on the fly
-		Color[] playerColors = {Color.red, Color.blue, Color.green, Color.black};
-		for (int i = 0; i < players.length; i++) {
-			players[i].setColor(playerColors[i]);
-		}
-						
+	public BoardController(int size, Player[] players) {
+		BoardController.size = size;
+		this.players = players;								
 		generateEdgesAndVertices(size);
 	}
 	
