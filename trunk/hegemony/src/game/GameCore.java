@@ -21,7 +21,19 @@ public class GameCore extends Applet implements Runnable {
 	
 	public void init() {	
 
-		board = new BoardController(13, 2);			
+		int numPlayers = 2;
+		Player[] players = new Player[numPlayers];
+		
+		players[0] = new Player("Kirk");
+		players[1] = new Player("Spock");
+		
+		//TODO: find a way to generate colors on the fly
+		Color[] playerColors = {Color.red, Color.blue, Color.green, Color.black};
+		for (int i = 0; i < players.length; i++) {
+			players[i].setColor(playerColors[i]);
+		}
+		
+		board = new BoardController(13, players);			
 		Thread t = new Thread(this);
 		
 		setLayout (new BorderLayout ());

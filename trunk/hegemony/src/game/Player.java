@@ -19,8 +19,10 @@ public class Player {
 	private Color color;
 	private Card lastSold = null;
 	private Card currentCard = null;
+	private String name;
 	
-	public Player() {
+	public Player(String name) {
+		this.name = name;
 		for (int i = 0; i < 3; i++) {
 			castles.add(new Castle(this));
 		}
@@ -111,5 +113,9 @@ public class Player {
 
 	public Card getLastSold() {
 		return lastSold;
+	}
+
+	public Object getName() {
+		return name;
 	}
 }
