@@ -7,9 +7,12 @@ import game.ResourceManager;
 public class Tree extends GamePiece {
 	
 	private int value = 1;
+	private int spriteNum;
 	
 	public Tree () {
-		super (ResourceManager.FOREST.getMediaController());
+		super (ResourceManager.FOREST.getMediaController());		
+		spriteNum = (int) (Math.random() * (mc.getNumSprites() - 1) );
+						
 	}
 	@Override
 	public int getValue() {
@@ -18,13 +21,13 @@ public class Tree extends GamePiece {
 
 	@Override
 	public void act() {
-		mc.updateFrame();
+		//mc.updateFrame();
 		mc.playSound();
 		
 	}
 
 	@Override
 	public BufferedImage draw() {
-		return mc.getSprite();
+		return mc.getSprite(spriteNum);
 	}
 }
