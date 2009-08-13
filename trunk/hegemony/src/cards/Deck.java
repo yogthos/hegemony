@@ -14,7 +14,11 @@ public class Deck {
 	public Deck(GameController controller) {
 		generateDeck(controller);
 	}
-			
+	
+	public Deck(Stack<Card> cards) {
+		this.cards = cards;
+	}
+	
 	private void generateDeck(GameController controller) {
 		for (int i = 0; i < 100; i++) {
 				cards.push(new Card(controller, BoardController.MODE.PLACE_KNIGHT));
@@ -27,6 +31,14 @@ public class Deck {
 		return cards.pop();
 	}
 
+	public Stack<Card> getCards() {
+		return cards;
+	}
+	
+	public void setCards(Stack<Card> cards) {
+		this.cards = cards;
+	}
+	
 	public boolean isEmpty() {
 		return cards.isEmpty();
 	}
