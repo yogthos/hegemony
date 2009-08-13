@@ -4,19 +4,19 @@ import java.awt.image.BufferedImage;
 	 
 public enum ResourceManager {
 	
-	CAPITAL("snow/temple0.png", 1, 35, null),
-	CASTLE("snow/base.png", 4, 100, null),
-	FOREST("tree.png", 1, 35, null),
+	CAPITAL("capital.png", 1, 35, null),
+	CASTLE("castle.png", 1, 100, null),
+	FOREST("forest.png", 4, 0, null),
 	GRASS("grass.png", 1, 35, null),			
-	KNIGHT("snow/habitat.png", 4, 35, null),
-	COPPER_MINE("snow/mine_green.png", 1, 35, null),
-	DIAMOND_MINE("snow/mine.png", 1, 35, null),
-	GOLD_MINE("snow/mine_yellow.png", 1, 35, null),
-	SILVER_MINE("snow/mine_orange.png", 1, 35, null),
-	TOWER("snow/tower.png", 1, 35, null),
-	VILLAGE("snow/beacon0.png", 1, 35, null),
-	V_WALL("snow/wall-v.png", 1, 35, "place_wall.wav"),
-	H_WALL("snow/wall-h.png", 1, 35, "place_wall.wav");
+	KNIGHT("knight.png", 1, 35, null),
+	COPPER_MINE("mine.png", 1, 35, null),
+	DIAMOND_MINE("mine.png", 1, 35, null),
+	GOLD_MINE("mine.png", 1, 35, null),
+	SILVER_MINE("mine.png", 1, 35, null),
+	TOWER("tower.png", 1, 35, null),
+	VILLAGE("village.png", 1, 35, null),
+	V_WALL("wallv.png", 1, 35, "place_wall.wav"),
+	H_WALL("wallh.png", 1, 35, "place_wall.wav");
 	
 	private String sound = null;
 	private String animation = null;
@@ -50,11 +50,23 @@ public enum ResourceManager {
 		}
 		
 		public void updateFrame() {
+			if (frameSpeed < 1)
+				return;
+			
 			time++;
 			if (time % frameSpeed == 0) {
 				time = 0;
 				frame = (frame + 1) % animationLength;
 			}
+		}
+		
+		public int getNumSprites() {
+			return animationLength;
+		}
+		
+		
+		public BufferedImage getSprite(int frame) {
+			return ResourceLoader.INSTANCE.getAnimationFrame(animation, frame);
 		}
 		
 		public BufferedImage getSprite() {
