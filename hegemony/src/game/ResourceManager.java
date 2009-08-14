@@ -6,9 +6,9 @@ public enum ResourceManager {
 	
 	CAPITAL("capital.png", 1, 35, null),
 	CASTLE("castle.png", 1, 100, null),
-	FOREST("forest.png", 4, 0, null),
+	FOREST("forest.png", 2, 0, null),
 	GRASS("grass.png", 1, 35, null),			
-	KNIGHT("knight.png", 1, 35, null),
+	KNIGHT("knight.png", 12, 20, null),
 	COPPER_MINE("mine.png", 1, 35, null),
 	DIAMOND_MINE("mine.png", 1, 35, null),
 	GOLD_MINE("mine.png", 1, 35, null),
