@@ -52,9 +52,15 @@ public class BoardController {
 	
 		
 	public BoardController(int size, Player[] players) {
+		this(size,players,null);
+	}
+	
+	public BoardController(int size, Player[] players, Tile[][] tiles) {
 		BoardController.size = size;
-		this.players = players;								
+		this.players = players;
+		this.tiles = tiles;
 		generateEdgesAndVertices(size);
+		
 	}
 	
 	public void updateWorld() {
@@ -96,7 +102,9 @@ public class BoardController {
 			}
 		}
 
-		tiles = GameBoard.generateBoard(3, 3, (size - 1)/3); 
+		if (null == tiles) {
+			tiles = GameBoard.generateBoard(3, 3, (size - 1)/3);
+		}
 		
 		for (int x = 0; x < tiles.length; x++) {
 			for (int y = 0; y < tiles[x].length; y++) {

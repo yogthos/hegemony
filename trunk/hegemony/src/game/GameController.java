@@ -19,11 +19,23 @@ public class GameController {
 		this.board = board;
 		this.deck = new Deck(this);
 		
-		initSetupPhase();	
-			
+		initSetupPhase();				
+	}
+
+	public GameController(GameCore gameCore, InfoPanel infoPanel) {
+		controlsPanel = new ControlsPanel(gameCore, infoPanel, this, board);
+		gameCore.add(controlsPanel, BorderLayout.PAGE_END);	
 	}
 	
-	private void initSetupPhase() {	
+	public void setDeck(Deck deck) {
+		this.deck = deck;
+	}
+	
+	public void setBoard(BoardController board) {
+		this.board = board;
+	}
+	
+	public void initSetupPhase() {	
 		controlsPanel.enableDrawControls(false);
 		board.setGamePhase(BoardController.GamePhase.SETUP);
 		board.setCurrentMode(BoardController.MODE.PLACE_CASTLE);

@@ -21,9 +21,9 @@ public class Deck {
 	
 	private void generateDeck(GameController controller) {
 		for (int i = 0; i < 100; i++) {
-				cards.push(new Card(controller, BoardController.MODE.PLACE_KNIGHT));
-				cards.push(new Card(controller, BoardController.MODE.PLACE_WALL));
-				cards.push(new Card(controller, BoardController.MODE.EXPAND_AREA));
+				cards.push(new Card(controller, new BoardController.MODE[]{BoardController.MODE.PLACE_WALL,BoardController.MODE.PLACE_KNIGHT}));
+				cards.push(new Card(controller, new BoardController.MODE[]{BoardController.MODE.PLACE_WALL}));
+				cards.push(new Card(controller, new BoardController.MODE[]{BoardController.MODE.PLACE_WALL,BoardController.MODE.EXPAND_AREA}));
 		}
 	}
 	

@@ -19,17 +19,30 @@ public class Card extends JPanel {
 
 	private int cost;
 	private int resellValue;
-	private BoardController.MODE mode;
+	private BoardController.MODE[] modes;
+	private String modeNames = "";
 	private GameController controller;	
-	private ActionButton actionButton;
-	private ActionButton sellButton;
+
 	private Box buttons = Box.createVerticalBox();
 	
-	public Card(GameController controller, BoardController.MODE mode) {
+	public Card(GameController controller, BoardController.MODE[] modes) {
 		
 		this.controller = controller;
-		this.mode = mode;
-		
+		this.modes = modes;
+		for (BoardController.MODE mode : modes) {
+			addActionButton(mode);
+		}
+
+		buttons.add(new ActionButton(ButtonType.SELL, null, "Sell: " + this.resellValue, this));		
+		add(buttons);
+	}
+	
+	@Override
+	public String getName() {
+		return modeNames;
+	}
+	
+	private void addActionButton(BoardController.MODE mode) {
 		String modeName = "";
 		if (BoardController.MODE.EXPAND_AREA == mode) {								
 			cost = 1;	
@@ -45,17 +58,12 @@ public class Card extends JPanel {
 		else if (BoardController.MODE.PLACE_WALL == mode) {
 			cost = 1;
 			resellValue = 1;
-			modeName = "Wall Mode: " + cost;
+			modeName = "Wall Mode: " + cost;			
 		}
-		
-		setName(modeName);
-		actionButton = new ActionButton(ButtonType.ACTION, modeName, this);
-		sellButton = new ActionButton(ButtonType.SELL, "Sell: " + this.resellValue, this);
-		buttons.add(sellButton);
-		buttons.add(actionButton);
-		add(buttons);
+		modeNames += modeName + "\n";
+		buttons.add(new ActionButton(ButtonType.ACTION, mode, modeName, this));
 	}
-		
+	
 	private enum ButtonType {
 		SELL,
 		ACTION
@@ -65,8 +73,9 @@ public class Card extends JPanel {
 		return resellValue;
 	}
 	
-	public BoardController.MODE getMode() {
-		return mode;
+	public BoardController.MODE[] getModes() {
+		
+		return modes;
 	}
 	
 	
@@ -76,14 +85,20 @@ public class Card extends JPanel {
 		private static final long serialVersionUID = 1L;
 		private ButtonType type;
 		private String label;
-		private Card card; 
+		private Card card;
+		private BoardController.MODE mode;
 		
-		public ActionButton(ButtonType type, String label, Card card) {
+		public ActionButton(ButtonType type, BoardController.MODE mode, String label, Card card) {
 			this.card = card;
 			this.label = label;
 			this.type = type;
+			this.mode = mode;
 			setText(label);
 			addActionListener(this);
+		}
+		
+		public BoardController.MODE getMode() {
+			return mode;
 		}
 		
 		@Override
@@ -101,7 +116,12 @@ public class Card extends JPanel {
 	}
 
 	public void setActionActive(boolean active) {
-		actionButton.setEnabled(active);
+		for (Component button : buttons.getComponents()) {
+			ActionButton actionButton = (ActionButton)button;
+			if (null != actionButton.getMode()) {
+				actionButton.setEnabled(active);
+			}
+		}
 	}
 	
 	public void setActive(boolean active) {		
