@@ -20,6 +20,9 @@ import tiles.WoodTile;
 
 public class MessageHandler {
 
+	private static final String JOIN = "J";
+	//private static final int 
+	
 	private static final char DRAW_ACTION = 'A';
 	private static final char BAZAAR_ACTION = 'Z';
 	private static final char SELL_ACTION = 'S';
@@ -42,35 +45,48 @@ public class MessageHandler {
 	private BoardController bc = null;
 	private GameController controller = null;
 	private ConnectionManager cm = null;
+	private String localPlayer = null;
 	
-	public MessageHandler(BoardController bc, GameController controller, String[] users) throws InterruptedException {
+	public MessageHandler(BoardController bc, GameController controller, String localPLayer, String[] players) throws InterruptedException {
 		this.bc = bc;
+		this.localPlayer = localPlayer;
 		this.controller = controller;
 		cm = ConnectionManager.INSTANCE;
 		int i = 0;
-		while(i < users.length) {
-			cm.getConnection(users[i++], users[i++]);
+		while(i < players.length) {
+			cm.getConnection(players[i++], players[i++]);
 		}
 	}
 	
 	public String serializeDeck(Deck deck) {
 		StringBuffer sb = new StringBuffer();
 		for (Card card : deck.getCards()) {
-			sb.append((BoardController.MODE.EXPAND_AREA == card.getMode() ? EXPAND_ACTION :
-						(BoardController.MODE.PLACE_KNIGHT == card.getMode() ? KNIGHT_ACTION :
-							BoardController.MODE.PLACE_WALL == card.getMode() ? WALL_ACTION : null)));
+
+			for (BoardController.MODE mode : card.getModes()) {
+				sb.append((BoardController.MODE.EXPAND_AREA == mode ? EXPAND_ACTION :
+						   (BoardController.MODE.PLACE_KNIGHT == mode ? KNIGHT_ACTION :
+							(BoardController.MODE.PLACE_WALL == mode ? WALL_ACTION : null))));
+			}
+			sb.append(SEPARATOR);
 		}
 		return sb.toString();
 	}
 	
 	public Deck deserializeDeck(String deck) {
 		Stack<Card> cards = new Stack<Card>();
-		for (int i = 0; i < deck.length(); i++) {
-			char c = deck.charAt(i);
-	
-			cards.push((EXPAND_ACTION == c ? new Card(controller, BoardController.MODE.EXPAND_AREA) :
-							(KNIGHT_ACTION == c ? new Card(controller, BoardController.MODE.PLACE_KNIGHT) :
-								(WALL_ACTION == c ? new Card(controller, BoardController.MODE.PLACE_WALL) : null))));
+		String[] cardStrings = deck.split(SEPARATOR);
+		
+		for (String cardString : cardStrings) {
+			BoardController.MODE modes[] = new BoardController.MODE[cardString.length()];
+			for (int i = 0; i < cardString.length(); i++) {
+				char c = cardString.charAt(i);	
+								
+				modes[i] = (EXPAND_ACTION == c ? BoardController.MODE.EXPAND_AREA :
+							(KNIGHT_ACTION == c ?  BoardController.MODE.PLACE_KNIGHT :
+							 (WALL_ACTION == c ? BoardController.MODE.PLACE_WALL : null)));
+				
+			}
+			cards.push(new Card(controller, modes));
 		}
 		return new Deck(cards);
 	}
@@ -163,6 +179,16 @@ public class MessageHandler {
 		else throw new IllegalStateException("Unknown action: " + action);		
 	}
 	
+	public void sendJoinRequest(String playerId, String targetPlayer) throws InterruptedException {
+		//cm.sendMessage(localPlayer, targetUser, JOIN);
+		controller.setDeck(deserializeDeck(cm.getQueue().take()));
+		
+		controller.setBoard(new BoardController(10, null, deserializeBoard(cm.getQueue().take())));
+		
+	}
+	
+	
+	
 	public static void main(String[] args) throws InterruptedException {
 		
 		int numPlayers = 2;
@@ -177,16 +203,16 @@ public class MessageHandler {
 			players[i].setColor(playerColors[i]);
 		}
 		BoardController board = new BoardController(12,players);
-		MessageHandler mh = new MessageHandler(board, null, new String[]{});
+		MessageHandler mh = new MessageHandler(board, null, "yogthos@gmail.com", new String[]{});
 		Tile[][] tiles = board.getTiles();
 		System.out.println(mh.serializeBoard(tiles));
 		System.out.println(mh.serializeBoard(mh.deserializeBoard(mh.serializeBoard(tiles))));
 		mh.handleAction(EXPAND_ACTION + "10,11");
 		
-		//Deck deck = new Deck(new GameController(null, null, null));
-		//System.out.println(mh.serializeDeck(deck));
-		//System.out.println(mh.serializeDeck(mh.deserializeDeck(mh.serializeDeck(deck))));
-		
+//		Deck deck = new Deck(new GameController(null, null, null));
+//		System.out.println(mh.serializeDeck(deck));
+//		System.out.println(mh.serializeDeck(mh.deserializeDeck(mh.serializeDeck(deck))));
+//		
 		
 	}
 }
