@@ -12,7 +12,7 @@ import java.util.concurrent.BlockingQueue;
 	import org.jivesoftware.smack.packet.Message;
 	import org.jivesoftware.smack.packet.Packet;
 import org.jivesoftware.smack.packet.Presence;
-
+	
 
 	public enum ConnectionManager {
 
@@ -24,6 +24,10 @@ import org.jivesoftware.smack.packet.Presence;
 	    private String type = "gmail.com";
 	    private BlockingQueue<String> queue = new ArrayBlockingQueue<String>(1);
 	    int reconnectTimeout = 30000;
+
+	    public static void main(String args[]) throws InterruptedException {
+	    	ConnectionManager.INSTANCE.getConnection("yogthos@gmail.com", "afsunwgut");
+	    }
 	    
 	    public BlockingQueue<String> getQueue() {
 	    	return queue;
@@ -37,19 +41,20 @@ import org.jivesoftware.smack.packet.Presence;
 	     */
 	    public void getConnection(String userId, String password) throws InterruptedException {
 	        
-	        try {
-	            host = System.getProperty("HOST");
-	            port = Integer.parseInt(System.getProperty("PORT").trim());
-	            type = System.getProperty("TYPE");
-	            String authorizedUsersString = System.getProperty("AUTHORIZED_USERS");
-	            if (null != authorizedUsersString)
-	                authorizedUsers = authorizedUsersString.split(",");
-	            
-	            reconnectTimeout = Integer.parseInt(System.getProperty("RECONNECT_TIMEOUT").trim()) * 1000;
-
-	        } catch (Exception ex) {
-	            System.exit(1);
-	        }
+//	        try {
+//	            host = System.getProperty("HOST");
+//	            port = Integer.parseInt(System.getProperty("PORT").trim());
+//	            type = System.getProperty("TYPE");
+//	            String authorizedUsersString = System.getProperty("AUTHORIZED_USERS");
+//	            if (null != authorizedUsersString)
+//	                authorizedUsers = authorizedUsersString.split(",");
+//	            
+//	            reconnectTimeout = Integer.parseInt(System.getProperty("RECONNECT_TIMEOUT").trim()) * 1000;
+//
+//	        } catch (Exception ex) {
+//	    		ex.printStackTrace();	
+//	            System.exit(1);
+//	        }
 
 	        ConnectionConfiguration connConfig = new ConnectionConfiguration(host, port, type);
 	        XMPPConnection connection = new XMPPConnection(connConfig);
@@ -71,6 +76,7 @@ import org.jivesoftware.smack.packet.Presence;
 	            connection.sendPacket(presence);
 
 	        } catch (Exception ex) {
+	        	ex.printStackTrace();
 	            return;
 	        }
 	   

@@ -74,12 +74,24 @@ public class LoginPanel extends JPanel {
 		add(rowTwo, BorderLayout.CENTER);
 		add(rowThree, BorderLayout.SOUTH);		
 		
-		core.setPreferredSize(new Dimension(GameCore.WIDTH,GameCore.HEIGHT));
+		core.setSize(new Dimension(GameCore.WIDTH,GameCore.HEIGHT));
 		core.add(this);
 		setVisible(true);		
 		core.validate();
 	}
 
+	private void initHost() throws InterruptedException {
+		players = new Player[2];
+		players[0] = new Player(userId.getText());
+		
+		ConnectionManager.INSTANCE.getConnection(userId.getText(), new String(password.getPassword()));
+		BlockingQueue<String> messageQueue = ConnectionManager.INSTANCE.getQueue();
+		
+		players[1] = new Player(messageQueue.take());
+		System.out.println(players[1].getName() + " has joined the game");
+		initGame();
+	}
+	
 	public void initGame() {				
 		int numPlayers = 2;
 		players = new Player[numPlayers];
@@ -102,8 +114,7 @@ public class LoginPanel extends JPanel {
 	
 	private enum ActionType {
 		JOIN,
-		HOST,
-		START
+		HOST
 	}
 	
 	private class StartButton extends JButton implements ActionListener {
@@ -117,7 +128,12 @@ public class LoginPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			initGame();
+			try {
+				//if (host)
+				initHost();
+			} catch (InterruptedException e1) {
+				e1.printStackTrace();
+			}			
 		}
 	}
 	
@@ -134,32 +150,7 @@ public class LoginPanel extends JPanel {
 		
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (ActionType.JOIN == action)
-				initClient();
-			else if (ActionType.HOST == action) {
-							
-				try {
-					initHost();
-				} catch (InterruptedException e1) {
-					e1.printStackTrace();
-				}
-			}
-			
+			host = ActionType.HOST == action;			
 		}
-		
-		private void initClient() {
-			
-		}
-		
-		private void initHost() throws InterruptedException {
-			players = new Player[2];
-			players[0] = new Player(userId.getText());
-			
-			ConnectionManager.INSTANCE.getConnection(userId.getText(), new String(password.getPassword()));
-			BlockingQueue<String> messageQueue = ConnectionManager.INSTANCE.getQueue();
-			
-			players[1] = new Player(messageQueue.take());
-		}
-		
 	}
 }
