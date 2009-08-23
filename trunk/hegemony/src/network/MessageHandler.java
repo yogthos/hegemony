@@ -136,10 +136,15 @@ public class MessageHandler {
 	}
 	
 	public void handleAction() throws IllegalStateException, InterruptedException {
-		handleAction(cm.getQueue().take());
+		String message = cm.getQueue().take();
+		if (JOIN.equals(message.charAt(0)))
+			handleJoinRequest(message);
+			
+		handlePlayerAction(message);
 	}
-	
-	public void handleAction(String action) throws IllegalStateException {
+
+		
+	public void handlePlayerAction(String action) throws IllegalStateException {
 
 		int x = -1;
 		int y = -1;
@@ -187,6 +192,11 @@ public class MessageHandler {
 		
 	}
 	
+	private void handleJoinRequest(String message) {
+		String playerName = message.substring(1);
+		controller.addPlayer(playerName);
+	}
+	
 	
 	
 	public static void main(String[] args) throws InterruptedException {
@@ -202,13 +212,13 @@ public class MessageHandler {
 		for (int i = 0; i < players.length; i++) {
 			players[i].setColor(playerColors[i]);
 		}
-		BoardController board = new BoardController(12,players);
-		MessageHandler mh = new MessageHandler(board, null, "yogthos@gmail.com", new String[]{});
-		Tile[][] tiles = board.getTiles();
-		System.out.println(mh.serializeBoard(tiles));
-		System.out.println(mh.serializeBoard(mh.deserializeBoard(mh.serializeBoard(tiles))));
-		mh.handleAction(EXPAND_ACTION + "10,11");
-		
+//		BoardController board = new BoardController(12,players);
+//		MessageHandler mh = new MessageHandler(board, null, "yogthos@gmail.com", new String[]{});
+//		Tile[][] tiles = board.getTiles();
+//		System.out.println(mh.serializeBoard(tiles));
+//		System.out.println(mh.serializeBoard(mh.deserializeBoard(mh.serializeBoard(tiles))));
+//		mh.handlePlayerAction(EXPAND_ACTION + "10,11");
+//		
 //		Deck deck = new Deck(new GameController(null, null, null));
 //		System.out.println(mh.serializeDeck(deck));
 //		System.out.println(mh.serializeDeck(mh.deserializeDeck(mh.serializeDeck(deck))));
