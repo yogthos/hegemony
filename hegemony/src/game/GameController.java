@@ -11,7 +11,7 @@ public class GameController {
 	private BoardController board;
 	private ControlsPanel controlsPanel;
 	
-	public GameController(GameCore gameCore, InfoPanel infoPanel, BoardController board) {
+	public void init(GameCore gameCore, InfoPanel infoPanel, BoardController board) {
 	
 		controlsPanel = new ControlsPanel(gameCore, infoPanel, this, board);
 		gameCore.add(controlsPanel, BorderLayout.PAGE_END);
@@ -22,11 +22,7 @@ public class GameController {
 		initSetupPhase();				
 	}
 
-	public GameController(GameCore gameCore, InfoPanel infoPanel) {
-		controlsPanel = new ControlsPanel(gameCore, infoPanel, this, board);
-		gameCore.add(controlsPanel, BorderLayout.PAGE_END);	
-	}
-	
+		
 	public void setDeck(Deck deck) {
 		this.deck = deck;
 	}
@@ -180,5 +176,10 @@ public class GameController {
 	 */
 	public boolean drawOverlay() {
 		return (BoardController.GamePhase.SETUP == board.getGamePhase()? false : true);
+	}
+
+	public void addPlayer(String playerName) {
+		// TODO Auto-generated method stub
+		
 	}
 }

@@ -8,6 +8,7 @@ import javax.swing.JPanel;
 import cards.Card;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -27,8 +28,10 @@ public class ControlsPanel extends JPanel {
 	
 	private JButton drawButton = new JButton("Draw Card");	
 	private JPanel playerHand = new JPanel();
-	private JPanel controls = new JPanel();
+	private JPanel controls = new JPanel();	
 	private Box bazaar = Box.createVerticalBox();
+	
+	private int WIDTH;
 	
 	public ControlsPanel(GameCore mainWindow, InfoPanel infoPanel, final GameController controller, BoardController board) {
 
@@ -36,7 +39,8 @@ public class ControlsPanel extends JPanel {
 		this.board = board;
 		this.controller = controller;
 		this.infoPanel = infoPanel;
-	    
+		WIDTH = this.getWidth();
+		
 		bazaar.add(new JLabel("The Bazaar"));
 		
 		
@@ -143,6 +147,8 @@ public class ControlsPanel extends JPanel {
 		public BazaarButton (Card card) {
 			this.card = card;
 			setText(card.getName());
+			int numLines = card.getName().split("\n").length;
+			setPreferredSize(new Dimension(WIDTH, numLines*10));
 			addActionListener(this);
 		}
 

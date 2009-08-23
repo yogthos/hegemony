@@ -50,10 +50,6 @@ public class BoardController {
 		ACT,
 	}
 	
-		
-	public BoardController(int size, Player[] players) {
-		this(size,players,null);
-	}
 	
 	public BoardController(int size, Player[] players, Tile[][] tiles) {
 		BoardController.size = size;
