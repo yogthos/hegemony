@@ -1,6 +1,7 @@
 package network;
 
 import java.awt.Color;
+import java.awt.Point;
 import java.util.Stack;
 
 import game.BoardController;
@@ -42,21 +43,17 @@ public class MessageHandler {
 	private static final char  SILVER = 'S';
 	private static final char  VILLAGE = 'V';
 	
-	private BoardController bc = null;
 	private GameController controller = null;
 	private ConnectionManager cm = null;
-	private String localPlayer = null;
+
 	
-	public MessageHandler(BoardController bc, GameController controller, String localPLayer, String[] players) throws InterruptedException {
-		this.bc = bc;
-		this.localPlayer = localPlayer;
+	public MessageHandler(GameController controller) throws InterruptedException {
+
 		this.controller = controller;
 		cm = ConnectionManager.INSTANCE;
-		int i = 0;
-		while(i < players.length) {
-			cm.getConnection(players[i++], players[i++]);
-		}
 	}
+	
+
 	
 	public String serializeDeck(Deck deck) {
 		StringBuffer sb = new StringBuffer();
@@ -134,56 +131,61 @@ public class MessageHandler {
 		}		
 		return tiles;
 	}
-	
-	public void handleAction() throws IllegalStateException, InterruptedException {
-		String message = cm.getQueue().take();
-		if (JOIN.equals(message.charAt(0)))
-			handleJoinRequest(message);
-			
-		handlePlayerAction(message);
-	}
+//	
+//	public void handleAction() throws IllegalStateException, InterruptedException {
+//		String message = cm.getQueue().take();
+//		if (JOIN.equals(message.charAt(0)))
+//			handleJoinRequest(message);
+//			
+//		handlePlayerAction(message);
+//	}
 
 		
-	public void handlePlayerAction(String action) throws IllegalStateException {
-
-		int x = -1;
-		int y = -1;
-		try {
-			int separator = action.indexOf(','); 
-			x = Integer.parseInt(action.substring(1,separator));
-			y = Integer.parseInt(action.substring(separator + 1,action.length()));
-		} catch (Exception ex) {
-			throw new IllegalStateException("Invalid action: " + action);
-		}
-		System.out.println(x + "," + y);
-		
-		if (DRAW_ACTION == action.charAt(0)) {
-			
-		}
-		else if (BAZAAR_ACTION == action.charAt(0)) {
-			
-		}
-		else if (SELL_ACTION == action.charAt(0)) {
-			
-		}
-		else if (EXPAND_ACTION == action.charAt(0)) {						
-			bc.expandTerritory(x, y);
-		}
-		else if (KNIGHT_ACTION == action.charAt(0)) {
-			bc.placeKnight(x,y);
-		}
-		else if (KNIGHT_SIMPLE_ACTION == action.charAt(0)) {
-			bc.placeCastle(x,y);
-		}
-		else if (CASTLE_ACTION == action.charAt(0)) {
-			bc.placeKnightSimple(x,y);
-		}
-		else if (WALL_ACTION == action.charAt(0)) {
-			bc.placeEdge(x, y);
-		}		
-		else throw new IllegalStateException("Unknown action: " + action);		
-	}
-	
+//	public Point handlePlayerAction(String action) throws IllegalStateException {
+//
+//		int x = -1;
+//		int y = -1;
+//		try {
+//			int separator = action.indexOf(','); 
+//			x = Integer.parseInt(action.substring(1,separator));
+//			y = Integer.parseInt(action.substring(separator + 1,action.length()));
+//		} catch (Exception ex) {
+//			throw new IllegalStateException("Invalid action: " + action);
+//		}
+//		System.out.println(x + "," + y);
+//		
+//		if (DRAW_ACTION == action.charAt(0)) {
+//			
+//		}
+//		else if (BAZAAR_ACTION == action.charAt(0)) {
+//			
+//		}
+//		else if (SELL_ACTION == action.charAt(0)) {
+//			
+//		}
+//		else if (EXPAND_ACTION == action.charAt(0)) {
+//			return (new Point(x,y));
+//			//bc.expandTerritory(x, y);
+//		}
+//		else if (KNIGHT_ACTION == action.charAt(0)) {
+//			return (new Point(x,y));
+//			//bc.placeKnight(x,y);
+//		}
+//		else if (KNIGHT_SIMPLE_ACTION == action.charAt(0)) {
+//			return (new Point(x,y));
+//			//bc.placeCastle(x,y);
+//		}
+//		else if (CASTLE_ACTION == action.charAt(0)) {
+//			return (new Point(x,y));
+//			//bc.placeKnightSimple(x,y);
+//		}
+//		else if (WALL_ACTION == action.charAt(0)) {
+//			return (new Point(x,y));
+//			//bc.placeEdge(x, y);
+//		}		
+//		else throw new IllegalStateException("Unknown action: " + action);		
+//	}
+//	
 	public void sendJoinRequest(String playerId, String targetPlayer) throws InterruptedException {
 		//cm.sendMessage(localPlayer, targetUser, JOIN);
 		controller.setDeck(deserializeDeck(cm.getQueue().take()));
@@ -192,9 +194,13 @@ public class MessageHandler {
 		
 	}
 	
-	private void handleJoinRequest(String message) {
-		String playerName = message.substring(1);
-		controller.addPlayer(playerName);
+	public String handleJoinRequest() throws Exception {
+		String playerId = cm.getQueue().take();
+		if (playerId.startsWith(JOIN)) {
+			return playerId.substring(1);
+		}
+		
+		throw new Exception("Uknown message: " + playerId);
 	}
 	
 	
