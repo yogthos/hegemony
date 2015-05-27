@@ -1,0 +1,1 @@
+A game in which the players compete for control of the lands surrounding their citadels. The goal is to outwit and outmaneuver the other players to secure the largest and the richest lands of the realm.
